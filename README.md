@@ -1,1 +1,1 @@
-# student-assignment-management-system
+# learning-management-system
