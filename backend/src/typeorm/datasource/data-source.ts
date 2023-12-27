@@ -1,5 +1,4 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { User } from '../entities/user.entity';
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'mysql',
@@ -8,8 +7,8 @@ export const dataSourceOptions: DataSourceOptions = {
   username: 'root',
   password: 'N1pun$',
   database: 'lms_db',
-  entities: [User],
-  migrations: ['src/typeorm/migrations/*.ts'],
+  entities: [__dirname + '/../entities/*.entity.{js,ts}'],
+  migrations: [__dirname + '/../migrations/*.ts'],
   synchronize: false,
 };
 
