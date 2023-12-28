@@ -3,12 +3,14 @@ import {
   Controller,
   HttpException,
   HttpStatus,
+  Param,
   Post,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
+import { CreateStudentInfoDto } from './dto/create-student-info.dto';
 
 @Controller('users')
 export class UsersController {
@@ -33,5 +35,13 @@ export class UsersController {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  @Post(':id/students')
+  async createStudentDetails(
+    @Param('id') id: number,
+    @Body() createStudentInfoDto: CreateStudentInfoDto,
+  ) {
+    return this.usersService.createStudentInfo(id, createStudentInfoDto);
   }
 }

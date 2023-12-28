@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/typeorm/entities/user.entity';
-import { CreateUserParams } from 'src/utils/types';
+import { CreateStudentInfoParams, CreateUserParams } from 'src/utils/types';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
@@ -23,4 +23,9 @@ export class UsersService {
 
     return this.userRepository.save(newUser);
   }
+
+  async createStudentInfo(
+    id: number,
+    studentDetails: CreateStudentInfoParams,
+  ) {}
 }
