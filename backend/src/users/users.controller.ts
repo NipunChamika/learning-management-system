@@ -4,6 +4,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Post,
   UsePipes,
   ValidationPipe,
@@ -38,10 +39,26 @@ export class UsersController {
   }
 
   @Post(':id/students')
+  @UsePipes(new ValidationPipe())
   async createStudentDetails(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) userId: number,
     @Body() createStudentInfoDto: CreateStudentInfoDto,
   ) {
-    return this.usersService.createStudentInfo(id, createStudentInfoDto);
+    try {
+      await this.usersService.createStudentInfo(userId, createStudentInfoDto);
+      return {
+        status: 'Student profile created successfully',
+        code: HttpStatus.CREATED,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error creating student profile',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }
