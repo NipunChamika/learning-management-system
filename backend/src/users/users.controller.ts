@@ -4,6 +4,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Param,
   ParseIntPipe,
   Post,
   Query,
@@ -44,5 +45,20 @@ export class UsersController {
     @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
   ) {
     return this.usersService.getAllUsers(page, limit);
+  }
+
+  @Get(':id')
+  async getUserById(@Param('id', ParseIntPipe) userId: number) {
+    try {
+      return this.usersService.getUserById(userId);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'User not found',
+          code: HttpStatus.NOT_FOUND,
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 }

@@ -46,4 +46,16 @@ export class UsersService {
       },
     };
   }
+
+  async getUserById(userId: number) {
+    const user = await this.userRepository.findOneBy({ userId });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const { password, otpFlag, otp, otpRequestedAt, ...userWithoutPassword } =
+      user;
+    return userWithoutPassword;
+  }
 }
