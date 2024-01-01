@@ -23,4 +23,27 @@ export class UsersService {
 
     return this.userRepository.save(newUser);
   }
+
+  async getAllUsers(page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+
+    const [users, totalCount] = await this.userRepository.findAndCount({
+      skip: skip,
+      take: limit,
+      select: ['userId', 'firstName', 'lastName', 'email', 'role'],
+    });
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    return {
+      data: users,
+      meta: {
+        page,
+        limit,
+        totalCount,
+        totalPages,
+        skip,
+      },
+    };
+  }
 }
