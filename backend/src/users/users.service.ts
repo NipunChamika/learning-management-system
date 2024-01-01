@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/typeorm/entities/user.entity';
-import { CreateUserParams } from 'src/utils/types';
+import { CreateUserParams, UpdateUserParams } from 'src/utils/types';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
@@ -57,5 +57,15 @@ export class UsersService {
     const { password, otpFlag, otp, otpRequestedAt, ...userWithoutPassword } =
       user;
     return userWithoutPassword;
+  }
+
+  async updateUser(userId: number, updateUserDetails: UpdateUserParams) {
+    const user = await this.userRepository.findOneBy({ userId });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+    }
+
+    await this.userRepository.update({ userId }, { ...updateUserDetails });
   }
 }

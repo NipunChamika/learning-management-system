@@ -6,6 +6,13 @@ export type CreateUserParams = {
   role: 'ADMIN' | 'STUDENT';
 };
 
+export type UpdateUserParams = {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  role?: 'ADMIN' | 'STUDENT';
+};
+
 export type CreateStudentInfoParams = {
   programEnrolled: string;
   passedAL: boolean;
