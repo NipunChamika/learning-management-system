@@ -10,3 +10,8 @@ export type CreateStudentInfoParams = {
   programEnrolled: string;
   passedAL: boolean;
 };
+
+export type UpdateStudentInfoParams = {
+  programEnrolled?: string;
+  passedAL?: boolean;
+};

@@ -1,7 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/typeorm/entities/user.entity';
-import { CreateStudentInfoParams, CreateUserParams } from 'src/utils/types';
+import {
+  CreateStudentInfoParams,
+  CreateUserParams,
+  UpdateStudentInfoParams,
+} from 'src/utils/types';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Student } from 'src/typeorm/entities/student.entity';
@@ -44,5 +48,21 @@ export class UsersService {
     });
 
     return this.studentInfoRepository.save(newStudentInfo);
+  }
+
+  async updateStudentInfo(
+    studentId: number,
+    updateStudentInfo: UpdateStudentInfoParams,
+  ) {
+    const user = await this.studentInfoRepository.findOneBy({ studentId });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+    }
+
+    await this.studentInfoRepository.update(
+      { studentId },
+      { ...updateStudentInfo },
+    );
   }
 }
