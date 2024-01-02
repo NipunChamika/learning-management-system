@@ -60,6 +60,16 @@ export class StudentsService {
     };
   }
 
+  async getStudentById(studentId: number) {
+    const user = await this.studentRepository.findOneBy({ studentId });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+    }
+
+    return user;
+  }
+
   async updateStudentInfo(
     studentId: number,
     updateStudentInfo: UpdateStudentInfoParams,

@@ -55,6 +55,21 @@ export class StudentsController {
     return this.studentsService.getAllStudents(page, limit);
   }
 
+  @Get(':id')
+  async getStudentById(@Param('id', ParseIntPipe) studentId: number) {
+    try {
+      return this.studentsService.getStudentById(studentId);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Student not found',
+          code: HttpStatus.NOT_FOUND,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
   @Patch(':id')
   @UsePipes(new ValidationPipe())
   async updateStudentDetails(
