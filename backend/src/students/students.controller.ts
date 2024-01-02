@@ -1,12 +1,14 @@
 import {
   Body,
   Controller,
+  Get,
   HttpException,
   HttpStatus,
   Param,
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -43,6 +45,14 @@ export class StudentsController {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  @Get()
+  async getAllStudents(
+    @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
+  ) {
+    return this.studentsService.getAllStudents(page, limit);
   }
 
   @Patch(':id')

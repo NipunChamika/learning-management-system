@@ -36,6 +36,30 @@ export class StudentsService {
     return this.studentRepository.save(newStudentInfo);
   }
 
+  async getAllStudents(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+
+    const [students, totalCount] = await this.studentRepository.findAndCount({
+      skip: skip,
+      take: limit,
+      relations: ['user'],
+      select: ['studentId', 'programEnrolled', 'passedAL', 'user'],
+    });
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    return {
+      data: students,
+      meta: {
+        page,
+        limit,
+        totalCount,
+        totalPages,
+        skip,
+      },
+    };
+  }
+
   async updateStudentInfo(
     studentId: number,
     updateStudentInfo: UpdateStudentInfoParams,
