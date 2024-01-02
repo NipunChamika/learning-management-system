@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
@@ -73,6 +74,25 @@ export class UsersController {
       await this.usersService.updateUser(userId, updateUserDto);
       return {
         status: 'User updated successfully',
+        code: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'User not found',
+          code: HttpStatus.NOT_FOUND,
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
+  @Delete(':id')
+  async deleteUser(@Param('id', ParseIntPipe) userId: number) {
+    try {
+      await this.usersService.deleteUser(userId);
+      return {
+        status: 'User deleted successfully',
         code: HttpStatus.OK,
       };
     } catch (error) {

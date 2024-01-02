@@ -68,4 +68,14 @@ export class UsersService {
 
     await this.userRepository.update({ userId }, { ...updateUserDetails });
   }
+
+  async deleteUser(userId: number) {
+    const user = await this.userRepository.findOneBy({ userId });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+    }
+
+    await this.userRepository.delete(userId);
+  }
 }
