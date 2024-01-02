@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
@@ -91,6 +92,25 @@ export class StudentsController {
           status: 'Error updating student profile',
           code: HttpStatus.BAD_REQUEST,
           message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Delete(':id')
+  async deleteStudent(@Param('id', ParseIntPipe) studentId: number) {
+    try {
+      await this.studentsService.deleteStudent(studentId);
+      return {
+        status: 'User deleted successfully',
+        code: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'User not found',
+          code: HttpStatus.BAD_REQUEST,
         },
         HttpStatus.BAD_REQUEST,
       );

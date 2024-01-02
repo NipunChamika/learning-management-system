@@ -85,4 +85,14 @@ export class StudentsService {
       { ...updateStudentInfo },
     );
   }
+
+  async deleteStudent(studentId: number) {
+    const user = this.studentRepository.findOneBy({ studentId });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+    }
+
+    await this.studentRepository.delete(studentId);
+  }
 }
