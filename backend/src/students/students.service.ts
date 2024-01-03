@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Program } from 'src/typeorm/entities/program.entity';
 import { Student } from 'src/typeorm/entities/student.entity';
 import { User } from 'src/typeorm/entities/user.entity';
 import {
@@ -16,6 +17,9 @@ export class StudentsService {
 
     @InjectRepository(Student)
     private studentRepository: Repository<Student>,
+
+    @InjectRepository(Program)
+    private programRepository: Repository<Program>,
   ) {}
 
   async createStudentInfo(
@@ -28,9 +32,18 @@ export class StudentsService {
       throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
     }
 
+    const program = await this.programRepository.findOneBy({
+      programId: createStudentInfo.programId,
+    });
+
+    if (!program) {
+      throw new HttpException('Program not found', HttpStatus.BAD_REQUEST);
+    }
+
     const newStudentInfo = this.studentRepository.create({
       ...createStudentInfo,
       user: user,
+      program: program,
     });
 
     return this.studentRepository.save(newStudentInfo);
