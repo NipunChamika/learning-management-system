@@ -14,11 +14,16 @@ export type UpdateUserParams = {
 };
 
 export type CreateStudentInfoParams = {
-  programEnrolled: string;
+  // programEnrolled: string;
   passedAL: boolean;
+  programId: number;
 };
 
 export type UpdateStudentInfoParams = {
   programEnrolled?: string;
   passedAL?: boolean;
+};
+
+export type CreateProgramParams = {
+  programName: string;
 };
