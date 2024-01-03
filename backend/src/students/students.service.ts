@@ -55,14 +55,21 @@ export class StudentsService {
     const [students, totalCount] = await this.studentRepository.findAndCount({
       skip: skip,
       take: limit,
-      relations: ['user'],
-      select: ['studentId', 'passedAL', 'user'],
+      relations: ['user', 'program'],
+      select: ['studentId', 'passedAL', 'user', 'program'],
     });
 
     const totalPages = Math.ceil(totalCount / limit);
 
+    const studentData = students.map((student) => ({
+      studentId: student.studentId,
+      passedAL: student.passedAL,
+      userId: student.user.userId,
+      programId: student.program ? student.program.programId : null,
+    }));
+
     return {
-      data: students,
+      data: studentData,
       meta: {
         page,
         limit,
@@ -74,23 +81,32 @@ export class StudentsService {
   }
 
   async getStudentById(studentId: number) {
-    const user = await this.studentRepository.findOneBy({ studentId });
+    const student = await this.studentRepository.findOne({
+      where: { studentId },
+      relations: ['user', 'program'],
+    });
 
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+    if (!student) {
+      throw new HttpException('Student not found', HttpStatus.BAD_REQUEST);
     }
 
-    return user;
+    // return student;
+    return {
+      studentId: student.studentId,
+      passedAL: student.passedAL,
+      userId: student.user.userId,
+      programId: student.program ? student.program.programId : null,
+    };
   }
 
   async updateStudentInfo(
     studentId: number,
     updateStudentInfo: UpdateStudentInfoParams,
   ) {
-    const user = await this.studentRepository.findOneBy({ studentId });
+    const student = await this.studentRepository.findOneBy({ studentId });
 
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+    if (!student) {
+      throw new HttpException('Student not found', HttpStatus.BAD_REQUEST);
     }
 
     await this.studentRepository.update(
@@ -100,10 +116,10 @@ export class StudentsService {
   }
 
   async deleteStudent(studentId: number) {
-    const user = this.studentRepository.findOneBy({ studentId });
+    const student = this.studentRepository.findOneBy({ studentId });
 
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+    if (!student) {
+      throw new HttpException('Student not found', HttpStatus.BAD_REQUEST);
     }
 
     await this.studentRepository.delete(studentId);

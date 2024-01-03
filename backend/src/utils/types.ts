@@ -20,7 +20,7 @@ export type CreateStudentInfoParams = {
 };
 
 export type UpdateStudentInfoParams = {
-  programEnrolled?: string;
+  // programEnrolled?: string;
   passedAL?: boolean;
 };
 
