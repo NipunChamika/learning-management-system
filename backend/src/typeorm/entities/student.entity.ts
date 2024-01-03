@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from './user.entity';
+import { Program } from './program.entity';
 
 @Entity({ name: 'students' })
 export class Student {
@@ -19,4 +20,8 @@ export class Student {
   @OneToOne(() => User)
   @JoinColumn({ name: 'userId' })
   user: User;
+
+  @ManyToOne(() => Program, (program) => program.students)
+  @JoinColumn({ name: 'programId' })
+  program: Program;
 }
