@@ -4,6 +4,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Param,
   ParseIntPipe,
   Post,
   Query,
@@ -43,5 +44,20 @@ export class ProgramsController {
     @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
   ) {
     return this.programsService.getAllPrograms(page, limit);
+  }
+
+  @Get(':id')
+  async getProgramById(@Param('id', ParseIntPipe) programId: number) {
+    try {
+      return this.programsService.getProgramById(programId);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Program not found',
+          code: HttpStatus.BAD_REQUEST,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }

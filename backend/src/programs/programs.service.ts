@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Program } from 'src/typeorm/entities/program.entity';
 import { CreateProgramParams } from 'src/utils/types';
@@ -38,5 +38,15 @@ export class ProgramsService {
         skip,
       },
     };
+  }
+
+  async getProgramById(programId: number) {
+    const program = await this.programRepository.findOneBy({ programId });
+
+    if (!program) {
+      throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
+    }
+
+    return program;
   }
 }
