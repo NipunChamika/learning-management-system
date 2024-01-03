@@ -43,7 +43,7 @@ export class StudentsService {
       skip: skip,
       take: limit,
       relations: ['user'],
-      select: ['studentId', 'programEnrolled', 'passedAL', 'user'],
+      select: ['studentId', 'passedAL', 'user'],
     });
 
     const totalPages = Math.ceil(totalCount / limit);

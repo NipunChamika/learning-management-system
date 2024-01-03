@@ -2,6 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -11,9 +12,6 @@ import { User } from './user.entity';
 export class Student {
   @PrimaryGeneratedColumn()
   studentId: number;
-
-  @Column()
-  programEnrolled: string;
 
   @Column()
   passedAL: boolean;
