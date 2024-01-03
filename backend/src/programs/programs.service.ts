@@ -16,4 +16,27 @@ export class ProgramsService {
 
     return this.programRepository.save(newProgram);
   }
+
+  async getAllPrograms(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+
+    const [programs, totalCount] = await this.programRepository.findAndCount({
+      skip: skip,
+      take: limit,
+      select: ['programId', 'programName'],
+    });
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    return {
+      data: programs,
+      meta: {
+        page,
+        limit,
+        totalCount,
+        totalPages,
+        skip,
+      },
+    };
+  }
 }

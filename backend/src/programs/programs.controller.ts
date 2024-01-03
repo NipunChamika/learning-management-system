@@ -1,9 +1,12 @@
 import {
   Body,
   Controller,
+  Get,
   HttpException,
   HttpStatus,
+  ParseIntPipe,
   Post,
+  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -32,5 +35,13 @@ export class ProgramsController {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  @Get()
+  async getAllPrograms(
+    @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
+  ) {
+    return this.programsService.getAllPrograms(page, limit);
   }
 }
