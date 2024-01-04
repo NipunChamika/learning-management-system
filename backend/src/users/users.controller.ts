@@ -106,4 +106,24 @@ export class UsersController {
       );
     }
   }
+
+  @Post(':id/undo-delete')
+  async undoDeleteUser(@Param('id', ParseIntPipe) userId: number) {
+    try {
+      await this.usersService.undoDeleteUser(userId);
+      return {
+        status: 'User restored successfully',
+        code: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error restoring the user',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }

@@ -90,4 +90,25 @@ export class UsersService {
 
     await this.userRepository.softDelete(id);
   }
+
+  async undoDeleteUser(id: number) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      withDeleted: true,
+    });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    if (!user.deletedAt) {
+      throw new HttpException('User is not deleted', HttpStatus.BAD_REQUEST);
+    }
+
+    await this.userRepository.restore(id);
+
+    if (user.student && user.student.deletedAt) {
+      await this.studentRepository.restore(user.student.id);
+    }
+  }
 }
