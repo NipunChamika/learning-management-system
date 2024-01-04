@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
@@ -79,6 +80,25 @@ export class ProgramsController {
       throw new HttpException(
         {
           status: 'Error updating program',
+          code: HttpStatus.BAD_REQUEST,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Delete(':id')
+  async deleteProgram(@Param('id', ParseIntPipe) programId: number) {
+    try {
+      await this.programsService.deleteProgram(programId);
+      return {
+        status: 'Program deleted successfully',
+        code: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error deleting program',
           code: HttpStatus.BAD_REQUEST,
         },
         HttpStatus.BAD_REQUEST,

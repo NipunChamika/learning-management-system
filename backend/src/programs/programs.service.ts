@@ -65,4 +65,14 @@ export class ProgramsService {
       { ...updateProgramInfo },
     );
   }
+
+  async deleteProgram(programId: number) {
+    const program = await this.programRepository.findOneBy({ programId });
+
+    if (!program) {
+      throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
+    }
+
+    await this.programRepository.delete(programId);
+  }
 }
