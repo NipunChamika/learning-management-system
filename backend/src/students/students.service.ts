@@ -23,17 +23,17 @@ export class StudentsService {
   ) {}
 
   async createStudentInfo(
-    userId: number,
+    id: number,
     createStudentInfo: CreateStudentInfoParams,
   ) {
-    const user = await this.userRepository.findOneBy({ userId });
+    const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
       throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
     }
 
     const program = await this.programRepository.findOneBy({
-      programId: createStudentInfo.programId,
+      id: createStudentInfo.id,
     });
 
     if (!program) {
@@ -56,16 +56,16 @@ export class StudentsService {
       skip: skip,
       take: limit,
       relations: ['user', 'program'],
-      select: ['studentId', 'passedAL', 'user', 'program'],
+      select: ['id', 'passedAL', 'user', 'program'],
     });
 
     const totalPages = Math.ceil(totalCount / limit);
 
     const studentData = students.map((student) => ({
-      studentId: student.studentId,
+      studentId: student.id,
       passedAL: student.passedAL,
-      userId: student.user.userId,
-      programId: student.program ? student.program.programId : null,
+      userId: student.user.id,
+      programId: student.program ? student.program.id : null,
     }));
 
     return {
@@ -80,9 +80,9 @@ export class StudentsService {
     };
   }
 
-  async getStudentById(studentId: number) {
+  async getStudentById(id: number) {
     const student = await this.studentRepository.findOne({
-      where: { studentId },
+      where: { id },
       relations: ['user', 'program'],
     });
 
@@ -92,36 +92,33 @@ export class StudentsService {
 
     // return student;
     return {
-      studentId: student.studentId,
+      studentId: student.id,
       passedAL: student.passedAL,
-      userId: student.user.userId,
-      programId: student.program ? student.program.programId : null,
+      userId: student.user.id,
+      programId: student.program ? student.program.id : null,
     };
   }
 
   async updateStudentInfo(
-    studentId: number,
+    id: number,
     updateStudentInfo: UpdateStudentInfoParams,
   ) {
-    const student = await this.studentRepository.findOneBy({ studentId });
+    const student = await this.studentRepository.findOneBy({ id });
 
     if (!student) {
       throw new HttpException('Student not found', HttpStatus.BAD_REQUEST);
     }
 
-    await this.studentRepository.update(
-      { studentId },
-      { ...updateStudentInfo },
-    );
+    await this.studentRepository.update({ id }, { ...updateStudentInfo });
   }
 
-  async deleteStudent(studentId: number) {
-    const student = this.studentRepository.findOneBy({ studentId });
+  async deleteStudent(id: number) {
+    const student = this.studentRepository.findOneBy({ id });
 
     if (!student) {
       throw new HttpException('Student not found', HttpStatus.BAD_REQUEST);
     }
 
-    await this.studentRepository.delete(studentId);
+    await this.studentRepository.delete(id);
   }
 }

@@ -30,7 +30,7 @@ export class UsersService {
     const [users, totalCount] = await this.userRepository.findAndCount({
       skip: skip,
       take: limit,
-      select: ['userId', 'firstName', 'lastName', 'email', 'role'],
+      select: ['id', 'firstName', 'lastName', 'email', 'role'],
     });
 
     const totalPages = Math.ceil(totalCount / limit);
@@ -47,8 +47,8 @@ export class UsersService {
     };
   }
 
-  async getUserById(userId: number) {
-    const user = await this.userRepository.findOneBy({ userId });
+  async getUserById(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
       throw new Error('User not found');
@@ -59,23 +59,23 @@ export class UsersService {
     return userWithoutPassword;
   }
 
-  async updateUser(userId: number, updateUserDetails: UpdateUserParams) {
-    const user = await this.userRepository.findOneBy({ userId });
+  async updateUser(id: number, updateUserDetails: UpdateUserParams) {
+    const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
       throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
     }
 
-    await this.userRepository.update({ userId }, { ...updateUserDetails });
+    await this.userRepository.update({ id }, { ...updateUserDetails });
   }
 
-  async deleteUser(userId: number) {
-    const user = await this.userRepository.findOneBy({ userId });
+  async deleteUser(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
       throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
     }
 
-    await this.userRepository.delete(userId);
+    await this.userRepository.delete(id);
   }
 }

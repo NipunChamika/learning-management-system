@@ -1,19 +1,10 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { User } from './user.entity';
 import { Program } from './program.entity';
+import { BaseEntity } from 'src/core/base.entity';
 
 @Entity({ name: 'students' })
-export class Student {
-  @PrimaryGeneratedColumn()
-  studentId: number;
-
+export class Student extends BaseEntity {
   @Column()
   passedAL: boolean;
 

@@ -23,7 +23,7 @@ export class ProgramsService {
     const [programs, totalCount] = await this.programRepository.findAndCount({
       skip: skip,
       take: limit,
-      select: ['programId', 'programName'],
+      select: ['id', 'programName'],
     });
 
     const totalPages = Math.ceil(totalCount / limit);
@@ -40,8 +40,8 @@ export class ProgramsService {
     };
   }
 
-  async getProgramById(programId: number) {
-    const program = await this.programRepository.findOneBy({ programId });
+  async getProgramById(id: number) {
+    const program = await this.programRepository.findOneBy({ id });
 
     if (!program) {
       throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
@@ -50,29 +50,23 @@ export class ProgramsService {
     return program;
   }
 
-  async updateProgram(
-    programId: number,
-    updateProgramInfo: UpdateProrgamParams,
-  ) {
-    const program = await this.programRepository.findOneBy({ programId });
+  async updateProgram(id: number, updateProgramInfo: UpdateProrgamParams) {
+    const program = await this.programRepository.findOneBy({ id });
 
     if (!program) {
       throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
     }
 
-    await this.programRepository.update(
-      { programId },
-      { ...updateProgramInfo },
-    );
+    await this.programRepository.update({ id }, { ...updateProgramInfo });
   }
 
-  async deleteProgram(programId: number) {
-    const program = await this.programRepository.findOneBy({ programId });
+  async deleteProgram(id: number) {
+    const program = await this.programRepository.findOneBy({ id });
 
     if (!program) {
       throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
     }
 
-    await this.programRepository.delete(programId);
+    await this.programRepository.delete(id);
   }
 }
