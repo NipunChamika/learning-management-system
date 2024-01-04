@@ -100,6 +100,7 @@ export class UsersController {
         {
           status: 'User not found',
           code: HttpStatus.NOT_FOUND,
+          message: error.message,
         },
         HttpStatus.NOT_FOUND,
       );

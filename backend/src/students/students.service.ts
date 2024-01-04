@@ -33,7 +33,7 @@ export class StudentsService {
     }
 
     const program = await this.programRepository.findOneBy({
-      id: createStudentInfo.id,
+      id: createStudentInfo.programId,
     });
 
     if (!program) {

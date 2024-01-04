@@ -8,7 +8,7 @@ export class Student extends BaseEntity {
   @Column()
   passedAL: boolean;
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, (user) => user.student, { cascade: ['soft-remove'] })
   @JoinColumn({ name: 'userId' })
   user: User;
 

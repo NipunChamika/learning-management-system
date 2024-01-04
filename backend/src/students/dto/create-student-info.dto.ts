@@ -11,5 +11,5 @@ export class CreateStudentInfoDto {
 
   @IsNumber()
   @IsNotEmpty()
-  id: number;
+  programId: number;
 }

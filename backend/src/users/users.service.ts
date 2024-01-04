@@ -4,12 +4,16 @@ import { User } from 'src/typeorm/entities/user.entity';
 import { CreateUserParams, UpdateUserParams } from 'src/utils/types';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Student } from 'src/typeorm/entities/student.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+
+    @InjectRepository(Student)
+    private studentRepository: Repository<Student>,
   ) {}
 
   async createUser(userDetails: CreateUserParams) {
@@ -70,12 +74,20 @@ export class UsersService {
   }
 
   async deleteUser(id: number) {
-    const user = await this.userRepository.findOneBy({ id });
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['student'],
+    });
+    // const userExists = await this.userRepository.count({ id }) > 0; More efficient than loading the entire user
 
     if (!user) {
       throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
     }
 
-    await this.userRepository.delete(id);
+    if (user.student) {
+      await this.studentRepository.softDelete(user.student.id);
+    }
+
+    await this.userRepository.softDelete(id);
   }
 }

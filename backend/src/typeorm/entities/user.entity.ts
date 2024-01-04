@@ -1,5 +1,6 @@
 import { BaseEntity } from 'src/core/base.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToOne } from 'typeorm';
+import { Student } from './student.entity';
 
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
@@ -26,4 +27,7 @@ export class User extends BaseEntity {
 
   @Column({ nullable: true })
   otpRequestedAt: Date;
+
+  @OneToOne(() => Student, (student) => student.user)
+  student: Student;
 }
