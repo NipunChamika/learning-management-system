@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
   UsePipes,
@@ -13,6 +14,7 @@ import {
 } from '@nestjs/common';
 import { ProgramsService } from './programs.service';
 import { CreateProgramDto } from './dto/create-program.dto';
+import { UpdateProgramDto } from './dto/update-program.dto';
 
 @Controller('programs')
 export class ProgramsController {
@@ -54,6 +56,29 @@ export class ProgramsController {
       throw new HttpException(
         {
           status: 'Program not found',
+          code: HttpStatus.BAD_REQUEST,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Patch(':id')
+  @UsePipes(new ValidationPipe())
+  async updateProgram(
+    @Param('id', ParseIntPipe) programId: number,
+    @Body() updateProgramInfo: UpdateProgramDto,
+  ) {
+    try {
+      await this.programsService.updateProgram(programId, updateProgramInfo);
+      return {
+        status: 'Program updated successfully',
+        code: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error updating program',
           code: HttpStatus.BAD_REQUEST,
         },
         HttpStatus.BAD_REQUEST,

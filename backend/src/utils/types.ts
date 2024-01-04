@@ -27,3 +27,7 @@ export type UpdateStudentInfoParams = {
 export type CreateProgramParams = {
   programName: string;
 };
+
+export type UpdateProrgamParams = {
+  programName: string;
+};
