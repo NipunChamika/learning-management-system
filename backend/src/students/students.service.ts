@@ -7,7 +7,7 @@ import {
   CreateStudentInfoParams,
   UpdateStudentInfoParams,
 } from 'src/utils/types';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class StudentsService {
@@ -32,18 +32,21 @@ export class StudentsService {
       throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
     }
 
-    const program = await this.programRepository.findOneBy({
-      id: createStudentInfo.programId,
+    const programs = await this.programRepository.findBy({
+      id: In(createStudentInfo.programIds),
     });
 
-    if (!program) {
-      throw new HttpException('Program not found', HttpStatus.BAD_REQUEST);
+    if (programs.length !== createStudentInfo.programIds.length) {
+      throw new HttpException(
+        'One or more programs not found',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const newStudentInfo = this.studentRepository.create({
       ...createStudentInfo,
       user: user,
-      program: program,
+      programs: programs,
     });
 
     return this.studentRepository.save(newStudentInfo);
@@ -56,7 +59,7 @@ export class StudentsService {
       skip: skip,
       take: limit,
       relations: ['user', 'program'],
-      select: ['id', 'passedAL', 'user', 'program'],
+      select: ['id', 'passedAL', 'user', 'programs'],
     });
 
     const totalPages = Math.ceil(totalCount / limit);
@@ -65,7 +68,7 @@ export class StudentsService {
       studentId: student.id,
       passedAL: student.passedAL,
       userId: student.user.id,
-      programId: student.program ? student.program.id : null,
+      programIds: student.programs.map((program) => program.id),
     }));
 
     return {
@@ -95,7 +98,7 @@ export class StudentsService {
       studentId: student.id,
       passedAL: student.passedAL,
       userId: student.user.id,
-      programId: student.program ? student.program.id : null,
+      programId: student.programs.map((program) => program.id),
     };
   }
 

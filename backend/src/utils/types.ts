@@ -16,7 +16,7 @@ export type UpdateUserParams = {
 export type CreateStudentInfoParams = {
   // programEnrolled: string;
   passedAL: boolean;
-  programId: number;
+  programIds: number[];
 };
 
 export type UpdateStudentInfoParams = {

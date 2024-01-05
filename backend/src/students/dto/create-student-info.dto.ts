@@ -1,15 +1,12 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateStudentInfoDto {
-  // @IsString()
-  // @IsNotEmpty()
-  // programEnrolled: string;
-
   @IsBoolean()
   @IsNotEmpty()
   passedAL: boolean;
 
-  @IsNumber()
+  @IsArray()
+  @IsNumber({}, { each: true })
   @IsNotEmpty()
-  programId: number;
+  programIds: number[];
 }
