@@ -94,6 +94,7 @@ export class UsersService {
   async undoDeleteUser(id: number) {
     const user = await this.userRepository.findOne({
       where: { id },
+      relations: ['student'],
       withDeleted: true,
     });
 
