@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToMany } from 'typeorm';
 import { Student } from './student.entity';
 import { BaseEntity } from 'src/core/base.entity';
 
@@ -7,6 +7,6 @@ export class Program extends BaseEntity {
   @Column()
   programName: string;
 
-  @OneToMany(() => Student, (student) => student.program)
+  @ManyToMany(() => Student, (student) => student.programs)
   students: Student[];
 }

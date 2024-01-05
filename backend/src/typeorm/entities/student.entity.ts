@@ -1,4 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  OneToOne,
+} from 'typeorm';
 import { User } from './user.entity';
 import { Program } from './program.entity';
 import { BaseEntity } from 'src/core/base.entity';
@@ -12,7 +19,7 @@ export class Student extends BaseEntity {
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @ManyToOne(() => Program, (program) => program.students)
-  @JoinColumn({ name: 'programId' })
-  program: Program;
+  @ManyToMany(() => Program, (program) => program.students)
+  @JoinTable({ name: 'student_programs' })
+  programs: Program[];
 }
