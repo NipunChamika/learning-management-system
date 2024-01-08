@@ -32,4 +32,38 @@ export class LearningMaterialService {
 
     return this.learningMaterialRepository.save(newLearningMaterial);
   }
+
+  async getAllLearningMaterial(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+
+    const [learningMaterials, totalCount] =
+      await this.learningMaterialRepository.findAndCount({
+        skip: skip,
+        take: limit,
+        relations: ['course'],
+        select: ['id', 'materialType', 'resourcePath'],
+      });
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    const learningMaterialData = learningMaterials.map((learningMaterial) => ({
+      id: learningMaterial.id,
+      materialType: learningMaterial.materialType,
+      resourcePath: learningMaterial.resourcePath
+        ? learningMaterial.resourcePath
+        : null,
+      courseId: learningMaterial.course.id,
+    }));
+
+    return {
+      data: learningMaterialData,
+      meta: {
+        page,
+        limit,
+        totalCount,
+        totalPages,
+        skip,
+      },
+    };
+  }
 }
