@@ -13,7 +13,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { StudentsService } from './students.service';
+import { StudentsService } from './student.service';
 import { CreateStudentInfoDto } from './dto/create-student-info.dto';
 import { UpdateStudentInfoDto } from './dto/update-student-info.dto';
 
