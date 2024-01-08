@@ -1,4 +1,43 @@
-import { Controller } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import { CourseService } from './course.service';
+import { CreateCourseDto } from './dto/create-course.dto';
 
 @Controller('course')
-export class CourseController {}
+export class CourseController {
+  constructor(private courseService: CourseService) {}
+
+  @Post(':id')
+  @UsePipes(new ValidationPipe())
+  async createCourse(
+    @Param('id', ParseIntPipe) programId: number,
+    @Body() createCourseDto: CreateCourseDto,
+  ) {
+    try {
+      await this.courseService.createCourse(programId, createCourseDto);
+
+      return {
+        status: 'Course created successfully',
+        code: HttpStatus.CREATED,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error creating course',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+}

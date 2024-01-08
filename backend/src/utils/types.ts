@@ -31,3 +31,7 @@ export type CreateProgramParams = {
 export type UpdateProrgamParams = {
   programName: string;
 };
+
+export type CreateCourseParams = {
+  courseName: string;
+};
