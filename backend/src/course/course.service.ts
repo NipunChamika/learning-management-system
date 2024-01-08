@@ -70,4 +70,21 @@ export class CourseService {
       },
     };
   }
+
+  async getCourseById(id: number) {
+    const course = await this.courseRepository.findOne({
+      where: { id },
+      relations: ['program'],
+    });
+
+    if (!course) {
+      throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      id: course.id,
+      courseName: course.courseName,
+      programId: course.program ? course.program.id : null,
+    };
+  }
 }

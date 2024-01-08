@@ -50,4 +50,20 @@ export class CourseController {
   ) {
     return this.courseService.getAllCourses(page, limit);
   }
+
+  @Get(':id')
+  async getCourseById(@Param('id', ParseIntPipe) courseId: number) {
+    try {
+      return this.courseService.getCourseById(courseId);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error fetching course',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }
