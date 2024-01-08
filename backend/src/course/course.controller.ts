@@ -1,11 +1,13 @@
 import {
   Body,
   Controller,
+  Get,
   HttpException,
   HttpStatus,
   Param,
   ParseIntPipe,
   Post,
+  Query,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -39,5 +41,13 @@ export class CourseController {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  @Get()
+  async getAllCourses(
+    @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
+  ) {
+    return this.courseService.getAllCourses(page, limit);
   }
 }

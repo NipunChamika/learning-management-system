@@ -40,4 +40,34 @@ export class CourseService {
 
     return this.courseRepository.save(newCourse);
   }
+
+  async getAllCourses(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+
+    const [courses, totalCount] = await this.courseRepository.findAndCount({
+      skip: skip,
+      take: limit,
+      relations: ['program'],
+      select: ['id', 'courseName', 'program'],
+    });
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    const courseData = courses.map((course) => ({
+      id: course.id,
+      courseName: course.courseName,
+      programId: course.program ? course.program.id : null,
+    }));
+
+    return {
+      data: courseData,
+      meta: {
+        page,
+        limit,
+        totalCount,
+        totalPages,
+        skip,
+      },
+    };
+  }
 }
