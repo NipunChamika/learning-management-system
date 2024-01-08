@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
   UsePipes,
@@ -13,6 +14,7 @@ import {
 } from '@nestjs/common';
 import { CourseService } from './course.service';
 import { CreateCourseDto } from './dto/create-course.dto';
+import { UpdateCourseDto } from './dto/update-course.dto';
 
 @Controller('course')
 export class CourseController {
@@ -59,6 +61,31 @@ export class CourseController {
       throw new HttpException(
         {
           status: 'Error fetching course',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Patch(':id')
+  @UsePipes(new ValidationPipe())
+  async updateCourse(
+    @Param('id', ParseIntPipe) courseId: number,
+    @Body() updateCourseDto: UpdateCourseDto,
+  ) {
+    try {
+      await this.courseService.updateCourse(courseId, updateCourseDto);
+
+      return {
+        status: 'Course updated successfully',
+        code: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error updating course',
           code: HttpStatus.BAD_REQUEST,
           message: error.message,
         },
