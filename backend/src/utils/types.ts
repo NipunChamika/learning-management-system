@@ -39,3 +39,8 @@ export type CreateCourseParams = {
 export type UpdateCourseParams = {
   courseName: string;
 };
+
+export type CreateLearningMaterialParams = {
+  materialType: string;
+  resourcePath?: string;
+};
