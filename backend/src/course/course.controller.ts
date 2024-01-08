@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
@@ -86,6 +87,27 @@ export class CourseController {
       throw new HttpException(
         {
           status: 'Error updating course',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Delete(':id')
+  async deleteCourse(@Param('id', ParseIntPipe) courseId: number) {
+    try {
+      await this.courseService.deleteCourse(courseId);
+
+      return {
+        status: 'Course deleted successfully',
+        code: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error deleting course',
           code: HttpStatus.BAD_REQUEST,
           message: error.message,
         },

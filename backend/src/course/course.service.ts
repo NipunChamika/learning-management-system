@@ -97,4 +97,14 @@ export class CourseService {
 
     await this.courseRepository.update({ id }, { ...updateCourseInfo });
   }
+
+  async deleteCourse(id: number) {
+    const course = await this.courseRepository.findOneBy({ id });
+
+    if (!course) {
+      throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
+    }
+
+    await this.courseRepository.softDelete(id);
+  }
 }
