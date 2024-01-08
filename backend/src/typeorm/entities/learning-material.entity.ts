@@ -2,7 +2,7 @@ import { BaseEntity } from 'src/core/entity/base.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Course } from './course.entity';
 
-@Entity({ name: 'learning_material' })
+@Entity({ name: 'learning_materials' })
 export class LearningMaterial extends BaseEntity {
   @Column()
   materialType: string;

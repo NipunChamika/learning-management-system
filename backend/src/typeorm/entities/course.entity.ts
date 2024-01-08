@@ -2,6 +2,7 @@ import { BaseEntity } from 'src/core/entity/base.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Program } from './program.entity';
 import { LearningMaterial } from './learning-material.entity';
+import { Assignment } from './assignment.entity';
 
 @Entity({ name: 'courses' })
 export class Course extends BaseEntity {
@@ -16,4 +17,7 @@ export class Course extends BaseEntity {
     (learningMaterial) => learningMaterial.course,
   )
   learningMaterials: LearningMaterial[];
+
+  @OneToMany(() => Assignment, (assignment) => assignment.course)
+  assignments: Assignment[];
 }
