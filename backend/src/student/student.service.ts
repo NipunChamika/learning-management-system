@@ -10,7 +10,7 @@ import {
 import { In, Repository } from 'typeorm';
 
 @Injectable()
-export class StudentsService {
+export class StudentService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,

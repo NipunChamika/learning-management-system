@@ -5,7 +5,7 @@ import { CreateProgramParams, UpdateProrgamParams } from 'src/utils/types';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class ProgramsService {
+export class ProgramService {
   constructor(
     @InjectRepository(Program)
     private programRepository: Repository<Program>,

@@ -14,18 +14,18 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UsersService } from './user.service';
+import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 
-@Controller('users')
-export class UsersController {
-  constructor(private usersService: UsersService) {}
+@Controller('user')
+export class UserController {
+  constructor(private userService: UserService) {}
 
   @Post()
   @UsePipes(new ValidationPipe())
   async createUser(@Body() createUserDto: CreateUserDto) {
     try {
-      await this.usersService.createUser(createUserDto);
+      await this.userService.createUser(createUserDto);
       return {
         status: 'User created successfully',
         code: HttpStatus.CREATED,
@@ -47,13 +47,13 @@ export class UsersController {
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
     @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
   ) {
-    return this.usersService.getAllUsers(page, limit);
+    return this.userService.getAllUsers(page, limit);
   }
 
   @Get(':id')
   async getUserById(@Param('id', ParseIntPipe) userId: number) {
     try {
-      return this.usersService.getUserById(userId);
+      return this.userService.getUserById(userId);
     } catch (error) {
       throw new HttpException(
         {
@@ -71,7 +71,7 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     try {
-      await this.usersService.updateUser(userId, updateUserDto);
+      await this.userService.updateUser(userId, updateUserDto);
       return {
         status: 'User updated successfully',
         code: HttpStatus.OK,
@@ -90,7 +90,7 @@ export class UsersController {
   @Delete(':id')
   async deleteUser(@Param('id', ParseIntPipe) userId: number) {
     try {
-      await this.usersService.deleteUser(userId);
+      await this.userService.deleteUser(userId);
       return {
         status: 'User deleted successfully',
         code: HttpStatus.OK,
@@ -110,7 +110,7 @@ export class UsersController {
   @Post(':id/undo-delete')
   async undoDeleteUser(@Param('id', ParseIntPipe) userId: number) {
     try {
-      await this.usersService.undoDeleteUser(userId);
+      await this.userService.undoDeleteUser(userId);
       return {
         status: 'User restored successfully',
         code: HttpStatus.OK,

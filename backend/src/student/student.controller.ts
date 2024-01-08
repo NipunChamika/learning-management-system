@@ -13,13 +13,13 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { StudentsService } from './student.service';
+import { StudentService } from './student.service';
 import { CreateStudentInfoDto } from './dto/create-student-info.dto';
 import { UpdateStudentInfoDto } from './dto/update-student-info.dto';
 
-@Controller('students')
-export class StudentsController {
-  constructor(private studentsService: StudentsService) {}
+@Controller('student')
+export class StudentController {
+  constructor(private studentService: StudentService) {}
 
   @Post(':id')
   @UsePipes(new ValidationPipe())
@@ -28,10 +28,7 @@ export class StudentsController {
     @Body() createStudentInfoDto: CreateStudentInfoDto,
   ) {
     try {
-      await this.studentsService.createStudentInfo(
-        userId,
-        createStudentInfoDto,
-      );
+      await this.studentService.createStudentInfo(userId, createStudentInfoDto);
       return {
         status: 'Student profile created successfully',
         code: HttpStatus.CREATED,
@@ -53,13 +50,13 @@ export class StudentsController {
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
     @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
   ) {
-    return this.studentsService.getAllStudents(page, limit);
+    return this.studentService.getAllStudents(page, limit);
   }
 
   @Get(':id')
   async getStudentById(@Param('id', ParseIntPipe) studentId: number) {
     try {
-      return this.studentsService.getStudentById(studentId);
+      return this.studentService.getStudentById(studentId);
     } catch (error) {
       throw new HttpException(
         {
@@ -78,7 +75,7 @@ export class StudentsController {
     @Body() updateStudentInfoDto: UpdateStudentInfoDto,
   ) {
     try {
-      await this.studentsService.updateStudentInfo(
+      await this.studentService.updateStudentInfo(
         studentId,
         updateStudentInfoDto,
       );
@@ -101,7 +98,7 @@ export class StudentsController {
   @Delete(':id')
   async deleteStudent(@Param('id', ParseIntPipe) studentId: number) {
     try {
-      await this.studentsService.deleteStudent(studentId);
+      await this.studentService.deleteStudent(studentId);
       return {
         status: 'User deleted successfully',
         code: HttpStatus.OK,

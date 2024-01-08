@@ -13,19 +13,19 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ProgramsService } from './program.service';
+import { ProgramService } from './program.service';
 import { CreateProgramDto } from './dto/create-program.dto';
 import { UpdateProgramDto } from './dto/update-program.dto';
 
-@Controller('programs')
-export class ProgramsController {
-  constructor(private programsService: ProgramsService) {}
+@Controller('program')
+export class ProgramController {
+  constructor(private programService: ProgramService) {}
 
   @Post()
   @UsePipes(new ValidationPipe())
   async createProgram(@Body() createProgramDto: CreateProgramDto) {
     try {
-      await this.programsService.createProgram(createProgramDto);
+      await this.programService.createProgram(createProgramDto);
       return {
         status: 'Program created successfully',
         code: HttpStatus.CREATED,
@@ -46,13 +46,13 @@ export class ProgramsController {
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
     @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
   ) {
-    return this.programsService.getAllPrograms(page, limit);
+    return this.programService.getAllPrograms(page, limit);
   }
 
   @Get(':id')
   async getProgramById(@Param('id', ParseIntPipe) programId: number) {
     try {
-      return this.programsService.getProgramById(programId);
+      return this.programService.getProgramById(programId);
     } catch (error) {
       throw new HttpException(
         {
@@ -71,7 +71,7 @@ export class ProgramsController {
     @Body() updateProgramInfo: UpdateProgramDto,
   ) {
     try {
-      await this.programsService.updateProgram(programId, updateProgramInfo);
+      await this.programService.updateProgram(programId, updateProgramInfo);
       return {
         status: 'Program updated successfully',
         code: HttpStatus.OK,
@@ -90,7 +90,7 @@ export class ProgramsController {
   @Delete(':id')
   async deleteProgram(@Param('id', ParseIntPipe) programId: number) {
     try {
-      await this.programsService.deleteProgram(programId);
+      await this.programService.deleteProgram(programId);
       return {
         status: 'Program deleted successfully',
         code: HttpStatus.OK,

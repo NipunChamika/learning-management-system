@@ -7,7 +7,7 @@ import * as bcrypt from 'bcrypt';
 import { Student } from 'src/typeorm/entities/student.entity';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
