@@ -136,4 +136,41 @@ export class CourseService {
       );
     }
   }
+
+  async undoDeleteCourse(id: number) {
+    const course = await this.courseRepository.findOne({
+      where: { id },
+      relations: ['program', 'learningMaterials', 'assignments'],
+      withDeleted: true,
+    });
+
+    if (!course) {
+      throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
+    }
+
+    if (!course.deletedAt) {
+      throw new HttpException('Course is not deleted', HttpStatus.BAD_REQUEST);
+    }
+
+    if (course.program.deletedAt) {
+      throw new HttpException(
+        'Corresponding program is deleted',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    await this.courseRepository.restore(id);
+
+    if (course.learningMaterials && course.learningMaterials.length > 0) {
+      await this.learningMaterialRepository.restore(
+        course.learningMaterials.map((learningMaterial) => learningMaterial.id),
+      );
+    }
+
+    if (course.assignments && course.assignments.length > 0) {
+      await this.assignmentRepository.restore(
+        course.assignments.map((assignment) => assignment.id),
+      );
+    }
+  }
 }

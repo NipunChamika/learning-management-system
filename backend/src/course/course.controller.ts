@@ -115,4 +115,24 @@ export class CourseController {
       );
     }
   }
+
+  @Post(':id/undo-delete')
+  async undoDeleteCourse(@Param('id', ParseIntPipe) courseId: number) {
+    try {
+      await this.courseService.undoDeleteCourse(courseId);
+      return {
+        status: 'Course restored successfully',
+        code: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error restoring the course',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }
