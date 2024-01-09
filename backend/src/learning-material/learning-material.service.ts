@@ -116,4 +116,19 @@ export class LearningMaterialService {
       { ...updateLearningMaterialInfo },
     );
   }
+
+  async deleteLearningMaterial(id: number) {
+    const learningMaterial = await this.learningMaterialRepository.findOneBy({
+      id,
+    });
+
+    if (!learningMaterial) {
+      throw new HttpException(
+        'Learning material not found',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    await this.learningMaterialRepository.softDelete(id);
+  }
 }

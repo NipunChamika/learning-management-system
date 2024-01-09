@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
@@ -96,6 +97,31 @@ export class LearningMaterialController {
       throw new HttpException(
         {
           status: 'Error updating learning material',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Delete(':id')
+  async deleteLearningMaterial(
+    @Param('id', ParseIntPipe) learningMaterialId: number,
+  ) {
+    try {
+      await this.learningMaterialService.deleteLearningMaterial(
+        learningMaterialId,
+      );
+
+      return {
+        status: 'Learning material deleted successfully',
+        code: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error deleting learning material',
           code: HttpStatus.BAD_REQUEST,
           message: error.message,
         },
