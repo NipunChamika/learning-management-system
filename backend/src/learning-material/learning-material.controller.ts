@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
   UsePipes,
@@ -13,6 +14,7 @@ import {
 } from '@nestjs/common';
 import { LearningMaterialService } from './learning-material.service';
 import { CreateLearningMaterial } from './dto/create-learning-material.dto';
+import { UpdateLearningMaterialDto } from './dto/update-learning-material.dto';
 
 @Controller('learning-material')
 export class LearningMaterialController {
@@ -66,6 +68,34 @@ export class LearningMaterialController {
       throw new HttpException(
         {
           status: 'Error fetching learning material',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Patch(':id')
+  @UsePipes(new ValidationPipe())
+  async updateLearningMaterial(
+    @Param('id', ParseIntPipe) learningMaterialId: number,
+    @Body() updateLearningMaterialDto: UpdateLearningMaterialDto,
+  ) {
+    try {
+      await this.learningMaterialService.updateLearningMaterial(
+        learningMaterialId,
+        updateLearningMaterialDto,
+      );
+
+      return {
+        status: 'Learning material updated successfully',
+        code: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error updating learning material',
           code: HttpStatus.BAD_REQUEST,
           message: error.message,
         },

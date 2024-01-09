@@ -29,7 +29,7 @@ export type CreateProgramParams = {
 };
 
 export type UpdateProrgamParams = {
-  programName: string;
+  programName?: string;
 };
 
 export type CreateCourseParams = {
@@ -37,10 +37,15 @@ export type CreateCourseParams = {
 };
 
 export type UpdateCourseParams = {
-  courseName: string;
+  courseName?: string;
 };
 
 export type CreateLearningMaterialParams = {
   materialType: string;
+  resourcePath?: string;
+};
+
+export type UpdateLearningMaterialParams = {
+  materialType?: string;
   resourcePath?: string;
 };
