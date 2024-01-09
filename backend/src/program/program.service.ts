@@ -12,6 +12,17 @@ export class ProgramService {
   ) {}
 
   async createProgram(programDetails: CreateProgramParams) {
+    const existingProgram = await this.programRepository.findOne({
+      where: { programName: programDetails.programName },
+    });
+
+    if (existingProgram) {
+      throw new HttpException(
+        'Program with the same name already exists',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const newProgram = this.programRepository.create(programDetails);
 
     return this.programRepository.save(newProgram);

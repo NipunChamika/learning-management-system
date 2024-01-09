@@ -41,11 +41,18 @@ export type UpdateCourseParams = {
 };
 
 export type CreateLearningMaterialParams = {
+  learningMaterialTitle: string;
   materialType: string;
   resourcePath?: string;
 };
 
 export type UpdateLearningMaterialParams = {
+  learningMaterialTitle?: string;
   materialType?: string;
+  resourcePath?: string;
+};
+
+export type CreateAssignmentParams = {
+  assignmentTitle: string;
   resourcePath?: string;
 };

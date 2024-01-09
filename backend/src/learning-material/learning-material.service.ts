@@ -28,6 +28,21 @@ export class LearningMaterialService {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
 
+    const existingLearningMaterial =
+      await this.learningMaterialRepository.findOne({
+        where: {
+          learningMaterialTitle: learningMaterialDetails.learningMaterialTitle,
+          course: { id },
+        },
+      });
+
+    if (existingLearningMaterial) {
+      throw new HttpException(
+        'Learning material with the same title already exists in the course',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const newLearningMaterial = this.learningMaterialRepository.create({
       ...learningMaterialDetails,
       course: course,

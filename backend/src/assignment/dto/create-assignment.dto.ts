@@ -1,13 +1,9 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class CreateLearningMaterialDto {
+export class CreateAssignmentDto {
   @IsNotEmpty()
   @IsString()
-  learningMaterialTitle: string;
-
-  @IsNotEmpty()
-  @IsString()
-  materialType: string;
+  assignmentTitle: string;
 
   @IsOptional()
   @IsString()

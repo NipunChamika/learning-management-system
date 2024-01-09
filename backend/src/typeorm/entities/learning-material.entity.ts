@@ -5,6 +5,9 @@ import { Course } from './course.entity';
 @Entity({ name: 'learning_materials' })
 export class LearningMaterial extends BaseEntity {
   @Column()
+  learningMaterialTitle: string;
+
+  @Column()
   materialType: string;
 
   @Column({ nullable: true })

@@ -14,7 +14,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { LearningMaterialService } from './learning-material.service';
-import { CreateLearningMaterial } from './dto/create-learning-material.dto';
+import { CreateLearningMaterialDto } from './dto/create-learning-material.dto';
 import { UpdateLearningMaterialDto } from './dto/update-learning-material.dto';
 
 @Controller('learning-material')
@@ -23,14 +23,14 @@ export class LearningMaterialController {
 
   @Post(':id')
   @UsePipes(new ValidationPipe())
-  async createCourse(
+  async createLearningMaterial(
     @Param('id', ParseIntPipe) courseId: number,
-    @Body() createCourseDto: CreateLearningMaterial,
+    @Body() createLearningMaterialDto: CreateLearningMaterialDto,
   ) {
     try {
       await this.learningMaterialService.createLearningMaterial(
         courseId,
-        createCourseDto,
+        createLearningMaterialDto,
       );
 
       return {
@@ -50,7 +50,7 @@ export class LearningMaterialController {
   }
 
   @Get()
-  async getAllCourses(
+  async getAllLearningMaterials(
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
     @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
   ) {

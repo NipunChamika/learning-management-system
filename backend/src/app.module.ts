@@ -8,6 +8,7 @@ import { StudentModule } from './student/student.module';
 import { ProgramModule } from './program/program.module';
 import { CourseModule } from './course/course.module';
 import { LearningMaterialModule } from './learning-material/learning-material.module';
+import { AssignmentModule } from './assignment/assignment.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { LearningMaterialModule } from './learning-material/learning-material.mo
     ProgramModule,
     CourseModule,
     LearningMaterialModule,
+    AssignmentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

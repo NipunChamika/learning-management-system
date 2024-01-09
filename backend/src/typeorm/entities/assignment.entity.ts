@@ -4,6 +4,9 @@ import { Course } from './course.entity';
 
 @Entity({ name: 'assignments' })
 export class Assignment extends BaseEntity {
+  @Column()
+  assignmentTitle: string;
+
   @Column({ nullable: true })
   resourcePath: string;
 
