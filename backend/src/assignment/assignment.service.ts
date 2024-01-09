@@ -115,4 +115,14 @@ export class AssignmentService {
 
     await this.assignmentRepository.update({ id }, { ...updateAssignmentInfo });
   }
+
+  async deleteAssignment(id: number) {
+    const assignment = await this.assignmentRepository.findOneBy({ id });
+
+    if (!assignment) {
+      throw new HttpException('Assignment not found', HttpStatus.NOT_FOUND);
+    }
+
+    await this.assignmentRepository.softDelete(id);
+  }
 }

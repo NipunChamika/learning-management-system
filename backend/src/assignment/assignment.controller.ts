@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
@@ -92,6 +93,27 @@ export class AssignmentController {
       throw new HttpException(
         {
           status: 'Error updating assignment',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Delete(':id')
+  async deleteAssignment(@Param('id', ParseIntPipe) assignmentId: number) {
+    try {
+      await this.assignmentService.deleteAssignment(assignmentId);
+
+      return {
+        status: 'Assignment deleted successfully',
+        code: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error deleting assignment',
           code: HttpStatus.BAD_REQUEST,
           message: error.message,
         },
