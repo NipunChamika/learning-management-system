@@ -1,6 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Assignment } from 'src/typeorm/entities/assignment.entity';
 import { Course } from 'src/typeorm/entities/course.entity';
+import { LearningMaterial } from 'src/typeorm/entities/learning-material.entity';
 import { Program } from 'src/typeorm/entities/program.entity';
 import { CreateCourseParams, UpdateCourseParams } from 'src/utils/types';
 import { Repository } from 'typeorm';
@@ -13,6 +15,12 @@ export class CourseService {
 
     @InjectRepository(Program)
     private programRepository: Repository<Program>,
+
+    @InjectRepository(LearningMaterial)
+    private learningMaterialRepository: Repository<LearningMaterial>,
+
+    @InjectRepository(Assignment)
+    private assignmentRepository: Repository<Assignment>,
   ) {}
 
   async createCourse(id: number, courseDetails: CreateCourseParams) {
@@ -89,7 +97,10 @@ export class CourseService {
   }
 
   async updateCourse(id: number, updateCourseInfo: UpdateCourseParams) {
-    const course = await this.courseRepository.findOneBy({ id });
+    const course = await this.courseRepository.findOne({
+      where: { id },
+      relations: ['assignments'],
+    });
 
     if (!course) {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
@@ -99,12 +110,30 @@ export class CourseService {
   }
 
   async deleteCourse(id: number) {
-    const course = await this.courseRepository.findOneBy({ id });
+    const course = await this.courseRepository.findOne({
+      where: { id },
+      relations: ['learningMaterials', 'assignments'],
+    });
 
     if (!course) {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
 
+    // Soft delete the course
     await this.courseRepository.softDelete(id);
+
+    // Cascade soft delete to learning materials
+    if (course.learningMaterials && course.learningMaterials.length > 0) {
+      await this.learningMaterialRepository.softDelete(
+        course.learningMaterials.map((learningMaterial) => learningMaterial.id),
+      );
+    }
+
+    // Cascade soft delete to assignments
+    if (course.assignments && course.assignments.length > 0) {
+      await this.assignmentRepository.softDelete(
+        course.assignments.map((assignment) => assignment.id),
+      );
+    }
   }
 }
