@@ -147,4 +147,35 @@ export class LearningMaterialService {
 
     await this.learningMaterialRepository.softDelete(id);
   }
+
+  async undoDeleteLearningMaterial(id: number) {
+    const learningMaterial = await this.learningMaterialRepository.findOne({
+      where: { id },
+      relations: ['course'],
+      withDeleted: true,
+    });
+
+    if (!learningMaterial) {
+      throw new HttpException(
+        'Learning material not found',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (!learningMaterial.deletedAt) {
+      throw new HttpException(
+        'Learning material is not deleted',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (learningMaterial.course.deletedAt) {
+      throw new HttpException(
+        'Corresponding course is deleted',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    await this.learningMaterialRepository.restore(id);
+  }
 }

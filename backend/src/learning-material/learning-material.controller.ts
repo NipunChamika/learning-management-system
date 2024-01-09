@@ -129,4 +129,28 @@ export class LearningMaterialController {
       );
     }
   }
+
+  @Post(':id/undo-delete')
+  async undoDeleteLearningMaterial(
+    @Param('id', ParseIntPipe) learningMaterialId: number,
+  ) {
+    try {
+      await this.learningMaterialService.undoDeleteLearningMaterial(
+        learningMaterialId,
+      );
+      return {
+        status: 'Learning material restored successfully',
+        code: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error restoring the learning material',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }
