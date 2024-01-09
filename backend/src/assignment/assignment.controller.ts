@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
   UsePipes,
@@ -13,6 +14,7 @@ import {
 } from '@nestjs/common';
 import { AssignmentService } from './assignment.service';
 import { CreateAssignmentDto } from './dto/create-assignment.dto';
+import { UpdateAssignmentDto } from './dto/update-assignment.dto';
 
 @Controller('assignment')
 export class AssignmentController {
@@ -62,6 +64,34 @@ export class AssignmentController {
       throw new HttpException(
         {
           status: 'Error fetching assignment',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Patch(':id')
+  @UsePipes(new ValidationPipe())
+  async updateAssignment(
+    @Param('id', ParseIntPipe) assignmentId: number,
+    @Body() updateAssignmentDto: UpdateAssignmentDto,
+  ) {
+    try {
+      await this.assignmentService.updateAssignment(
+        assignmentId,
+        updateAssignmentDto,
+      );
+
+      return {
+        status: 'Assignment updated successfully',
+        code: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error updating assignment',
           code: HttpStatus.BAD_REQUEST,
           message: error.message,
         },

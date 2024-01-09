@@ -2,7 +2,10 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Assignment } from 'src/typeorm/entities/assignment.entity';
 import { Course } from 'src/typeorm/entities/course.entity';
-import { CreateAssignmentParams } from 'src/utils/types';
+import {
+  CreateAssignmentParams,
+  UpdateAssignmentParams,
+} from 'src/utils/types';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -98,5 +101,18 @@ export class AssignmentService {
     };
 
     return assignmentData;
+  }
+
+  async updateAssignment(
+    id: number,
+    updateAssignmentInfo: UpdateAssignmentParams,
+  ) {
+    const assignment = await this.assignmentRepository.findOneBy({ id });
+
+    if (!assignment) {
+      throw new HttpException('Assignment not found', HttpStatus.NOT_FOUND);
+    }
+
+    await this.assignmentRepository.update({ id }, { ...updateAssignmentInfo });
   }
 }

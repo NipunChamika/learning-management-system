@@ -56,3 +56,8 @@ export type CreateAssignmentParams = {
   assignmentTitle: string;
   resourcePath?: string;
 };
+
+export type UpdateAssignmentParams = {
+  assignmentTitle?: string;
+  resourcePath?: string;
+};
