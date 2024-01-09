@@ -53,4 +53,20 @@ export class AssignmentController {
   ) {
     return this.assignmentService.getAllAssignments(page, limit);
   }
+
+  @Get(':id')
+  async getAssignmentById(@Param('id', ParseIntPipe) assignmentId: number) {
+    try {
+      return this.assignmentService.getAssignmentById(assignmentId);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error fetching assignment',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }

@@ -78,4 +78,25 @@ export class AssignmentService {
       },
     };
   }
+
+  async getAssignmentById(id: number) {
+    const assignment = await this.assignmentRepository.findOne({
+      where: { id },
+      relations: ['course'],
+    });
+
+    if (!assignment) {
+      throw new HttpException('Assignment not found', HttpStatus.NOT_FOUND);
+    }
+
+    const assignmentData = {
+      id: assignment.id,
+      assignmentTitle: assignment.assignmentTitle,
+      resourcePath:
+        assignment.resourcePath !== null ? assignment.resourcePath : null,
+      courseId: assignment.course.id,
+    };
+
+    return assignmentData;
+  }
 }
