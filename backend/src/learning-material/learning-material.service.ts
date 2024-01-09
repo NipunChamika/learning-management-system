@@ -66,4 +66,30 @@ export class LearningMaterialService {
       },
     };
   }
+
+  async getLearningMaterialById(id: number) {
+    const learningMaterial = await this.learningMaterialRepository.findOne({
+      where: { id },
+      relations: ['course'],
+    });
+
+    if (!learningMaterial) {
+      throw new HttpException(
+        'Learning material not found',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const learningMaterialData = {
+      id: learningMaterial.id,
+      materialType: learningMaterial.materialType,
+      resourcePath:
+        learningMaterial.resourcePath !== null
+          ? learningMaterial.resourcePath
+          : null,
+      courseId: learningMaterial.course.id,
+    };
+
+    return learningMaterialData;
+  }
 }

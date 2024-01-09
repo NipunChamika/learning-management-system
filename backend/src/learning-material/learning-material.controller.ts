@@ -53,4 +53,24 @@ export class LearningMaterialController {
   ) {
     return this.learningMaterialService.getAllLearningMaterial(page, limit);
   }
+
+  @Get(':id')
+  async getLearningMaterialById(
+    @Param('id', ParseIntPipe) learningMaterialId: number,
+  ) {
+    try {
+      return this.learningMaterialService.getLearningMaterialById(
+        learningMaterialId,
+      );
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error fetching learning material',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }

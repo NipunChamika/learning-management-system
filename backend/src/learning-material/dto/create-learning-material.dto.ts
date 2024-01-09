@@ -1,11 +1,11 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateLearningMaterial {
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   materialType: string;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   resourcePath: string;
 }
