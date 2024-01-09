@@ -59,13 +59,14 @@ export class LearningMaterialService {
         skip: skip,
         take: limit,
         relations: ['course'],
-        select: ['id', 'materialType', 'resourcePath'],
+        select: ['id', 'learningMaterialTitle', 'materialType', 'resourcePath'],
       });
 
     const totalPages = Math.ceil(totalCount / limit);
 
     const learningMaterialData = learningMaterials.map((learningMaterial) => ({
       id: learningMaterial.id,
+      learningMaterialTitle: learningMaterial.learningMaterialTitle,
       materialType: learningMaterial.materialType,
       resourcePath: learningMaterial.resourcePath
         ? learningMaterial.resourcePath

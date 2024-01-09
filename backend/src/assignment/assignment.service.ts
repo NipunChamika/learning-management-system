@@ -46,4 +46,36 @@ export class AssignmentService {
 
     return this.assignmentRepository.save(newAssignment);
   }
+
+  async getAllAssignments(page: number, limit: number) {
+    const skip = (page - 1) * limit;
+
+    const [assignments, totalCount] =
+      await this.assignmentRepository.findAndCount({
+        skip: skip,
+        take: limit,
+        relations: ['course'],
+        select: ['id', 'assignmentTitle', 'resourcePath'],
+      });
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    const assignmentData = assignments.map((assignment) => ({
+      id: assignment.id,
+      assignmentTitle: assignment.assignmentTitle,
+      resourcePath: assignment.resourcePath ? assignment.resourcePath : null,
+      courseId: assignment.course.id,
+    }));
+
+    return {
+      data: assignmentData,
+      meta: {
+        page,
+        limit,
+        totalCount,
+        totalPages,
+        skip,
+      },
+    };
+  }
 }
