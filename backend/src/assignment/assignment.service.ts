@@ -125,4 +125,32 @@ export class AssignmentService {
 
     await this.assignmentRepository.softDelete(id);
   }
+
+  async undoDeleteAssignment(id: number) {
+    const assignment = await this.assignmentRepository.findOne({
+      where: { id },
+      relations: ['course'],
+      withDeleted: true,
+    });
+
+    if (!assignment) {
+      throw new HttpException('Assignment not found', HttpStatus.NOT_FOUND);
+    }
+
+    if (!assignment.deletedAt) {
+      throw new HttpException(
+        'Assignment is not deleted',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (assignment.course.deletedAt) {
+      throw new HttpException(
+        'Corresponding course is deleted',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    await this.assignmentRepository.restore(id);
+  }
 }

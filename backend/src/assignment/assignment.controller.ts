@@ -121,4 +121,24 @@ export class AssignmentController {
       );
     }
   }
+
+  @Post(':id/undo-delete')
+  async undoDeleteAssignment(@Param('id', ParseIntPipe) assignmentId: number) {
+    try {
+      await this.assignmentService.undoDeleteAssignment(assignmentId);
+      return {
+        status: 'Assignment restored successfully',
+        code: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error restoring the assignment',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }
