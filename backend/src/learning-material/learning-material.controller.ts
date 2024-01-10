@@ -18,12 +18,14 @@ import { LearningMaterialService } from './learning-material.service';
 import { CreateLearningMaterialDto } from './dto/create-learning-material.dto';
 import { UpdateLearningMaterialDto } from './dto/update-learning-material.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @Controller('learning-material')
 export class LearningMaterialController {
   constructor(private learningMaterialService: LearningMaterialService) {}
 
   @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Post(':id')
   @UsePipes(new ValidationPipe())
   async createLearningMaterial(
@@ -53,6 +55,7 @@ export class LearningMaterialController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Get()
   async getAllLearningMaterials(
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
@@ -61,6 +64,8 @@ export class LearningMaterialController {
     return this.learningMaterialService.getAllLearningMaterial(page, limit);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN', 'STUDENT')
   @Get(':id')
   async getLearningMaterialById(
     @Param('id', ParseIntPipe) learningMaterialId: number,
@@ -82,6 +87,7 @@ export class LearningMaterialController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Patch(':id')
   @UsePipes(new ValidationPipe())
   async updateLearningMaterial(
@@ -111,6 +117,7 @@ export class LearningMaterialController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Delete(':id')
   async deleteLearningMaterial(
     @Param('id', ParseIntPipe) learningMaterialId: number,
@@ -137,6 +144,7 @@ export class LearningMaterialController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Post(':id/undo-delete')
   async undoDeleteLearningMaterial(
     @Param('id', ParseIntPipe) learningMaterialId: number,

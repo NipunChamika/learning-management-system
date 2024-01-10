@@ -18,12 +18,14 @@ import { AssignmentService } from './assignment.service';
 import { CreateAssignmentDto } from './dto/create-assignment.dto';
 import { UpdateAssignmentDto } from './dto/update-assignment.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @Controller('assignment')
 export class AssignmentController {
   constructor(private assignmentService: AssignmentService) {}
 
   @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Post(':id')
   @UsePipes(new ValidationPipe())
   async createAssignment(
@@ -53,6 +55,7 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Get()
   async getAllAssignments(
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
@@ -62,6 +65,7 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN', 'STUDENT')
   @Get(':id')
   async getAssignmentById(@Param('id', ParseIntPipe) assignmentId: number) {
     try {
@@ -79,6 +83,7 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Patch(':id')
   @UsePipes(new ValidationPipe())
   async updateAssignment(
@@ -108,6 +113,7 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Delete(':id')
   async deleteAssignment(@Param('id', ParseIntPipe) assignmentId: number) {
     try {
@@ -130,6 +136,7 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Post(':id/undo-delete')
   async undoDeleteAssignment(@Param('id', ParseIntPipe) assignmentId: number) {
     try {

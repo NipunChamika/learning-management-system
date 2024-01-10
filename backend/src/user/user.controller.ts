@@ -18,11 +18,15 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @UseGuards(RolesGuard)
+  @Roles('ADMIN')
   @Post()
   @UsePipes(new ValidationPipe())
   async createUser(@Body() createUserDto: CreateUserDto) {
@@ -44,7 +48,8 @@ export class UserController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Get()
   async getAllUsers(
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
@@ -53,7 +58,8 @@ export class UserController {
     return this.userService.getAllUsers(page, limit);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Get(':id')
   async getUserById(@Param('id', ParseIntPipe) userId: number) {
     try {
@@ -69,7 +75,8 @@ export class UserController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Patch(':id')
   async updateUser(
     @Param('id', ParseIntPipe) userId: number,
@@ -92,7 +99,8 @@ export class UserController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Delete(':id')
   async deleteUser(@Param('id', ParseIntPipe) userId: number) {
     try {
@@ -113,7 +121,8 @@ export class UserController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @Post(':id/undo-delete')
   async undoDeleteUser(@Param('id', ParseIntPipe) userId: number) {
     try {

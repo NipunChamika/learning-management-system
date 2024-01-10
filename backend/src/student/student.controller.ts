@@ -18,12 +18,14 @@ import { StudentService } from './student.service';
 import { CreateStudentInfoDto } from './dto/create-student-info.dto';
 import { UpdateStudentInfoDto } from './dto/update-student-info.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @Controller('student')
 export class StudentController {
   constructor(private studentService: StudentService) {}
 
   @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Post(':id')
   @UsePipes(new ValidationPipe())
   async createStudentDetails(
@@ -49,6 +51,7 @@ export class StudentController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Get()
   async getAllStudents(
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
@@ -57,6 +60,8 @@ export class StudentController {
     return this.studentService.getAllStudents(page, limit);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN', 'STUDENT')
   @Get(':id')
   async getStudentById(@Param('id', ParseIntPipe) studentId: number) {
     try {
@@ -73,6 +78,7 @@ export class StudentController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Patch(':id')
   @UsePipes(new ValidationPipe())
   async updateStudentDetails(
@@ -101,6 +107,7 @@ export class StudentController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Delete(':id')
   async deleteStudent(@Param('id', ParseIntPipe) studentId: number) {
     try {
