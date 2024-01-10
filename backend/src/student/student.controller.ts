@@ -10,17 +10,20 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { CreateStudentInfoDto } from './dto/create-student-info.dto';
 import { UpdateStudentInfoDto } from './dto/update-student-info.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('student')
 export class StudentController {
   constructor(private studentService: StudentService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post(':id')
   @UsePipes(new ValidationPipe())
   async createStudentDetails(
@@ -45,6 +48,7 @@ export class StudentController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getAllStudents(
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
@@ -68,6 +72,7 @@ export class StudentController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @UsePipes(new ValidationPipe())
   async updateStudentDetails(
@@ -95,6 +100,7 @@ export class StudentController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async deleteStudent(@Param('id', ParseIntPipe) studentId: number) {
     try {

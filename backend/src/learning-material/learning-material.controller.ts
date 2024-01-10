@@ -10,17 +10,20 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { LearningMaterialService } from './learning-material.service';
 import { CreateLearningMaterialDto } from './dto/create-learning-material.dto';
 import { UpdateLearningMaterialDto } from './dto/update-learning-material.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('learning-material')
 export class LearningMaterialController {
   constructor(private learningMaterialService: LearningMaterialService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post(':id')
   @UsePipes(new ValidationPipe())
   async createLearningMaterial(
@@ -49,6 +52,7 @@ export class LearningMaterialController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getAllLearningMaterials(
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
@@ -77,6 +81,7 @@ export class LearningMaterialController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @UsePipes(new ValidationPipe())
   async updateLearningMaterial(
@@ -105,6 +110,7 @@ export class LearningMaterialController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async deleteLearningMaterial(
     @Param('id', ParseIntPipe) learningMaterialId: number,
@@ -130,6 +136,7 @@ export class LearningMaterialController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post(':id/undo-delete')
   async undoDeleteLearningMaterial(
     @Param('id', ParseIntPipe) learningMaterialId: number,

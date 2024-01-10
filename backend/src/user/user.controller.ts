@@ -10,12 +10,14 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -42,6 +44,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getAllUsers(
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
@@ -50,6 +53,7 @@ export class UserController {
     return this.userService.getAllUsers(page, limit);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getUserById(@Param('id', ParseIntPipe) userId: number) {
     try {
@@ -65,6 +69,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async updateUser(
     @Param('id', ParseIntPipe) userId: number,
@@ -87,6 +92,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async deleteUser(@Param('id', ParseIntPipe) userId: number) {
     try {
@@ -107,6 +113,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post(':id/undo-delete')
   async undoDeleteUser(@Param('id', ParseIntPipe) userId: number) {
     try {

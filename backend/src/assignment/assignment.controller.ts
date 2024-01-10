@@ -10,17 +10,20 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { AssignmentService } from './assignment.service';
 import { CreateAssignmentDto } from './dto/create-assignment.dto';
 import { UpdateAssignmentDto } from './dto/update-assignment.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('assignment')
 export class AssignmentController {
   constructor(private assignmentService: AssignmentService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post(':id')
   @UsePipes(new ValidationPipe())
   async createAssignment(
@@ -49,6 +52,7 @@ export class AssignmentController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getAllAssignments(
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
@@ -57,6 +61,7 @@ export class AssignmentController {
     return this.assignmentService.getAllAssignments(page, limit);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getAssignmentById(@Param('id', ParseIntPipe) assignmentId: number) {
     try {
@@ -73,6 +78,7 @@ export class AssignmentController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @UsePipes(new ValidationPipe())
   async updateAssignment(
@@ -101,6 +107,7 @@ export class AssignmentController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async deleteAssignment(@Param('id', ParseIntPipe) assignmentId: number) {
     try {
@@ -122,6 +129,7 @@ export class AssignmentController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post(':id/undo-delete')
   async undoDeleteAssignment(@Param('id', ParseIntPipe) assignmentId: number) {
     try {

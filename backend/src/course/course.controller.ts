@@ -10,17 +10,20 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { CourseService } from './course.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('course')
 export class CourseController {
   constructor(private courseService: CourseService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post(':id')
   @UsePipes(new ValidationPipe())
   async createCourse(
@@ -46,6 +49,7 @@ export class CourseController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getAllCourses(
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
@@ -70,6 +74,7 @@ export class CourseController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @UsePipes(new ValidationPipe())
   async updateCourse(
@@ -95,6 +100,7 @@ export class CourseController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async deleteCourse(@Param('id', ParseIntPipe) courseId: number) {
     try {
@@ -116,6 +122,7 @@ export class CourseController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post(':id/undo-delete')
   async undoDeleteCourse(@Param('id', ParseIntPipe) courseId: number) {
     try {
