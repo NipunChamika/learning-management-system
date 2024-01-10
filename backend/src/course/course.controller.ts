@@ -19,12 +19,13 @@ import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Controller('course')
 export class CourseController {
   constructor(private courseService: CourseService) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Post(':id')
   @UsePipes(new ValidationPipe())
@@ -51,7 +52,7 @@ export class CourseController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Get()
   async getAllCourses(
@@ -61,7 +62,7 @@ export class CourseController {
     return this.courseService.getAllCourses(page, limit);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN', 'STUDENT')
   @Get(':id')
   async getCourseById(@Param('id', ParseIntPipe) courseId: number) {
@@ -79,7 +80,7 @@ export class CourseController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Patch(':id')
   @UsePipes(new ValidationPipe())
@@ -106,7 +107,7 @@ export class CourseController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Delete(':id')
   async deleteCourse(@Param('id', ParseIntPipe) courseId: number) {
@@ -129,7 +130,7 @@ export class CourseController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Post(':id/undo-delete')
   async undoDeleteCourse(@Param('id', ParseIntPipe) courseId: number) {

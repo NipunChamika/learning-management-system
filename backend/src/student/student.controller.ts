@@ -19,12 +19,13 @@ import { CreateStudentInfoDto } from './dto/create-student-info.dto';
 import { UpdateStudentInfoDto } from './dto/update-student-info.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Controller('student')
 export class StudentController {
   constructor(private studentService: StudentService) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Post(':id')
   @UsePipes(new ValidationPipe())
@@ -50,7 +51,7 @@ export class StudentController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Get()
   async getAllStudents(
@@ -60,7 +61,7 @@ export class StudentController {
     return this.studentService.getAllStudents(page, limit);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN', 'STUDENT')
   @Get(':id')
   async getStudentById(@Param('id', ParseIntPipe) studentId: number) {
@@ -77,7 +78,7 @@ export class StudentController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Patch(':id')
   @UsePipes(new ValidationPipe())
@@ -106,7 +107,7 @@ export class StudentController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Delete(':id')
   async deleteStudent(@Param('id', ParseIntPipe) studentId: number) {

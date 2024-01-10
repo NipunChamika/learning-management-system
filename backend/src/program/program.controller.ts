@@ -19,12 +19,13 @@ import { CreateProgramDto } from './dto/create-program.dto';
 import { UpdateProgramDto } from './dto/update-program.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Controller('program')
 export class ProgramController {
   constructor(private programService: ProgramService) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Post()
   @UsePipes(new ValidationPipe())
@@ -46,7 +47,7 @@ export class ProgramController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Get()
   async getAllPrograms(
@@ -56,7 +57,7 @@ export class ProgramController {
     return this.programService.getAllPrograms(page, limit);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN', 'STUDENT')
   @Get(':id')
   async getProgramById(@Param('id', ParseIntPipe) programId: number) {
@@ -73,7 +74,7 @@ export class ProgramController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Patch(':id')
   @UsePipes(new ValidationPipe())
@@ -98,7 +99,7 @@ export class ProgramController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Delete(':id')
   async deleteProgram(@Param('id', ParseIntPipe) programId: number) {
