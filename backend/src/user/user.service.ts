@@ -5,6 +5,7 @@ import { CreateUserParams, UpdateUserParams } from 'src/utils/types';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Student } from 'src/typeorm/entities/student.entity';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class UserService {
@@ -14,6 +15,8 @@ export class UserService {
 
     @InjectRepository(Student)
     private studentRepository: Repository<Student>,
+
+    private mailService: MailService,
   ) {}
 
   async createUser(userDetails: CreateUserParams) {
@@ -131,9 +134,8 @@ export class UserService {
 
     await this.userRepository.save(user);
 
-    return {
-      id: user.id,
-      otp: user.otp,
-    };
+    const mailResponse = await this.mailService.sendOtpEmail(email, otp);
+
+    return mailResponse;
   }
 }

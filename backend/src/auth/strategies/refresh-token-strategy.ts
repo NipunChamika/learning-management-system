@@ -1,5 +1,8 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 export class RefreshJwtStrategy extends PassportStrategy(
   Strategy,
@@ -9,7 +12,7 @@ export class RefreshJwtStrategy extends PassportStrategy(
     super({
       jwtFromRequest: ExtractJwt.fromBodyField('refreshToken'),
       ignoreExpiration: false,
-      secretOrKey: `${process.env.SECRET_KEY}`,
+      secretOrKey: process.env.SECRET_KEY,
     });
   }
 
