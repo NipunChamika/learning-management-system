@@ -42,11 +42,10 @@ export class StudentController {
     } catch (error) {
       throw new HttpException(
         {
-          status: 'Error creating student profile',
-          code: HttpStatus.BAD_REQUEST,
-          message: error.message,
+          status: error.response || 'Error creating student profile',
+          code: error.status || HttpStatus.BAD_REQUEST,
         },
-        HttpStatus.BAD_REQUEST,
+        error.status || HttpStatus.BAD_REQUEST,
       );
     }
   }
@@ -58,7 +57,17 @@ export class StudentController {
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
     @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
   ) {
-    return this.studentService.getAllStudents(page, limit);
+    try {
+      return this.studentService.getAllStudents(page, limit);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: error.response || 'Error fetching all students',
+          code: error.status || HttpStatus.BAD_REQUEST,
+        },
+        error.status || HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -70,10 +79,10 @@ export class StudentController {
     } catch (error) {
       throw new HttpException(
         {
-          status: 'Student not found',
-          code: HttpStatus.NOT_FOUND,
+          status: error.response || 'Student not found',
+          code: error.status || HttpStatus.NOT_FOUND,
         },
-        HttpStatus.BAD_REQUEST,
+        error.status || HttpStatus.BAD_REQUEST,
       );
     }
   }
@@ -98,11 +107,10 @@ export class StudentController {
     } catch (error) {
       throw new HttpException(
         {
-          status: 'Error updating student profile',
-          code: HttpStatus.BAD_REQUEST,
-          message: error.message,
+          status: error.response || 'Error updating student profile',
+          code: error.status || HttpStatus.BAD_REQUEST,
         },
-        HttpStatus.BAD_REQUEST,
+        error.status || HttpStatus.BAD_REQUEST,
       );
     }
   }
@@ -120,10 +128,10 @@ export class StudentController {
     } catch (error) {
       throw new HttpException(
         {
-          status: 'User not found',
-          code: HttpStatus.BAD_REQUEST,
+          status: error.response || 'User not found',
+          code: error.status || HttpStatus.BAD_REQUEST,
         },
-        HttpStatus.BAD_REQUEST,
+        error.status || HttpStatus.BAD_REQUEST,
       );
     }
   }

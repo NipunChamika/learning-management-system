@@ -41,11 +41,10 @@ export class UserController {
     } catch (error) {
       throw new HttpException(
         {
-          status: 'Error creating user',
-          code: HttpStatus.BAD_REQUEST,
-          message: error.message,
+          status: error.response || 'Error creating user',
+          code: error.status || HttpStatus.BAD_REQUEST,
         },
-        HttpStatus.BAD_REQUEST,
+        error.status || HttpStatus.BAD_REQUEST,
       );
     }
   }
@@ -57,7 +56,17 @@ export class UserController {
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
     @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
   ) {
-    return this.userService.getAllUsers(page, limit);
+    try {
+      return this.userService.getAllUsers(page, limit);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: error.response || 'Error fetching all users',
+          code: error.status || HttpStatus.BAD_REQUEST,
+        },
+        error.status || HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -69,10 +78,10 @@ export class UserController {
     } catch (error) {
       throw new HttpException(
         {
-          status: 'User not found',
-          code: HttpStatus.NOT_FOUND,
+          status: error.response || 'Error fetching user',
+          code: error.status || HttpStatus.BAD_REQUEST,
         },
-        HttpStatus.NOT_FOUND,
+        error.status || HttpStatus.BAD_REQUEST,
       );
     }
   }
@@ -94,10 +103,10 @@ export class UserController {
     } catch (error) {
       throw new HttpException(
         {
-          status: 'User not found',
-          code: HttpStatus.NOT_FOUND,
+          status: error.response || 'Error updating user',
+          code: error.status || HttpStatus.BAD_REQUEST,
         },
-        HttpStatus.NOT_FOUND,
+        error.status || HttpStatus.BAD_REQUEST,
       );
     }
   }
@@ -115,11 +124,10 @@ export class UserController {
     } catch (error) {
       throw new HttpException(
         {
-          status: 'User not found',
-          code: HttpStatus.NOT_FOUND,
-          message: error.message,
+          status: error.response || 'Error deleting user',
+          code: error.status || HttpStatus.BAD_REQUEST,
         },
-        HttpStatus.NOT_FOUND,
+        error.status || HttpStatus.BAD_REQUEST,
       );
     }
   }
@@ -137,11 +145,10 @@ export class UserController {
     } catch (error) {
       throw new HttpException(
         {
-          status: 'Error restoring the user',
-          code: HttpStatus.BAD_REQUEST,
-          message: error.message,
+          status: error.response || 'Error restoring the user',
+          code: error.status || HttpStatus.BAD_REQUEST,
         },
-        HttpStatus.BAD_REQUEST,
+        error.status || HttpStatus.BAD_REQUEST,
       );
     }
   }
