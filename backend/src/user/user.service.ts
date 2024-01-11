@@ -1,7 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/typeorm/entities/user.entity';
-import { CreateUserParams, UpdateUserParams } from 'src/utils/types';
+import {
+  CreateUserParams,
+  ResetPasswordParams,
+  UpdateUserParams,
+} from 'src/utils/types';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Student } from 'src/typeorm/entities/student.entity';
@@ -137,5 +141,48 @@ export class UserService {
     const mailResponse = await this.mailService.sendOtpEmail(email, otp);
 
     return mailResponse;
+  }
+
+  async resetPassword(resetPasswordDetails: ResetPasswordParams) {
+    const user = await this.userRepository.findOne({
+      where: {
+        email: resetPasswordDetails.email,
+        otp: resetPasswordDetails.otp,
+        otpFlag: true,
+      },
+    });
+
+    if (!user) {
+      throw new HttpException(
+        'Password reset request not found or invalid OTP',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const expirationTime = +process.env.OTP_EXPIRATION;
+    const currentTime = new Date();
+    const otpRequestedTime = user.otpRequestedAt;
+
+    const timeDiff = currentTime.getTime() - otpRequestedTime.getTime();
+
+    if (timeDiff > expirationTime * 1000) {
+      user.otp = null;
+      user.otpFlag = false;
+
+      await this.userRepository.save(user);
+
+      throw new HttpException('OTP has expired', HttpStatus.GONE);
+    }
+
+    const hashedNewPassword = await bcrypt.hash(
+      resetPasswordDetails.newPassword,
+      10,
+    );
+
+    user.otp = null;
+    user.otpFlag = false;
+    user.password = hashedNewPassword;
+
+    await this.userRepository.save(user);
   }
 }

@@ -61,3 +61,9 @@ export type UpdateAssignmentParams = {
   assignmentTitle?: string;
   resourcePath?: string;
 };
+
+export type ResetPasswordParams = {
+  email: string;
+  otp: string;
+  newPassword: string;
+};

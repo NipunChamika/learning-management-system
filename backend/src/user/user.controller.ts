@@ -21,6 +21,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Controller('user')
 export class UserController {
@@ -159,6 +160,26 @@ export class UserController {
           message: error.message,
         },
         HttpStatus.NOT_FOUND,
+      );
+    }
+  }
+
+  @Post('reset-password')
+  @UsePipes(new ValidationPipe())
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    try {
+      await this.userService.resetPassword(resetPasswordDto);
+      return {
+        status: 'Password reset successfully',
+        code: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: error.response || 'Error resetting password',
+          code: error.status || HttpStatus.BAD_REQUEST,
+        },
+        error.status || HttpStatus.BAD_REQUEST,
       );
     }
   }
