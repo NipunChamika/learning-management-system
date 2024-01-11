@@ -112,4 +112,28 @@ export class UserService {
       await this.studentRepository.restore(user.student.id);
     }
   }
+
+  async forgotPassword(email: string) {
+    const user = await this.userRepository.findOne({
+      where: { email },
+      select: ['id', 'otp'],
+    });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    const otp = (Math.floor(Math.random() * 9000) + 1000).toString();
+
+    user.otpRequestedAt = new Date();
+    user.otp = otp;
+    user.otpFlag = true;
+
+    await this.userRepository.save(user);
+
+    return {
+      id: user.id,
+      otp: user.otp,
+    };
+  }
 }

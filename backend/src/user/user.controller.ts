@@ -20,6 +20,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
 
 @Controller('user')
 export class UserController {
@@ -78,6 +79,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Patch(':id')
+  @UsePipes(new ValidationPipe())
   async updateUser(
     @Param('id', ParseIntPipe) userId: number,
     @Body() updateUserDto: UpdateUserDto,
@@ -139,6 +141,24 @@ export class UserController {
           message: error.message,
         },
         HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Post('forgot-password')
+  @UsePipes(new ValidationPipe())
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    try {
+      const { email } = forgotPasswordDto;
+      return await this.userService.forgotPassword(email);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error finding user',
+          code: HttpStatus.NOT_FOUND,
+          message: error.message,
+        },
+        HttpStatus.NOT_FOUND,
       );
     }
   }
