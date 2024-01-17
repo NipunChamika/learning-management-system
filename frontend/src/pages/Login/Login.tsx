@@ -4,16 +4,23 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Divider,
   FormControl,
+  FormErrorMessage,
   FormLabel,
+  IconButton,
   Input,
+  InputGroup,
+  InputRightElement,
   Text,
 } from "@chakra-ui/react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { loginSchema } from "../../validation/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { useState } from "react";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
@@ -32,6 +39,8 @@ const Login = () => {
     formState: { errors },
   } = useForm<LoginFormData>({ resolver: zodResolver(loginSchema) });
 
+  const [show, setShow] = useState(false);
+
   const onSubmit = (data: LoginFormData) => {
     // console.log("Form Data: ", data);
 
@@ -47,34 +56,122 @@ const Login = () => {
       });
   };
 
+  const handleVisibility = () => setShow(!show);
+
   return (
     <>
       <Box h="100vh" display="flex" justifyContent="center" alignItems="center">
-        <Card minW="440px">
-          <CardHeader as="h1" fontSize="24px" textAlign="center" pb="0">
+        <Card minW="400px">
+          <CardHeader
+            as="h1"
+            fontSize="28"
+            fontWeight="600"
+            textAlign="center"
+            pb="0"
+          >
             Login
           </CardHeader>
           <CardBody>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <FormControl mb={4}>
-                <FormLabel htmlFor="email">Email</FormLabel>
-                <Input {...register("email")} type="email" id="email" />
-                {errors.email && <Text>{errors.email.message}</Text>}
-              </FormControl>
-              <FormControl>
-                <FormLabel htmlFor="password">Password</FormLabel>
+              <FormControl isInvalid={!!errors.email} mb={4}>
+                <FormLabel
+                  htmlFor="email"
+                  textColor="slategrey"
+                  mb={0}
+                  fontSize="14"
+                  fontWeight="400"
+                >
+                  Email
+                </FormLabel>
                 <Input
-                  {...register("password")}
-                  type="password"
-                  id="password"
+                  {...register("email")}
+                  id="email"
+                  // errorBorderColor="#c00"
                 />
-                {errors.password && <Text>{errors.password.message}</Text>}
+                <FormErrorMessage mt="1px">
+                  {errors.email && errors.email.message}
+                </FormErrorMessage>
               </FormControl>
-              <Button type="submit" colorScheme="blue" mt="5" w="100%">
+              <FormControl isInvalid={!!errors.password}>
+                <FormLabel
+                  htmlFor="password"
+                  textColor="slategrey"
+                  mb={0}
+                  fontSize="14"
+                  fontWeight="400"
+                >
+                  Password
+                </FormLabel>
+                <InputGroup>
+                  <Input
+                    {...register("password")}
+                    type={show ? "text" : "password"}
+                    id="password"
+                    fontSize="14px"
+                    // focusBorderColor="pink.400"
+                  />
+                  <InputRightElement>
+                    <IconButton
+                      variant="none"
+                      textColor="slategrey"
+                      aria-label="Show password"
+                      icon={show ? <ViewOffIcon /> : <ViewIcon />}
+                      onClick={handleVisibility}
+                    />
+                  </InputRightElement>
+                </InputGroup>
+                <FormErrorMessage mt="1px">
+                  {errors.password && errors.password.message}
+                </FormErrorMessage>
+              </FormControl>
+              <Box display="flex" alignItems="center" justifyContent="end">
+                <Button
+                  as="a"
+                  href="#"
+                  variant="link"
+                  color="#84a9ff"
+                  fontSize="12px"
+                  _hover={{ textDecoration: "none", color: "#608fff" }}
+                  pt="20px"
+                >
+                  Forgot password?
+                </Button>
+              </Box>
+              <Button
+                type="submit"
+                colorScheme="blue"
+                borderRadius={50}
+                py="3px"
+                mt="5"
+                w="100%"
+                fontSize="16px"
+                fontWeight="600"
+              >
                 Login
               </Button>
             </form>
           </CardBody>
+          <Box mx="20px">
+            <Divider />
+          </Box>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            py="20px"
+          >
+            <Text fontSize="14px">Need an account?&nbsp;</Text>
+            <Button
+              as="a"
+              href="#"
+              variant="link"
+              color="#84a9ff"
+              _hover={{ textDecoration: "none", color: "#608fff" }}
+              fontSize="14px"
+            >
+              Sign Up
+            </Button>
+          </Box>
         </Card>
       </Box>
     </>
