@@ -5,6 +5,7 @@ import { UserContext } from "./context/UserContext";
 import { useState } from "react";
 import Layout from "./layout/Layout";
 import EmailEntry from "./pages/EmailEntry/EmailEntry";
+import PasswordReset from "./pages/PasswordReset/PasswordReset";
 
 function App() {
   const router = createBrowserRouter([
@@ -20,6 +21,10 @@ function App() {
     {
       path: "/email",
       element: <EmailEntry />,
+    },
+    {
+      path: "/password-reset",
+      element: <PasswordReset />,
     },
   ]);
 
