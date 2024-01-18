@@ -1,28 +1,8 @@
-import { useEffect, useState } from "react";
-import { useUserContext } from "../../context/UserContext";
-import { useNavigate } from "react-router-dom";
 import { Box, Grid, GridItem, Show } from "@chakra-ui/react";
 import MenuBar from "../../components/MenuBar/MenuBar";
 import Profile from "../Profile/Profile";
 
 const Home = () => {
-  const { isLoggedIn } = useUserContext();
-
-  const navigate = useNavigate();
-  const [isCheckingAuth, setCheckingAuth] = useState(true);
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/login");
-    } else {
-      setCheckingAuth(false);
-    }
-  }, [isLoggedIn]);
-
-  if (isCheckingAuth) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <>
       <Grid
