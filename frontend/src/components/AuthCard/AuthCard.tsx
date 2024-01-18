@@ -13,9 +13,9 @@ import { ReactNode } from "react";
 interface Props {
   cardTitle: string;
   children: ReactNode;
-  footerText: string;
-  onFooterLinkClick: () => void;
-  footerLinkText: string;
+  footerText?: string;
+  onFooterLinkClick?: () => void;
+  footerLinkText?: string;
 }
 
 const AuthCard = ({
@@ -39,26 +39,30 @@ const AuthCard = ({
             {cardTitle}
           </CardHeader>
           <CardBody>{children}</CardBody>
-          <Box mx="20px">
-            <Divider />
-          </Box>
-          <Flex
-            fontSize="14px"
-            py="20px"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Text>{footerText}&nbsp;</Text>
-            <Button
-              variant="link"
-              color="#84a9ff"
-              _hover={{ textDecoration: "none", color: "#608fff" }}
-              fontSize="14px"
-              onClick={onFooterLinkClick}
-            >
-              {footerLinkText}
-            </Button>
-          </Flex>
+          {footerText && (
+            <>
+              <Box mx="20px">
+                <Divider />
+              </Box>
+              <Flex
+                fontSize="14px"
+                py="20px"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Text>{footerText}&nbsp;</Text>
+                <Button
+                  variant="link"
+                  color="#84a9ff"
+                  _hover={{ textDecoration: "none", color: "#608fff" }}
+                  fontSize="14px"
+                  onClick={onFooterLinkClick}
+                >
+                  {footerLinkText}
+                </Button>
+              </Flex>
+            </>
+          )}
         </Card>
       </Box>
     </>

@@ -3,6 +3,8 @@ import { createContext, useContext } from "react";
 interface UserContextInterface {
   isLoggedIn: boolean;
   setLoggedIn: (isLoggedIn: boolean) => void;
+  passwordResetEmail: { email: string };
+  setPasswordResetEmail: (passwordResetEmail: { email: string }) => void;
 }
 
 export const UserContext = createContext<UserContextInterface | undefined>(

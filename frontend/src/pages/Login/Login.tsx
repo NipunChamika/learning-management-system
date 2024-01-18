@@ -64,12 +64,7 @@ const Login = () => {
 
   return (
     <>
-      <AuthCard
-        cardTitle="Log in"
-        footerText="Need an account?"
-        footerLinkText="Sign Up"
-        onFooterLinkClick={() => navigate("/signup")}
-      >
+      <AuthCard cardTitle="Log in">
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl isInvalid={!!errors.email} mb={4}>
             <FormLabel

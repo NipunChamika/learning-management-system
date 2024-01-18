@@ -5,7 +5,7 @@ import { UserContext } from "./context/UserContext";
 import { useState } from "react";
 import Layout from "./layout/Layout";
 import EmailEntry from "./pages/EmailEntry/EmailEntry";
-import PasswordReset from "./pages/PasswordReset/PasswordReset";
+import ResetPassword from "./pages/ResetPassword/ResetPassword";
 
 function App() {
   const router = createBrowserRouter([
@@ -23,15 +23,23 @@ function App() {
       element: <EmailEntry />,
     },
     {
-      path: "/password-reset",
-      element: <PasswordReset />,
+      path: "/reset-password",
+      element: <ResetPassword />,
     },
   ]);
 
   const [isLoggedIn, setLoggedIn] = useState(false);
+  const [passwordResetEmail, setPasswordResetEmail] = useState({ email: "" });
 
   return (
-    <UserContext.Provider value={{ isLoggedIn, setLoggedIn }}>
+    <UserContext.Provider
+      value={{
+        isLoggedIn,
+        setLoggedIn,
+        passwordResetEmail,
+        setPasswordResetEmail,
+      }}
+    >
       <RouterProvider router={router} />
     </UserContext.Provider>
   );

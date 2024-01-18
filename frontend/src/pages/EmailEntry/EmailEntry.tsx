@@ -12,10 +12,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AuthCard from "../../components/AuthCard/AuthCard";
+import { useUserContext } from "../../context/UserContext";
 
 type EmailEntryFormData = z.infer<typeof emailSchema>;
 
 const EmailEntry = () => {
+  const { setPasswordResetEmail } = useUserContext();
+
   const {
     register,
     handleSubmit,
@@ -28,6 +31,8 @@ const EmailEntry = () => {
     axios
       .post("http://localhost:3000/user/forgot-password", data)
       .then((res) => {
+        navigate("/reset-password");
+        setPasswordResetEmail(data);
         console.log(res);
       })
       .catch((error) => {
@@ -72,7 +77,6 @@ const EmailEntry = () => {
             w="100%"
             fontSize="16px"
             fontWeight="600"
-            onClick={() => navigate("/password-reset")}
           >
             Next
           </Button>
