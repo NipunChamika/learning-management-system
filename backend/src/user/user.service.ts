@@ -23,10 +23,6 @@ export class UserService {
     private mailService: MailService,
   ) {}
 
-  private async handleError(message: string, status: HttpStatus) {
-    throw new HttpException(message, status);
-  }
-
   async createUser(userDetails: CreateUserParams) {
     const { password } = userDetails;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -66,7 +62,7 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
-      this.handleError('User not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
     const { password, otpFlag, otp, otpRequestedAt, ...userWithoutPassword } =
@@ -78,7 +74,7 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
-      this.handleError('User not found', HttpStatus.BAD_REQUEST);
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
     }
 
     await this.userRepository.update({ id }, { ...updateUserDetails });
@@ -92,7 +88,7 @@ export class UserService {
     // const userExists = await this.userRepository.count({ id }) > 0; More efficient than loading the entire user
 
     if (!user) {
-      this.handleError('User not found', HttpStatus.BAD_REQUEST);
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
     }
 
     if (user.student) {
@@ -110,11 +106,11 @@ export class UserService {
     });
 
     if (!user) {
-      this.handleError('User not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
     if (!user.deletedAt) {
-      this.handleError('User is not deleted', HttpStatus.BAD_REQUEST);
+      throw new HttpException('User is not deleted', HttpStatus.BAD_REQUEST);
     }
 
     await this.userRepository.restore(id);
@@ -131,7 +127,7 @@ export class UserService {
     });
 
     if (!user) {
-      this.handleError('User not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
     const otp = (Math.floor(Math.random() * 9000) + 1000).toString();
@@ -157,7 +153,7 @@ export class UserService {
     });
 
     if (!user) {
-      this.handleError(
+      throw new HttpException(
         'Password reset request not found or invalid OTP',
         HttpStatus.NOT_FOUND,
       );
@@ -175,7 +171,7 @@ export class UserService {
 
       await this.userRepository.save(user);
 
-      this.handleError('OTP has expired', HttpStatus.GONE);
+      throw new HttpException('OTP has expired', HttpStatus.GONE);
     }
 
     const hashedNewPassword = await bcrypt.hash(
