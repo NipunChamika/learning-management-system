@@ -134,13 +134,12 @@ const Login = () => {
               </FormControl>
               <Box display="flex" alignItems="center" justifyContent="end">
                 <Button
-                  as="a"
-                  href="#"
                   variant="link"
                   color="#84a9ff"
                   fontSize="12px"
                   _hover={{ textDecoration: "none", color: "#608fff" }}
                   pt="20px"
+                  onClick={() => navigate("/email")}
                 >
                   Forgot password?
                 </Button>
