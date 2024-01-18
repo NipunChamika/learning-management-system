@@ -1,10 +1,14 @@
-import { createContext, useContext } from "react";
+import { Dispatch, SetStateAction, createContext, useContext } from "react";
 
 interface UserContextInterface {
   isLoggedIn: boolean;
   setLoggedIn: (isLoggedIn: boolean) => void;
   passwordResetEmail: { email: string };
   setPasswordResetEmail: (passwordResetEmail: { email: string }) => void;
+  resendTimer: number;
+  setResendTimer: Dispatch<SetStateAction<number>>;
+  showResendOtp: boolean;
+  setShowResendOtp: (showResendOtp: boolean) => void;
 }
 
 export const UserContext = createContext<UserContextInterface | undefined>(

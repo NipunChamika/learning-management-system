@@ -30,6 +30,8 @@ function App() {
 
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [passwordResetEmail, setPasswordResetEmail] = useState({ email: "" });
+  const [resendTimer, setResendTimer] = useState(60);
+  const [showResendOtp, setShowResendOtp] = useState(false);
 
   return (
     <UserContext.Provider
@@ -38,6 +40,10 @@ function App() {
         setLoggedIn,
         passwordResetEmail,
         setPasswordResetEmail,
+        resendTimer,
+        setResendTimer,
+        showResendOtp,
+        setShowResendOtp,
       }}
     >
       <RouterProvider router={router} />
