@@ -20,11 +20,13 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useUserContext } from "../../context/UserContext";
 import { useEffect, useState } from "react";
+import useToastFunction from "../../hooks/useToastFunction";
 
 type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 
 const PasswordReset = () => {
-  const { passwordResetEmail, resetPassword } = useUserContext();
+  const { passwordResetEmail, resetPassword, sendOtp, setSendOtp } =
+    useUserContext();
 
   const {
     register,
@@ -37,6 +39,7 @@ const PasswordReset = () => {
   const navigate = useNavigate();
   const [timer, setTimer] = useState(60);
   const [showResendOtp, setShowResendOtp] = useState(false);
+  const toastFunction = useToastFunction();
 
   useEffect(() => {
     if (timer > 0) {
@@ -54,6 +57,19 @@ const PasswordReset = () => {
       navigate("/email");
     }
   }, [passwordResetEmail]);
+
+  useEffect(() => {
+    console.log("state: ", sendOtp);
+
+    if (sendOtp) {
+      toastFunction({
+        title: "OTP Sent",
+        description: "An OTP has been sent to your email",
+        status: "success",
+      });
+    }
+    setSendOtp(false);
+  }, [sendOtp]);
 
   const onSubmit = (data: ResetPasswordFormData) => {
     const { confirmNewPassword, ...otherData } = data;

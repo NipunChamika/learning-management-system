@@ -14,11 +14,13 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AuthCard from "../../components/AuthCard/AuthCard";
 import { useUserContext } from "../../context/UserContext";
+import useToastFunction from "../../hooks/useToastFunction";
 
 type EmailEntryFormData = z.infer<typeof emailSchema>;
 
 const EmailEntry = () => {
-  const { setPasswordResetEmail, setResetPassword } = useUserContext();
+  const { setPasswordResetEmail, setResetPassword, setSendOtp } =
+    useUserContext();
 
   const {
     register,
@@ -28,17 +30,29 @@ const EmailEntry = () => {
 
   const navigate = useNavigate();
 
+  const toastFunction = useToastFunction();
+
   const onSubmit = (data: EmailEntryFormData) => {
     axios
       .post("http://localhost:3000/user/forgot-password", data)
       .then((res) => {
         setResetPassword(true);
         navigate("/reset-password");
+        setSendOtp(true);
         setPasswordResetEmail(data);
         console.log(res);
       })
       .catch((error) => {
         console.log(error);
+        if (error.code === "ERR_NETWORK") {
+          toastFunction({
+            title: "Server Error",
+            status: "error",
+            description: "Please try again later.",
+          });
+        } else {
+          toastFunction({ title: "Bad Request", status: "error" });
+        }
       });
   };
 

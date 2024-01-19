@@ -11,6 +11,8 @@ interface UserContextInterface {
   setShowResendOtp: (showResendOtp: boolean) => void;
   resetPassword: boolean;
   setResetPassword: (resetPassword: boolean) => void;
+  sendOtp: boolean;
+  setSendOtp: (sendOtp: boolean) => void;
 }
 
 export const UserContext = createContext<UserContextInterface | undefined>(

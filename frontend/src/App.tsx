@@ -33,6 +33,7 @@ function App() {
   const [resendTimer, setResendTimer] = useState(60);
   const [showResendOtp, setShowResendOtp] = useState(false);
   const [resetPassword, setResetPassword] = useState(false);
+  const [sendOtp, setSendOtp] = useState(false);
 
   return (
     <UserContext.Provider
@@ -47,6 +48,8 @@ function App() {
         setShowResendOtp,
         resetPassword,
         setResetPassword,
+        sendOtp,
+        setSendOtp,
       }}
     >
       <RouterProvider router={router} />
