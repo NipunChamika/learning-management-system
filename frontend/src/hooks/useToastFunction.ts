@@ -16,6 +16,8 @@ const useToastFunction = () => {
     status,
     duration = 3000,
   }: toastFunctionParams) => {
+    toast.closeAll();
+
     toast({
       title: title,
       description: description,

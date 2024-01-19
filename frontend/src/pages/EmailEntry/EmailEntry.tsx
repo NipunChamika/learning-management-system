@@ -19,8 +19,7 @@ import useToastFunction from "../../hooks/useToastFunction";
 type EmailEntryFormData = z.infer<typeof emailSchema>;
 
 const EmailEntry = () => {
-  const { setPasswordResetEmail, setResetPassword, setSendOtp } =
-    useUserContext();
+  const { setPasswordResetEmail, setEmail, setSendOtp } = useUserContext();
 
   const {
     register,
@@ -36,7 +35,7 @@ const EmailEntry = () => {
     axios
       .post("http://localhost:3000/user/forgot-password", data)
       .then((res) => {
-        setResetPassword(true);
+        setEmail(true);
         navigate("/reset-password");
         setSendOtp(true);
         setPasswordResetEmail(data);
@@ -66,7 +65,7 @@ const EmailEntry = () => {
         bgColor="#f4f7fe"
       >
         <AuthCard
-          cardTitle="Email Verfication"
+          cardTitle="Email Verification"
           footerText="Remember the password?"
           footerLinkText="Log in"
           onFooterLinkClick={() => navigate("/login")}

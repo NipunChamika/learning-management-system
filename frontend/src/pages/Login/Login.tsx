@@ -15,10 +15,11 @@ import { z } from "zod";
 import { loginSchema } from "../../validation/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/UserContext";
 import AuthCard from "../../components/AuthCard/AuthCard";
+import useToastFunction from "../../hooks/useToastFunction";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
@@ -31,7 +32,7 @@ interface ResponseData {
 }
 
 const Login = () => {
-  const { setLoggedIn } = useUserContext();
+  const { setLoggedIn, isResetPassword, setResetPassword } = useUserContext();
 
   const {
     register,
@@ -42,6 +43,18 @@ const Login = () => {
   const [show, setShow] = useState(false);
 
   const navigate = useNavigate();
+
+  const toastFunction = useToastFunction();
+
+  useEffect(() => {
+    if (isResetPassword) {
+      toastFunction({
+        title: "Password reset successful",
+        status: "success",
+      });
+    }
+    setResetPassword(false);
+  });
 
   const onSubmit = (data: LoginFormData) => {
     // console.log("Form Data: ", data);

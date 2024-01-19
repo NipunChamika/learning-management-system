@@ -9,7 +9,10 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
+  IconButton,
   Input,
+  InputGroup,
+  InputRightElement,
   Text,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,11 +24,12 @@ import axios from "axios";
 import { useUserContext } from "../../context/UserContext";
 import { useEffect, useState } from "react";
 import useToastFunction from "../../hooks/useToastFunction";
+import { ViewOffIcon, ViewIcon } from "@chakra-ui/icons";
 
 type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 
 const PasswordReset = () => {
-  const { passwordResetEmail, resetPassword, sendOtp, setSendOtp } =
+  const { passwordResetEmail, isEmail, sendOtp, setSendOtp, setResetPassword } =
     useUserContext();
 
   const {
@@ -40,6 +44,8 @@ const PasswordReset = () => {
   const [timer, setTimer] = useState(60);
   const [showResendOtp, setShowResendOtp] = useState(false);
   const toastFunction = useToastFunction();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     if (timer > 0) {
@@ -53,10 +59,10 @@ const PasswordReset = () => {
   }, [timer]);
 
   useEffect(() => {
-    if (!resetPassword) {
+    if (!isEmail) {
       navigate("/email");
     }
-  }, [passwordResetEmail]);
+  }, [isEmail]);
 
   useEffect(() => {
     console.log("state: ", sendOtp);
@@ -81,11 +87,37 @@ const PasswordReset = () => {
     axios
       .post("http://localhost:3000/user/reset-password", payload)
       .then((res) => {
+        setResetPassword(true);
         navigate("/login");
         console.log(res);
       })
       .catch((error) => {
         console.log(error);
+        if (error.response.data.code === 410) {
+          toastFunction({
+            title: "OTP Expired",
+            description: "Please try again",
+            status: "error",
+          });
+        } else if (error.response.data.code === 404) {
+          toastFunction({
+            title: "Invalid OTP",
+            description: "Please enter a valid OTP",
+            status: "error",
+          });
+        } else if (error.code === "ERR_NETWORK") {
+          toastFunction({
+            title: "Server Error",
+            description: "Please try again later",
+            status: "error",
+          });
+        } else {
+          toastFunction({
+            title: "Error",
+            description: "Password reset failed",
+            status: "error",
+          });
+        }
       });
   };
 
@@ -95,10 +127,20 @@ const PasswordReset = () => {
       .then((res) => {
         setShowResendOtp(false);
         setTimer(60);
+        setSendOtp(true);
         console.log(res);
       })
       .catch((error) => {
         console.log(error);
+        if (error.code === "ERR_NETWORK") {
+          toastFunction({
+            title: "Server Error",
+            status: "error",
+            description: "Please try again later.",
+          });
+        } else {
+          toastFunction({ title: "Bad Request", status: "error" });
+        }
       });
   };
 
@@ -162,11 +204,22 @@ const PasswordReset = () => {
                 >
                   New Password
                 </FormLabel>
-                <Input
-                  {...register("newPassword")}
-                  id="newPassword"
-                  type="password"
-                />
+                <InputGroup>
+                  <Input
+                    {...register("newPassword")}
+                    id="newPassword"
+                    type={showPassword ? "text" : "password"}
+                  />
+                  <InputRightElement>
+                    <IconButton
+                      variant="none"
+                      textColor="slategrey"
+                      aria-label="Show password"
+                      icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                      onClick={() => setShowPassword(!showPassword)}
+                    />
+                  </InputRightElement>
+                </InputGroup>
                 <FormErrorMessage mt="1px">
                   {errors.newPassword && errors.newPassword.message}
                 </FormErrorMessage>
@@ -181,11 +234,26 @@ const PasswordReset = () => {
                 >
                   Confirm New Password
                 </FormLabel>
-                <Input
-                  {...register("confirmNewPassword")}
-                  id="confirmNewPassword"
-                  type="password"
-                />
+                <InputGroup>
+                  <Input
+                    {...register("confirmNewPassword")}
+                    id="confirmNewPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                  />
+                  <InputRightElement>
+                    <IconButton
+                      variant="none"
+                      textColor="slategrey"
+                      aria-label="Show confirm password"
+                      icon={
+                        showConfirmPassword ? <ViewOffIcon /> : <ViewIcon />
+                      }
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                    />
+                  </InputRightElement>
+                </InputGroup>
                 <FormErrorMessage mt="1px">
                   {errors.confirmNewPassword &&
                     errors.confirmNewPassword.message}
