@@ -32,6 +32,7 @@ function App() {
   const [passwordResetEmail, setPasswordResetEmail] = useState({ email: "" });
   const [resendTimer, setResendTimer] = useState(60);
   const [showResendOtp, setShowResendOtp] = useState(false);
+  const [resetPassword, setResetPassword] = useState(false);
 
   return (
     <UserContext.Provider
@@ -44,6 +45,8 @@ function App() {
         setResendTimer,
         showResendOtp,
         setShowResendOtp,
+        resetPassword,
+        setResetPassword,
       }}
     >
       <RouterProvider router={router} />

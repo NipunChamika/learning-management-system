@@ -64,85 +64,93 @@ const Login = () => {
 
   return (
     <>
-      <AuthCard cardTitle="Log in">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <FormControl isInvalid={!!errors.email} mb={4}>
-            <FormLabel
-              htmlFor="email"
-              textColor="slategrey"
-              mb={0}
-              fontSize="14"
-              fontWeight="400"
-            >
-              Email
-            </FormLabel>
-            <Input
-              {...register("email")}
-              id="email"
-              // errorBorderColor="#c00"
-            />
-            <FormErrorMessage mt="1px">
-              {errors.email && errors.email.message}
-            </FormErrorMessage>
-          </FormControl>
-          <FormControl isInvalid={!!errors.password}>
-            <FormLabel
-              htmlFor="password"
-              textColor="slategrey"
-              mb={0}
-              fontSize="14"
-              fontWeight="400"
-            >
-              Password
-            </FormLabel>
-            <InputGroup>
+      <Box
+        h="100vh"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        bgColor="#f4f7fe"
+      >
+        <AuthCard cardTitle="Log in">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <FormControl isInvalid={!!errors.email} mb={4}>
+              <FormLabel
+                htmlFor="email"
+                textColor="slategrey"
+                mb={0}
+                fontSize="14"
+                fontWeight="400"
+              >
+                Email
+              </FormLabel>
               <Input
-                {...register("password")}
-                type={show ? "text" : "password"}
-                id="password"
-                fontSize="14px"
-                // focusBorderColor="pink.400"
+                {...register("email")}
+                id="email"
+                // errorBorderColor="#c00"
               />
-              <InputRightElement>
-                <IconButton
-                  variant="none"
-                  textColor="slategrey"
-                  aria-label="Show password"
-                  icon={show ? <ViewOffIcon /> : <ViewIcon />}
-                  onClick={handleVisibility}
+              <FormErrorMessage mt="1px">
+                {errors.email && errors.email.message}
+              </FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={!!errors.password}>
+              <FormLabel
+                htmlFor="password"
+                textColor="slategrey"
+                mb={0}
+                fontSize="14"
+                fontWeight="400"
+              >
+                Password
+              </FormLabel>
+              <InputGroup>
+                <Input
+                  {...register("password")}
+                  type={show ? "text" : "password"}
+                  id="password"
+                  fontSize="14px"
+                  // focusBorderColor="pink.400"
                 />
-              </InputRightElement>
-            </InputGroup>
-            <FormErrorMessage mt="1px">
-              {errors.password && errors.password.message}
-            </FormErrorMessage>
-          </FormControl>
-          <Box display="flex" alignItems="center" justifyContent="end">
+                <InputRightElement>
+                  <IconButton
+                    variant="none"
+                    textColor="slategrey"
+                    aria-label="Show password"
+                    icon={show ? <ViewOffIcon /> : <ViewIcon />}
+                    onClick={handleVisibility}
+                  />
+                </InputRightElement>
+              </InputGroup>
+              <FormErrorMessage mt="1px">
+                {errors.password && errors.password.message}
+              </FormErrorMessage>
+            </FormControl>
+            <Box display="flex" alignItems="center" justifyContent="end">
+              <Button
+                variant="link"
+                color="#84a9ff"
+                fontSize="12px"
+                _hover={{ textDecoration: "none", color: "#608fff" }}
+                pt="20px"
+                onClick={() => navigate("/email")}
+              >
+                Forgot password?
+              </Button>
+            </Box>
             <Button
-              variant="link"
-              color="#84a9ff"
-              fontSize="12px"
-              _hover={{ textDecoration: "none", color: "#608fff" }}
-              pt="20px"
-              onClick={() => navigate("/email")}
+              type="submit"
+              colorScheme="blue"
+              borderRadius={50}
+              py="3px"
+              mt="5"
+              w="100%"
+              fontSize="16px"
+              fontWeight="600"
             >
-              Forgot password?
+              Login
             </Button>
-          </Box>
-          <Button
-            type="submit"
-            colorScheme="blue"
-            borderRadius={50}
-            py="3px"
-            mt="5"
-            w="100%"
-            fontSize="16px"
-            fontWeight="600"
-          >
-            Login
-          </Button>
-        </form>
-      </AuthCard>
+          </form>
+        </AuthCard>
+      </Box>
     </>
   );
 };

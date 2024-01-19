@@ -23,7 +23,8 @@ export const resetPasswordSchema = z
     otp: z
       .string()
       .min(1, { message: "OTP is required" })
-      .min(4, { message: "OTP must be of 4 digits" }),
+      .length(4, { message: "OTP must be of 4 digits" })
+      .regex(/^\d{4}$/, { message: "OTP must be a 4 digit number" }),
     newPassword: z
       .string()
       .min(1, { message: "New password is required" })

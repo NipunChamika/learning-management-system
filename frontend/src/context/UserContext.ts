@@ -9,6 +9,8 @@ interface UserContextInterface {
   setResendTimer: Dispatch<SetStateAction<number>>;
   showResendOtp: boolean;
   setShowResendOtp: (showResendOtp: boolean) => void;
+  resetPassword: boolean;
+  setResetPassword: (resetPassword: boolean) => void;
 }
 
 export const UserContext = createContext<UserContextInterface | undefined>(

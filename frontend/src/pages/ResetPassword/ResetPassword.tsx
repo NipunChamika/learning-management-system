@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 
 const PasswordReset = () => {
-  const { passwordResetEmail } = useUserContext();
+  const { passwordResetEmail, resetPassword } = useUserContext();
 
   const {
     register,
@@ -47,7 +47,13 @@ const PasswordReset = () => {
     } else {
       setShowResendOtp(true);
     }
-  });
+  }, [timer]);
+
+  useEffect(() => {
+    if (!resetPassword) {
+      navigate("/email");
+    }
+  }, [passwordResetEmail]);
 
   const onSubmit = (data: ResetPasswordFormData) => {
     const { confirmNewPassword, ...otherData } = data;
@@ -82,7 +88,13 @@ const PasswordReset = () => {
 
   return (
     <>
-      <Box h="100vh" display="flex" justifyContent="center" alignItems="center">
+      <Box
+        h="100vh"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        bgColor="#f4f7fe"
+      >
         <Card minW="400px">
           <CardHeader
             as="h1"
@@ -105,7 +117,21 @@ const PasswordReset = () => {
                 >
                   OTP
                 </FormLabel>
-                <Input {...register("otp")} id="otp" />
+                <Input
+                  {...register("otp", {
+                    onChange: (e) => {
+                      const numericValue = e.target.value.replace(
+                        /[^0-9]/g,
+                        ""
+                      );
+                      e.target.value = numericValue;
+                    },
+                    maxLength: 4,
+                  })}
+                  id="otp"
+                  maxLength={4}
+                  inputMode="numeric" // Mobile keyboards default to numeric input
+                />
                 <FormErrorMessage mt="1px">
                   {errors.otp && errors.otp.message}
                 </FormErrorMessage>
@@ -120,7 +146,11 @@ const PasswordReset = () => {
                 >
                   New Password
                 </FormLabel>
-                <Input {...register("newPassword")} id="newPassword" />
+                <Input
+                  {...register("newPassword")}
+                  id="newPassword"
+                  type="password"
+                />
                 <FormErrorMessage mt="1px">
                   {errors.newPassword && errors.newPassword.message}
                 </FormErrorMessage>
@@ -138,6 +168,7 @@ const PasswordReset = () => {
                 <Input
                   {...register("confirmNewPassword")}
                   id="confirmNewPassword"
+                  type="password"
                 />
                 <FormErrorMessage mt="1px">
                   {errors.confirmNewPassword &&
