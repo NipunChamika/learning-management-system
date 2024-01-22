@@ -10,17 +10,17 @@ const Layout = () => {
   const navigate = useNavigate();
   const [isCheckingAuth, setCheckingAuth] = useState(true);
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/login");
-    } else {
-      setCheckingAuth(false);
-    }
-  }, [isLoggedIn]);
+  // useEffect(() => {
+  //   if (!isLoggedIn) {
+  //     navigate("/login");
+  //   } else {
+  //     setCheckingAuth(false);
+  //   }
+  // }, [isLoggedIn]);
 
-  if (isCheckingAuth) {
-    return <div>Loading...</div>;
-  }
+  // if (isCheckingAuth) {
+  //   return <div>Loading...</div>;
+  // }
   return (
     <>
       <NavBar />
