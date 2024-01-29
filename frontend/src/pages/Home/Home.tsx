@@ -16,7 +16,7 @@ const Home = () => {
         }}
       >
         <Show above="lg">
-          <GridItem area="aside" paddingX={5}>
+          <GridItem area="aside">
             <MenuBar />
           </GridItem>
         </Show>
