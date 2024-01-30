@@ -1,4 +1,4 @@
-import { Box, Icon, Image, Text } from "@chakra-ui/react";
+import { Box, Image, Text } from "@chakra-ui/react";
 import profile from "../../assets/profile.svg";
 import programs from "../../assets/programs.svg";
 import courses from "../../assets/courses.svg";
@@ -55,6 +55,7 @@ const MenuBar = () => {
             borderColor: "#317CEC",
             ".programsIcon": { filter: "brightness(0) invert(1)" },
           }}
+          onClick={() => navigate("/")}
         >
           <Box display="flex" alignItems="center" gap="16px">
             <Image
