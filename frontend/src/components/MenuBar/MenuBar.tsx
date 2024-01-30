@@ -39,7 +39,9 @@ const MenuBar = () => {
               boxSize="26px"
               className="profileIcon"
             />
-            <Text fontSize="18px">Profile</Text>
+            <Text fontSize="18px" fontWeight="500">
+              Profile
+            </Text>
           </Box>
         </Box>
 
@@ -64,7 +66,9 @@ const MenuBar = () => {
               boxSize="26px"
               className="programsIcon"
             />
-            <Text fontSize="18px">Programs</Text>
+            <Text fontSize="18px" fontWeight="500">
+              Programs
+            </Text>
           </Box>
         </Box>
 
@@ -80,6 +84,7 @@ const MenuBar = () => {
             borderColor: "#317CEC",
             ".coursesIcon": { filter: "brightness(0) invert(1)" },
           }}
+          onClick={() => navigate("/courses")}
         >
           <Box display="flex" alignItems="center" gap="16px">
             <Image
@@ -88,7 +93,9 @@ const MenuBar = () => {
               boxSize="26px"
               className="coursesIcon"
             />
-            <Text fontSize="18px">Courses</Text>
+            <Text fontSize="18px" fontWeight="500">
+              Courses
+            </Text>
           </Box>
         </Box>
 
@@ -112,7 +119,9 @@ const MenuBar = () => {
               boxSize="26px"
               className="signOutIcon"
             />
-            <Text fontSize="18px">Sign Out</Text>
+            <Text fontSize="18px" fontWeight="500">
+              Sign Out
+            </Text>
           </Box>
         </Box>
         {/* <Box py="24px" px="32px" borderBottom="1px" borderColor="#F4F4F4">
