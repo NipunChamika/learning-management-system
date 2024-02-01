@@ -11,33 +11,40 @@ const Layout = () => {
   const navigate = useNavigate();
   const [isCheckingAuth, setCheckingAuth] = useState(true);
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/login");
-    } else {
-      setCheckingAuth(false);
-    }
-  }, [isLoggedIn]);
+  // useEffect(() => {
+  //   if (!isLoggedIn) {
+  //     navigate("/login");
+  //   } else {
+  //     setCheckingAuth(false);
+  //   }
+  // }, [isLoggedIn]);
 
-  if (isCheckingAuth) {
-    return <div>Loading...</div>;
-  }
+  // if (isCheckingAuth) {
+  //   return <div>Loading...</div>;
+  // }
 
   return (
     <>
       <Box display="flex" flexDirection="column" h="100vh">
         <NavBar />
         <Box display="flex" flex="1" overflow="hidden">
-          <Show above="lg">
-            <Box w="25%" h="100%" overflowY="auto">
-              <MenuBar />
-            </Box>
-          </Show>
-          <Box flex="1" p="24px" bgColor="#F4F4F4" pos="relative">
+          {/* <Show above="lg"> */}
+          <Box
+            w="20%"
+            h="100%"
+            overflowY="auto"
+            bgColor="bg-color"
+            borderRight="1px"
+            borderColor="border-color"
+          >
+            <MenuBar />
+          </Box>
+          {/* </Show> */}
+          <Box flex="1" p="24px" bgColor="bg-default" pos="relative">
             <Box
               flex="1"
               p="36px"
-              bgColor="white"
+              bgColor="bg-color"
               h="100%"
               overflowY="auto"
               borderRadius="8px"
