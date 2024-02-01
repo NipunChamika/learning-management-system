@@ -1,20 +1,25 @@
-import { Box, IconButton, Image, Text } from "@chakra-ui/react";
+import { Box, IconButton, Image, Text, useColorMode } from "@chakra-ui/react";
 import logo from "./../../assets/logo.svg";
-import dark from "../../assets/dark.svg";
+import darkIcon from "../../assets/dark.svg";
+import lightIcon from "../../assets/light.svg";
 import settings from "../../assets/settings.svg";
+import menu from "../../assets/menu.svg";
 
 const NavBar = () => {
+  const { toggleColorMode, colorMode } = useColorMode();
+
   return (
     <>
       <Box
         // bg="coral"
+        bg="bg-color"
         display="flex"
         justifyContent="space-between"
         alignItems="center"
         px="40px"
         py="24px"
         borderBottom="1px"
-        borderColor="#F4F4F4"
+        borderColor="border-color"
       >
         <Box display="flex" alignItems="center" gap="10px">
           <Image src={logo} alt="Logo" h="38px" w="50px" />
@@ -26,13 +31,33 @@ const NavBar = () => {
           </Text>
         </Box>
         <Box display="flex" alignItems="center" gap="24px">
-          <Box>
+          {/* <Box>
             <IconButton
-              icon={<Image src={dark} alt="Dark Mode" />}
+              icon={<Image src={menu} alt="Dark Mode" />}
               aria-label="Dark Mode"
               variant="ghost"
               isRound={true}
               _hover={{ bgColor: "#f9f6fd" }}
+              w="26px"
+              h="26px"
+              onClick={toggleColorMode}
+            /> */}
+          {/* <Image src={dark} alt="Logo" w="26px" h="26px" /> */}
+          {/* </Box> */}
+
+          <Box>
+            <IconButton
+              icon={
+                <Image
+                  src={colorMode === "light" ? darkIcon : lightIcon}
+                  alt="Dark Mode"
+                />
+              }
+              aria-label="Dark Mode"
+              variant="ghost"
+              isRound={true}
+              _hover={{ bgColor: "#f9f6fd" }}
+              onClick={toggleColorMode}
             />
             {/* <Image src={dark} alt="Logo" w="26px" h="26px" /> */}
           </Box>
