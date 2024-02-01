@@ -1,7 +1,7 @@
 import { extendTheme, ThemeConfig } from "@chakra-ui/react";
 
 const config: ThemeConfig = {
-  initialColorMode: "dark",
+  initialColorMode: "light",
 };
 
 const tokens = {
@@ -13,6 +13,8 @@ const tokens = {
       "text-color": "#1A2744",
       "low-text-color": "#978D8D",
       "menu-hover-bg": "#317CEC",
+      "menu-hover-text": "white",
+      "menu-hover-border": "#317CEC",
       "menu-active-bg": "#317CEC",
       "card-bg": "#FAFAFA",
     },
@@ -23,6 +25,8 @@ const tokens = {
       "text-color": "white",
       "low-text-color": "#978D8D",
       "menu-hover-bg": "#317CEC",
+      "menu-hover-text": "white",
+      "menu-hover-border": "#317CEC",
       "menu-active-bg": "#317CEC",
       "card-bg": "#232323",
     },
@@ -55,6 +59,14 @@ const semanticTokens = {
       default: tokens.colors.light["menu-hover-bg"],
       _dark: tokens.colors.dark["menu-hover-bg"],
     },
+    "menu-hover-text": {
+      default: tokens.colors.light["menu-hover-text"],
+      _dark: tokens.colors.dark["menu-hover-text"],
+    },
+    "menu-hover-border": {
+      default: tokens.colors.light["menu-hover-border"],
+      _dark: tokens.colors.dark["menu-hover-border"],
+    },
     "menu-active-bg": {
       default: tokens.colors.light["menu-active-bg"],
       _dark: tokens.colors.dark["menu-active-bg"],
@@ -73,11 +85,6 @@ const styles = {
     },
   },
 };
-
-// black: "#1A2744",
-//       white: "#FFFFFF",
-//       border: "#F4F4F4",
-//       primary: "#317CEC",
 
 const theme = extendTheme({ config, styles, semanticTokens });
 
