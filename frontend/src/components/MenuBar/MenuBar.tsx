@@ -1,9 +1,9 @@
-import { Box, Button, Image, Text, VStack, Icon } from "@chakra-ui/react";
-import profile from "../../assets/profile.svg";
-import programs from "../../assets/programs.svg";
-import courses from "../../assets/courses.svg";
-import signout from "../../assets/signout.svg";
+import { Box, Text, VStack } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { ProfileIcon } from "../../icons/ProfileIcon";
+import { CoursesIcon } from "../../icons/CoursesIcon";
+import { ProgramsIcon } from "../../icons/ProgramsIcon";
+import { SignoutIcon } from "../../icons/SignoutIcon";
 
 const MenuBar = () => {
   const navigate = useNavigate();
@@ -21,18 +21,19 @@ const MenuBar = () => {
             bgColor: "menu-hover-bg",
             color: "menu-hover-text",
             borderColor: "menu-hover-border",
-            ".profileIcon": { filter: "brightness(0) invert(1)" },
+            // ".profileIcon": { filter: "brightness(0) invert(1)" },
           }}
           onClick={() => navigate("/profile")}
         >
           <Box display="flex" alignItems="center" gap="16px">
-            <Image
+            {/* <Image
               src={profile}
               alt="Profile Icon"
               boxSize="26px"
               className="profileIcon"
-            />
+            /> */}
             {/* <Icon as={ProfileIcon} /> */}
+            <ProfileIcon boxSize="26px" />
             <Text fontSize="18px" fontWeight="500">
               Profile
             </Text>
@@ -78,18 +79,11 @@ const MenuBar = () => {
             bgColor: "menu-hover-bg",
             color: "menu-hover-text",
             borderColor: "menu-hover-border",
-            ".programsIcon": { filter: "brightness(0) invert(1)" },
           }}
           onClick={() => navigate("/")}
         >
           <Box display="flex" alignItems="center" gap="16px">
-            <Image
-              src={programs}
-              alt="Programs Icon"
-              boxSize="26px"
-              className="programsIcon"
-            />
-            {/* <Icon as={ProgramsIcon} /> */}
+            <ProgramsIcon boxSize="26px" />
             <Text fontSize="18px" fontWeight="500">
               Programs
             </Text>
@@ -106,18 +100,11 @@ const MenuBar = () => {
             bgColor: "menu-hover-bg",
             color: "menu-hover-text",
             borderColor: "menu-hover-border",
-            ".coursesIcon": { filter: "brightness(0) invert(1)" },
           }}
           onClick={() => navigate("/courses")}
         >
           <Box display="flex" alignItems="center" gap="16px">
-            <Image
-              src={courses}
-              alt="Courses Icon"
-              boxSize="26px"
-              className="coursesIcon"
-            />
-            {/* <Icon as={CoursesIcon} boxSize="26px" /> */}
+            <CoursesIcon boxSize="26px" />
             <Text fontSize="18px" fontWeight="500">
               Courses
             </Text>
@@ -134,17 +121,10 @@ const MenuBar = () => {
             bgColor: "menu-hover-bg",
             color: "menu-hover-text",
             borderColor: "menu-hover-border",
-            ".signOutIcon": { filter: "brightness(0) invert(1)" },
           }}
         >
           <Box display="flex" alignItems="center" gap="16px">
-            <Image
-              src={signout}
-              alt="Sign Out Icon"
-              boxSize="26px"
-              className="signOutIcon"
-            />
-            {/* <Icon as={SignoutIcon} boxSize="26px" /> */}
+            <SignoutIcon boxSize="26px" />
             <Text fontSize="18px" fontWeight="500">
               Sign Out
             </Text>
