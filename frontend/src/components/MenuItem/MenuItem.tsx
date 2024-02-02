@@ -1,5 +1,13 @@
-import { Box, ComponentWithAs, Icon, IconProps, Text } from "@chakra-ui/react";
+import {
+  Box,
+  ComponentWithAs,
+  Flex,
+  Icon,
+  IconProps,
+  Text,
+} from "@chakra-ui/react";
 import { To, useNavigate } from "react-router-dom";
+import { useUserContext } from "../../context/UserContext";
 
 interface Props {
   navigateTo?: To;
@@ -9,6 +17,7 @@ interface Props {
 
 const MenuItem = ({ icon, title, navigateTo }: Props) => {
   const navigate = useNavigate();
+  const { isMenuCollapse } = useUserContext();
 
   const handleClick = () => {
     navigateTo && navigate(navigateTo);
@@ -30,12 +39,21 @@ const MenuItem = ({ icon, title, navigateTo }: Props) => {
         }}
         onClick={handleClick}
       >
-        <Box display="flex" alignItems="center" gap="16px">
+        <Flex
+          display="flex"
+          alignItems="center"
+          gap="16px"
+          justifyContent={isMenuCollapse ? "center" : "flex-start"}
+        >
           <Icon as={icon} boxSize="26px" />
-          <Text fontSize="18px" fontWeight="500">
+          <Text
+            display={!isMenuCollapse ? "flex" : "none"}
+            fontSize="18px"
+            fontWeight="500"
+          >
             {title}
           </Text>
-        </Box>
+        </Flex>
       </Box>
     </>
   );

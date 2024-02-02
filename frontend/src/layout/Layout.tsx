@@ -6,7 +6,7 @@ import { Box, Show } from "@chakra-ui/react";
 import MenuBar from "../components/MenuBar/MenuBar";
 
 const Layout = () => {
-  const { isLoggedIn } = useUserContext();
+  const { isLoggedIn, isMenuCollapse } = useUserContext();
 
   const navigate = useNavigate();
   const [isCheckingAuth, setCheckingAuth] = useState(true);
@@ -28,18 +28,19 @@ const Layout = () => {
       <Box display="flex" flexDirection="column" h="100vh">
         <NavBar />
         <Box display="flex" flex="1" overflow="hidden">
-          {/* <Show above="lg"> */}
-          <Box
-            w="20%"
-            h="100%"
-            overflowY="auto"
-            bgColor="bg-color"
-            borderRight="1px"
-            borderColor="border-color"
-          >
-            <MenuBar />
-          </Box>
-          {/* </Show> */}
+          <Show above="lg">
+            <Box
+              w={isMenuCollapse ? "7%" : "20%"}
+              // w="20%"
+              h="100%"
+              overflowY="auto"
+              bgColor="bg-color"
+              borderRight="1px"
+              borderColor="border-color"
+            >
+              <MenuBar />
+            </Box>
+          </Show>
           <Box flex="1" p="24px" bgColor="bg-default" pos="relative">
             <Box
               flex="1"

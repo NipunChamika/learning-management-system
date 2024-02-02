@@ -3,9 +3,12 @@ import { DarkIcon } from "../../icons/DarkIcon";
 import { LightIcon } from "../../icons/LightIcon";
 import { SettingsIcon } from "../../icons/SettingsIcon";
 import { Logo } from "../../icons/Logo";
+import { MenuIcon } from "../../icons/MenuIcon";
+import { useUserContext } from "../../context/UserContext";
 
 const NavBar = () => {
   const { toggleColorMode, colorMode } = useColorMode();
+  const { isMenuCollapse, setMenuCollapse } = useUserContext();
 
   return (
     <>
@@ -28,7 +31,16 @@ const NavBar = () => {
             </Box>
           </Text>
         </Flex>
-        <Flex alignItems="center" gap="24px">
+        <Flex alignItems="center" gap="24px" justifyContent="center">
+          <IconButton
+            variant="ghost"
+            isRound={true}
+            _hover={{ bgColor: "#f9f6fd" }}
+            aria-label="Menu"
+            fontSize="26"
+            icon={<MenuIcon />}
+            onClick={() => setMenuCollapse(!isMenuCollapse)}
+          />
           <IconButton
             variant="ghost"
             isRound={true}

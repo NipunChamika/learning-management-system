@@ -11,6 +11,7 @@ function App() {
   const [isEmail, setEmail] = useState(false);
   const [sendOtp, setSendOtp] = useState(false);
   const [isResetPassword, setResetPassword] = useState(false);
+  const [isMenuCollapse, setMenuCollapse] = useState(false);
 
   return (
     <UserContext.Provider
@@ -29,6 +30,8 @@ function App() {
         setSendOtp,
         isResetPassword,
         setResetPassword,
+        isMenuCollapse,
+        setMenuCollapse,
       }}
     >
       <RouterProvider router={router} />

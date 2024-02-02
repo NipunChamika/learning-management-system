@@ -15,6 +15,8 @@ interface UserContextInterface {
   setSendOtp: (sendOtp: boolean) => void;
   isResetPassword: boolean;
   setResetPassword: (isResetPassword: boolean) => void;
+  isMenuCollapse: boolean;
+  setMenuCollapse: (isMenuCollapse: boolean) => void;
 }
 
 export const UserContext = createContext<UserContextInterface | undefined>(
