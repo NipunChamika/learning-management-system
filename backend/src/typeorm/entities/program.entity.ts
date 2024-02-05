@@ -5,6 +5,9 @@ import { Course } from './course.entity';
 
 @Entity({ name: 'programs' })
 export class Program extends BaseEntity {
+  @Column({ unique: true })
+  programCode: string;
+
   @Column()
   programName: string;
 

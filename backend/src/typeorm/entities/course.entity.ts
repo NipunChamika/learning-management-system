@@ -7,6 +7,9 @@ import { Assignment } from './assignment.entity';
 @Entity({ name: 'courses' })
 export class Course extends BaseEntity {
   @Column()
+  courseCode: string;
+
+  @Column()
   courseName: string;
 
   @ManyToOne(() => Program, (program) => program.courses)
