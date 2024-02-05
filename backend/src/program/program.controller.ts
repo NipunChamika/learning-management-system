@@ -119,21 +119,4 @@ export class ProgramController {
       );
     }
   }
-
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('ADMIN', 'STUDENT')
-  @Get('student/:id')
-  async getStudentPrograms(@Param('id', ParseIntPipe) studentId: number) {
-    try {
-      return this.programService.getStudentPrograms(studentId);
-    } catch (error) {
-      throw new HttpException(
-        {
-          status: 'Error fetching student enrolled programs',
-          code: HttpStatus.BAD_REQUEST,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-  }
 }

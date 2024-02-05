@@ -216,4 +216,24 @@ export class CourseService {
       );
     }
   }
+
+  async getProgramCourses(id: number) {
+    const program = await this.programRepository.findOne({
+      where: { id },
+      relations: ['courses'],
+    });
+
+    if (!program) {
+      throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      programId: program.id,
+      courses: program.courses.map((course) => ({
+        courseId: course.id,
+        courseName: course.courseName,
+        courseCode: course.courseCode,
+      })),
+    };
+  }
 }

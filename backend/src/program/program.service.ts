@@ -117,25 +117,4 @@ export class ProgramService {
 
     await this.programRepository.delete(id);
   }
-
-  async getStudentPrograms(id: number) {
-    const student = await this.studentRepository.findOne({
-      where: { id },
-      relations: ['programs'],
-    });
-
-    if (!student) {
-      throw new HttpException('Student not found', HttpStatus.NOT_FOUND);
-    }
-
-    // return student.programs;
-
-    return {
-      studentId: student.id,
-      programs: student.programs.map((program) => ({
-        programId: program.id,
-        programName: program.programName,
-      })),
-    };
-  }
 }

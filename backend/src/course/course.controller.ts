@@ -151,4 +151,22 @@ export class CourseController {
       );
     }
   }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN', 'STUDENT')
+  @Get('program/:id')
+  async getProgramCourses(@Param('id', ParseIntPipe) programId: number) {
+    try {
+      return this.courseService.getProgramCourses(programId);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error fetching courses in the program',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }
