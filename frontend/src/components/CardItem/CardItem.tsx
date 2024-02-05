@@ -5,9 +5,10 @@ interface Props {
   alt: string;
   code: string;
   name: string;
+  navigateTo: () => void;
 }
 
-const CardItem = ({ src, alt, code, name }: Props) => {
+const CardItem = ({ src, alt, code, name, navigateTo }: Props) => {
   return (
     <>
       <Card
@@ -18,6 +19,7 @@ const CardItem = ({ src, alt, code, name }: Props) => {
         cursor="pointer"
         _hover={{ transform: "scale(1.05)" }}
         transition="transform 0.3s ease-in-out"
+        onClick={navigateTo}
       >
         <Image
           src={src}
