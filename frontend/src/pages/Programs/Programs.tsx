@@ -30,6 +30,8 @@ const Programs = () => {
     },
   };
 
+  // TODO: Dynamically pass the studentId to the get request
+
   useEffect(() => {
     axios
       .get<ResponseData>("http://localhost:3000/program/student/3", config)
