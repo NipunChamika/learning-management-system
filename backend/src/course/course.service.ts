@@ -5,7 +5,7 @@ import { Course } from 'src/typeorm/entities/course.entity';
 import { LearningMaterial } from 'src/typeorm/entities/learning-material.entity';
 import { Program } from 'src/typeorm/entities/program.entity';
 import { CreateCourseParams, UpdateCourseParams } from 'src/utils/types';
-import { Repository } from 'typeorm';
+import { Equal, Not, Repository } from 'typeorm';
 
 @Injectable()
 export class CourseService {
@@ -30,13 +30,24 @@ export class CourseService {
       throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
     }
 
-    const existingCourse = await this.courseRepository.findOne({
+    const existingCourseName = await this.courseRepository.findOne({
       where: { courseName: courseDetails.courseName, program: { id: id } },
     });
 
-    if (existingCourse) {
+    if (existingCourseName) {
       throw new HttpException(
         'Course with the same name already exists in the program',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const existingCourseCode = await this.courseRepository.findOne({
+      where: { courseCode: courseDetails.courseCode, program: { id: id } },
+    });
+
+    if (existingCourseCode) {
+      throw new HttpException(
+        'Course with the same code already exists in the program',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -56,14 +67,15 @@ export class CourseService {
       skip: skip,
       take: limit,
       relations: ['program'],
-      select: ['id', 'courseName', 'program'],
+      select: ['id', 'courseName', 'courseCode', 'program'],
     });
 
     const totalPages = Math.ceil(totalCount / limit);
 
     const courseData = courses.map((course) => ({
-      id: course.id,
+      courseId: course.id,
       courseName: course.courseName,
+      courseCode: course.courseCode,
       programId: course.program ? course.program.id : null,
     }));
 
@@ -90,8 +102,9 @@ export class CourseService {
     }
 
     return {
-      id: course.id,
+      courseId: course.id,
       courseName: course.courseName,
+      courseCode: course.courseCode,
       programId: course.program ? course.program.id : null,
     };
   }
@@ -99,11 +112,41 @@ export class CourseService {
   async updateCourse(id: number, updateCourseInfo: UpdateCourseParams) {
     const course = await this.courseRepository.findOne({
       where: { id },
-      relations: ['assignments'],
+      relations: ['program'],
     });
 
     if (!course) {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
+    }
+
+    const existingCourseName = await this.courseRepository.findOne({
+      where: {
+        courseName: updateCourseInfo.courseName,
+        program: course.program,
+        id: Not(Equal(id)),
+      },
+    });
+
+    if (existingCourseName) {
+      throw new HttpException(
+        'Course with the same name already exists in the program',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const existingCourseCode = await this.courseRepository.findOne({
+      where: {
+        courseCode: updateCourseInfo.courseCode,
+        program: course.program,
+        id: Not(Equal(id)),
+      },
+    });
+
+    if (existingCourseCode) {
+      throw new HttpException(
+        'Course with the same code already exists in the program',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     await this.courseRepository.update({ id }, { ...updateCourseInfo });
