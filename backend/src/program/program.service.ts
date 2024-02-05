@@ -1,24 +1,39 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Program } from 'src/typeorm/entities/program.entity';
+import { Student } from 'src/typeorm/entities/student.entity';
 import { CreateProgramParams, UpdateProrgamParams } from 'src/utils/types';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 
 @Injectable()
 export class ProgramService {
   constructor(
     @InjectRepository(Program)
     private programRepository: Repository<Program>,
+
+    @InjectRepository(Student)
+    private studentRepository: Repository<Student>,
   ) {}
 
   async createProgram(programDetails: CreateProgramParams) {
-    const existingProgram = await this.programRepository.findOne({
+    const existingProgramName = await this.programRepository.findOne({
       where: { programName: programDetails.programName },
     });
 
-    if (existingProgram) {
+    if (existingProgramName) {
       throw new HttpException(
         'Program with the same name already exists',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const existingProgramCode = await this.programRepository.findOne({
+      where: { programCode: programDetails.programCode },
+    });
+
+    if (existingProgramCode) {
+      throw new HttpException(
+        'Program with the same code already exists',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -34,7 +49,7 @@ export class ProgramService {
     const [programs, totalCount] = await this.programRepository.findAndCount({
       skip: skip,
       take: limit,
-      select: ['id', 'programName'],
+      select: ['id', 'programName', 'programCode'],
     });
 
     const totalPages = Math.ceil(totalCount / limit);
@@ -68,6 +83,28 @@ export class ProgramService {
       throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
     }
 
+    const existingProgramName = await this.programRepository.findOne({
+      where: { id: Not(id), programName: updateProgramInfo.programName },
+    });
+
+    if (existingProgramName) {
+      throw new HttpException(
+        'Program with the same name already exists',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const existingProgramCode = await this.programRepository.findOne({
+      where: { id: Not(id), programCode: updateProgramInfo.programCode },
+    });
+
+    if (existingProgramCode) {
+      throw new HttpException(
+        'Program with the same code already exists',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     await this.programRepository.update({ id }, { ...updateProgramInfo });
   }
 
@@ -79,5 +116,26 @@ export class ProgramService {
     }
 
     await this.programRepository.delete(id);
+  }
+
+  async getStudentPrograms(id: number) {
+    const student = await this.studentRepository.findOne({
+      where: { id },
+      relations: ['programs'],
+    });
+
+    if (!student) {
+      throw new HttpException('Student not found', HttpStatus.NOT_FOUND);
+    }
+
+    // return student.programs;
+
+    return {
+      studentId: student.id,
+      programs: student.programs.map((program) => ({
+        programId: program.id,
+        programName: program.programName,
+      })),
+    };
   }
 }
