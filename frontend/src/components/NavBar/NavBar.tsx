@@ -35,7 +35,7 @@ const NavBar = () => {
           <IconButton
             variant="ghost"
             isRound={true}
-            _hover={{ bgColor: "#f9f6fd" }}
+            _hover={{ bg: "nav-btn-hover-bg" }}
             aria-label="Menu"
             fontSize="26"
             icon={<MenuIcon />}
@@ -44,7 +44,7 @@ const NavBar = () => {
           <IconButton
             variant="ghost"
             isRound={true}
-            _hover={{ bgColor: "#f9f6fd" }}
+            _hover={{ bg: "nav-btn-hover-bg" }}
             aria-label="Color Mode"
             fontSize="26"
             onClick={toggleColorMode}
@@ -53,7 +53,7 @@ const NavBar = () => {
           <IconButton
             variant="ghost"
             isRound={true}
-            _hover={{ bgColor: "#f9f6fd" }}
+            _hover={{ bg: "nav-btn-hover-bg" }}
             aria-label="Settings"
             fontSize="26"
             icon={<SettingsIcon />}

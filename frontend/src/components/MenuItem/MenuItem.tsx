@@ -50,6 +50,8 @@ const MenuItem = ({ icon, title, navigateTo }: Props) => {
             display={!isMenuCollapse ? "flex" : "none"}
             fontSize="18px"
             fontWeight="500"
+            whiteSpace="nowrap"
+            overflow="hidden"
           >
             {title}
           </Text>

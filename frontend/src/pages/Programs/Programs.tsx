@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, SimpleGrid, Text } from "@chakra-ui/react";
 import CardItem from "../../components/CardItem/CardItem";
 import Program1 from "../../assets/Program1.png";
 import Program2 from "../../assets/Program2.png";
@@ -10,11 +10,11 @@ import Program6 from "../../assets/Program6.png";
 const Programs = () => {
   return (
     <>
-      <Box>
+      <Box mb="24px">
         <Text fontSize="30px" fontWeight="500" color="text-color">
           Programs
         </Text>
-        <Box width="100%" h="1px" bgColor="border-color" my="16px" />
+        <Box width="100%" h="1px" bgColor="border-color" mt="16px" />
       </Box>
 
       <SimpleGrid columns={3} spacing={30} minChildWidth="275px">

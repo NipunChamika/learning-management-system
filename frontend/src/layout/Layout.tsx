@@ -37,17 +37,23 @@ const Layout = () => {
               bgColor="bg-color"
               borderRight="1px"
               borderColor="border-color"
+              transition="0.5s"
             >
               <MenuBar />
             </Box>
           </Show>
-          <Box flex="1" p="24px" bgColor="bg-default" pos="relative">
+          <Box
+            flex="1"
+            p="24px"
+            bgColor="bg-default"
+            pos="relative"
+            overflowY="auto"
+          >
             <Box
               flex="1"
               p="36px"
               bgColor="bg-color"
-              h="100%"
-              overflowY="auto"
+              h="auto"
               borderRadius="8px"
             >
               <Outlet />

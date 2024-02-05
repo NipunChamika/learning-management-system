@@ -12,6 +12,7 @@ const tokens = {
       "border-color": "#F4F4F4",
       "text-color": "#1A2744",
       "low-text-color": "#978D8D",
+      "nav-btn-hover-bg": "#f9f6fd",
       "menu-hover-bg": "#317CEC",
       "menu-hover-text": "white",
       "menu-hover-border": "#317CEC",
@@ -24,6 +25,7 @@ const tokens = {
       "border-color": "#373434",
       "text-color": "white",
       "low-text-color": "#978D8D",
+      "nav-btn-hover-bg": "#4C4C4C",
       "menu-hover-bg": "#317CEC",
       "menu-hover-text": "white",
       "menu-hover-border": "#317CEC",
@@ -54,6 +56,10 @@ const semanticTokens = {
     "low-text-color": {
       default: tokens.colors.light["low-text-color"],
       _dark: tokens.colors.dark["low-text-color"],
+    },
+    "nav-btn-hover-bg": {
+      default: tokens.colors.light["nav-btn-hover-bg"],
+      _dark: tokens.colors.dark["nav-btn-hover-bg"],
     },
     "menu-hover-bg": {
       default: tokens.colors.light["menu-hover-bg"],

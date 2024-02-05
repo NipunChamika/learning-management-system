@@ -10,8 +10,23 @@ interface Props {
 const CardItem = ({ src, alt, code, name }: Props) => {
   return (
     <>
-      <Card m={0} p={0} borderRadius="8px" bg="card-bg">
-        <Image src={src} alt={alt} borderTopRadius="8px" h="180px" />
+      <Card
+        m={0}
+        p={0}
+        borderRadius="8px"
+        bg="card-bg"
+        cursor="pointer"
+        _hover={{ transform: "scale(1.05)" }}
+        transition="transform 0.3s ease-in-out"
+      >
+        <Image
+          src={src}
+          alt={alt}
+          borderTopRadius="8px"
+          h="180px"
+          objectFit="cover"
+          width="100%"
+        />
         <CardBody>
           <Stack>
             <Text fontSize="15px" color="low-text-color" fontWeight="500">
