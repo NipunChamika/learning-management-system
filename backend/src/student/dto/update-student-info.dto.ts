@@ -1,11 +1,12 @@
-import { IsBoolean, IsOptional } from 'class-validator';
+import { IsArray, IsBoolean, IsInt, IsOptional } from 'class-validator';
 
 export class UpdateStudentInfoDto {
-  // @IsOptional()
-  // @IsString()
-  // programEnrolled?: string;
-
   @IsOptional()
   @IsBoolean()
   passedAL?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @IsInt({ each: true })
+  programIds?: number[];
 }

@@ -106,13 +106,29 @@ export class StudentService {
     id: number,
     updateStudentInfo: UpdateStudentInfoParams,
   ) {
-    const student = await this.studentRepository.findOneBy({ id });
+    const student = await this.studentRepository.findOne({
+      where: { id },
+      relations: ['programs'],
+    });
 
     if (!student) {
       throw new HttpException('Student not found', HttpStatus.BAD_REQUEST);
     }
 
-    await this.studentRepository.update({ id }, { ...updateStudentInfo });
+    if (updateStudentInfo.programIds) {
+      const programs = await this.programRepository.findBy({
+        id: In(updateStudentInfo.programIds),
+      });
+      student.programs = programs;
+    }
+
+    if (updateStudentInfo.hasOwnProperty('passedAL')) {
+      student.passedAL = updateStudentInfo.passedAL;
+    }
+
+    // await this.studentRepository.update({ id }, { ...updateStudentInfo });
+
+    await this.studentRepository.save(student);
   }
 
   async deleteStudent(id: number) {
