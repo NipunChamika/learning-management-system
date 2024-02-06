@@ -6,6 +6,7 @@ import Login from "./pages/Login/Login";
 import EmailEntry from "./pages/EmailEntry/EmailEntry";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import Courses from "./pages/Courses/Courses";
+import CourseDashboard from "./pages/CourseDashboard/CourseDashboard";
 
 const router = createBrowserRouter([
   {
@@ -14,7 +15,12 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Programs /> },
       { path: "/profile", element: <Profile /> },
-      { path: "/courses", element: <Courses /> },
+      {
+        path: "/courses",
+        element: <Courses />,
+        children: [{ path: ":courseCode", element: <CourseDashboard /> }],
+      },
+      { path: "/course-dashboard", element: <CourseDashboard /> },
     ],
   },
   {

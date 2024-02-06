@@ -53,7 +53,7 @@ const Layout = () => {
               flex="1"
               p="36px"
               bgColor="bg-color"
-              h="auto"
+              h="100%"
               borderRadius="8px"
             >
               <Outlet />

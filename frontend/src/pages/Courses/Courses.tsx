@@ -1,7 +1,7 @@
 import { Box, SimpleGrid, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import CardItem from "../../components/CardItem/CardItem";
 import Course1 from "../../assets/Program3.png";
 
@@ -25,7 +25,7 @@ const Courses = () => {
     const config = {
       headers: {
         Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNzE0Mjk0MSwiZXhwIjoxNzA3MTQ2NTQxfQ.j4WmwmhgFVVm2s_Bt5QSzbb89gWDJwZKx69YZLGl_64",
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNzIwMzgyNSwiZXhwIjoxNzA3MjA3NDI1fQ.RCgX6fwU0R3t2zcKvJGzDIDi_sE0iibBkDc_XoncjhI",
       },
     };
 
@@ -43,8 +43,11 @@ const Courses = () => {
       });
   }, []);
 
-  const handleNavigate = () => {
+  const navigate = useNavigate();
+
+  const handleNavigate = (courseCode: string) => {
     // TODO: Navigate to Course Page with courseId
+    navigate(`/courses/${courseCode}`);
   };
 
   return (
@@ -64,7 +67,7 @@ const Courses = () => {
             alt={`Course ${course.courseId}`}
             code={course.courseCode}
             name={course.courseName}
-            navigateTo={() => handleNavigate()}
+            navigateTo={() => handleNavigate(course.courseCode)}
           />
         ))}
       </SimpleGrid>

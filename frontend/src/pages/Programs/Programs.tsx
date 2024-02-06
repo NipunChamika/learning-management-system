@@ -26,7 +26,7 @@ const Programs = () => {
   const config = {
     headers: {
       Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNzE0Mjk0MSwiZXhwIjoxNzA3MTQ2NTQxfQ.j4WmwmhgFVVm2s_Bt5QSzbb89gWDJwZKx69YZLGl_64",
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNzIwMzgyNSwiZXhwIjoxNzA3MjA3NDI1fQ.RCgX6fwU0R3t2zcKvJGzDIDi_sE0iibBkDc_XoncjhI",
     },
   };
 
