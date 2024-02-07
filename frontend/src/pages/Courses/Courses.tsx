@@ -25,7 +25,7 @@ const Courses = () => {
     const config = {
       headers: {
         Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNzIwMzgyNSwiZXhwIjoxNzA3MjA3NDI1fQ.RCgX6fwU0R3t2zcKvJGzDIDi_sE0iibBkDc_XoncjhI",
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNzI3NjMwNywiZXhwIjoxNzA3Mjc5OTA3fQ.9BHiLD2OX6PlMhJ4f5VFvljEeTsmAGhruy-z4nfeOGk",
       },
     };
 

@@ -1,18 +1,5 @@
-import {
-  VStack,
-  Text,
-  Box,
-  HStack,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionIcon,
-  AccordionPanel,
-  Flex,
-} from "@chakra-ui/react";
-import { LearningMaterialIcon } from "../../icons/LearningMaterialIcon";
-import { PdfIcon } from "../../icons/PdfIcon";
-import { DownloadIcon } from "../../icons/DownloadIcon";
+import { VStack, Text, Box, HStack, Accordion } from "@chakra-ui/react";
+import CourseAccordion from "../../components/Accordion/CourseAccordion";
 
 const CourseDashboard = () => {
   return (
@@ -31,46 +18,27 @@ const CourseDashboard = () => {
 
       <Box mt={6}>
         <Accordion allowMultiple>
-          <AccordionItem
-            border="1px"
-            borderColor="border-color"
-            borderRadius="8px"
-          >
-            <h2>
-              <AccordionButton
-                px="24px"
-                py="20px"
-                bg="bg-default"
-                borderRadius="8px"
-                borderColor="border-color"
-                _expanded={{ borderBottom: "1px", borderColor: "border-color" }}
-                fontSize="22px"
-                fontWeight="500"
-              >
-                <Flex flex="1" textAlign="left" alignItems="center" gap="12px">
-                  <LearningMaterialIcon boxSize="56px" />
-                  <Text>Learning Materials</Text>
-                </Flex>
-                <AccordionIcon />
-              </AccordionButton>
-            </h2>
-            <AccordionPanel px="64px" py="48px">
-              <HStack
-                align="center"
-                borderBottom="1px"
-                borderColor="border-color"
-                pb="10px"
-              >
-                <Flex flex="1" gap="8px">
-                  <PdfIcon boxSize="24px" />
-                  <Text fontSize="16px" fontWeight="400">
-                    Week01_OOP.pdf
-                  </Text>
-                </Flex>
-                <DownloadIcon boxSize="24px" />
-              </HStack>
-            </AccordionPanel>
-          </AccordionItem>
+          <CourseAccordion
+            learningMaterials={[
+              { id: 1, panelTitle: "Week01_OOP.pdf" },
+              { id: 2, panelTitle: "Week02_OOP.pdf" },
+            ]}
+          />
+
+          <CourseAccordion
+            assignments={[
+              {
+                id: 1,
+                panelTitle: "Coursework 1 Submission",
+                dueDate: "07/02/2024, 13.00",
+              },
+              {
+                id: 1,
+                panelTitle: "Coursework 2 Submission",
+                dueDate: "20/03/2024, 13.00",
+              },
+            ]}
+          />
         </Accordion>
       </Box>
     </>
