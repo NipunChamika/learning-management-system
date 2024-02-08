@@ -8,4 +8,12 @@ export class CreateAssignmentDto {
   @IsOptional()
   @IsString()
   resourcePath: string;
+
+  @IsOptional()
+  @IsString()
+  description: string;
+
+  @IsNotEmpty()
+  @IsString()
+  dueDate: Date;
 }

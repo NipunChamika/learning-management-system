@@ -5,6 +5,7 @@ dotenv.config();
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'mysql',
+  timezone: 'Z',
   host: process.env.MYSQL_HOST,
   port: +process.env.MYSQL_PORT,
   username: process.env.MYSQL_USERNAME,

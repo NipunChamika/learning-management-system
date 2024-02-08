@@ -157,4 +157,22 @@ export class AssignmentController {
       );
     }
   }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN', 'STUDENT')
+  @Get('course/:id')
+  async getCourseAssignments(@Param('id', ParseIntPipe) courseId: number) {
+    try {
+      return this.assignmentService.getCourseAssignments(courseId);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error fetching course assignments',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }

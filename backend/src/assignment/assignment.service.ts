@@ -58,7 +58,13 @@ export class AssignmentService {
         skip: skip,
         take: limit,
         relations: ['course'],
-        select: ['id', 'assignmentTitle', 'resourcePath'],
+        select: [
+          'id',
+          'assignmentTitle',
+          'resourcePath',
+          'description',
+          'dueDate',
+        ],
       });
 
     const totalPages = Math.ceil(totalCount / limit);
@@ -67,6 +73,8 @@ export class AssignmentService {
       id: assignment.id,
       assignmentTitle: assignment.assignmentTitle,
       resourcePath: assignment.resourcePath ? assignment.resourcePath : null,
+      description: assignment.description ? assignment.description : null,
+      dueDate: assignment.dueDate,
       courseId: assignment.course.id,
     }));
 
@@ -97,6 +105,9 @@ export class AssignmentService {
       assignmentTitle: assignment.assignmentTitle,
       resourcePath:
         assignment.resourcePath !== null ? assignment.resourcePath : null,
+      description:
+        assignment.description !== null ? assignment.description : null,
+      dueDate: assignment.dueDate,
       courseId: assignment.course.id,
     };
 
@@ -152,5 +163,29 @@ export class AssignmentService {
     }
 
     await this.assignmentRepository.restore(id);
+  }
+
+  async getCourseAssignments(id: number) {
+    const course = await this.courseRepository.findOne({
+      where: { id },
+      relations: ['assignments'],
+    });
+
+    if (!course) {
+      throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      courseId: course.id,
+      assignments: course.assignments.map((assignment) => ({
+        assignmentId: assignment.id,
+        assignmentTitle: assignment.assignmentTitle,
+        assignmentResourcePath:
+          assignment.resourcePath !== null ? assignment.dueDate : null,
+        assignmentDescription:
+          assignment.description !== null ? assignment.description : null,
+        assignmentDueDate: assignment.dueDate,
+      })),
+    };
   }
 }

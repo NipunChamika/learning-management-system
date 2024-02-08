@@ -10,6 +10,12 @@ export class Assignment extends BaseEntity {
   @Column({ nullable: true })
   resourcePath: string;
 
+  @Column({ nullable: true, type: 'text' })
+  description: string;
+
+  @Column()
+  dueDate: Date;
+
   @ManyToOne(() => Course, (course) => course.assignments)
   course: Course;
 }
