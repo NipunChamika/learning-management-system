@@ -92,7 +92,8 @@ export class ProgramController {
       throw new HttpException(
         {
           status: 'Error updating program',
-          code: HttpStatus.BAD_REQUEST,
+          error: error.response.error || 'Something went wrong',
+          code: error.response.code || HttpStatus.BAD_REQUEST,
         },
         HttpStatus.BAD_REQUEST,
       );

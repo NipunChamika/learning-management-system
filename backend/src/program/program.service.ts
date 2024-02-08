@@ -83,26 +83,36 @@ export class ProgramService {
       throw new HttpException('Program not found', HttpStatus.NOT_FOUND);
     }
 
-    const existingProgramName = await this.programRepository.findOne({
-      where: { id: Not(id), programName: updateProgramInfo.programName },
-    });
+    if (updateProgramInfo.programName) {
+      const existingProgramName = await this.programRepository.findOne({
+        where: { id: Not(id), programName: updateProgramInfo.programName },
+      });
 
-    if (existingProgramName) {
-      throw new HttpException(
-        'Program with the same name already exists',
-        HttpStatus.BAD_REQUEST,
-      );
+      if (existingProgramName) {
+        throw new HttpException(
+          {
+            error: 'Program with the same name already exists',
+            code: HttpStatus.BAD_REQUEST,
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
     }
 
-    const existingProgramCode = await this.programRepository.findOne({
-      where: { id: Not(id), programCode: updateProgramInfo.programCode },
-    });
+    if (updateProgramInfo.programCode) {
+      const existingProgramCode = await this.programRepository.findOne({
+        where: { id: Not(id), programCode: updateProgramInfo.programCode },
+      });
 
-    if (existingProgramCode) {
-      throw new HttpException(
-        'Program with the same code already exists',
-        HttpStatus.BAD_REQUEST,
-      );
+      if (existingProgramCode) {
+        throw new HttpException(
+          {
+            error: 'Program with the same code already exists',
+            code: HttpStatus.BAD_REQUEST,
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
     }
 
     await this.programRepository.update({ id }, { ...updateProgramInfo });

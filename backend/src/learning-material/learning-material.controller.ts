@@ -40,13 +40,13 @@ export class LearningMaterialController {
       );
 
       return {
-        status: 'Course created successfully',
+        status: 'Learning material created successfully',
         code: HttpStatus.CREATED,
       };
     } catch (error) {
       throw new HttpException(
         {
-          status: 'Error creating course',
+          status: 'Error creating learning material',
           code: HttpStatus.BAD_REQUEST,
           message: error.message,
         },
@@ -162,6 +162,26 @@ export class LearningMaterialController {
       throw new HttpException(
         {
           status: 'Error restoring the learning material',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message,
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN', 'STUDENT')
+  @Get('course/:id')
+  async getCourseLearningMaterials(
+    @Param('id', ParseIntPipe) courseId: number,
+  ) {
+    try {
+      await this.learningMaterialService.getCourseLearningMaterials(courseId);
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error fetching course learning materials',
           code: HttpStatus.BAD_REQUEST,
           message: error.message,
         },

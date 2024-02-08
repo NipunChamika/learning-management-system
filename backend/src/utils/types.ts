@@ -58,11 +58,15 @@ export type UpdateLearningMaterialParams = {
 export type CreateAssignmentParams = {
   assignmentTitle: string;
   resourcePath?: string;
+  description?: string;
+  dueDate: Date;
 };
 
 export type UpdateAssignmentParams = {
   assignmentTitle?: string;
   resourcePath?: string;
+  description?: string;
+  dueDate?: Date;
 };
 
 export type ResetPasswordParams = {

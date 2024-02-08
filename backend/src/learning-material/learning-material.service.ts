@@ -178,4 +178,28 @@ export class LearningMaterialService {
 
     await this.learningMaterialRepository.restore(id);
   }
+
+  async getCourseLearningMaterials(id: number) {
+    const course = await this.courseRepository.findOne({
+      where: { id },
+      relations: ['course'],
+    });
+
+    if (!course) {
+      throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      courseId: course.id,
+      learningMaterials: course.learningMaterials.map((learningMaterial) => ({
+        learningMaterialId: learningMaterial.id,
+        learningMaterialTitle: learningMaterial.learningMaterialTitle,
+        learningMaterialType: learningMaterial.materialType,
+        learningMaterialResourcePath:
+          learningMaterial.resourcePath !== null
+            ? learningMaterial.resourcePath
+            : null,
+      })),
+    };
+  }
 }
