@@ -8,6 +8,7 @@ import {
   HStack,
   Icon,
   Text,
+  VStack,
 } from "@chakra-ui/react";
 import { PdfIcon } from "../../icons/PdfIcon";
 import { DownloadIcon } from "../../icons/DownloadIcon";
@@ -23,7 +24,8 @@ type LearningMaterial = {
 type Assignment = {
   id: number;
   panelTitle: string;
-  dueDate: string;
+  dueDate: Date;
+  description: string;
 };
 
 interface Props {
@@ -32,6 +34,22 @@ interface Props {
 }
 
 const CourseAccordion = ({ learningMaterials, assignments }: Props) => {
+  const date = (dueDate: Date) => {
+    const formatter = new Intl.DateTimeFormat("en-GB", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+      timeZone: "UTC",
+    });
+
+    const formattedDate = formatter.format(new Date(dueDate));
+
+    return formattedDate;
+  };
+
   return (
     <>
       <AccordionItem
@@ -67,13 +85,14 @@ const CourseAccordion = ({ learningMaterials, assignments }: Props) => {
           {learningMaterials &&
             learningMaterials.map((material) => (
               <HStack
+                key={material.id}
                 align="center"
                 borderBottom="1px"
                 borderColor="border-color"
                 pb="16px"
                 mb="40px"
               >
-                <Flex key={material.id} flex="1" gap="8px" align="center">
+                <Flex flex="1" gap="8px" align="center">
                   <PdfIcon boxSize="35px" />
                   <Text fontSize="16px" fontWeight="400">
                     {material.panelTitle}
@@ -85,30 +104,40 @@ const CourseAccordion = ({ learningMaterials, assignments }: Props) => {
           {assignments &&
             assignments.map((assignment) => (
               <HStack
+                key={assignment.id}
                 align="center"
                 borderBottom="1px"
                 borderColor="border-color"
                 pb="16px"
                 mb="40px"
               >
-                <Flex key={assignment.id} flex="1" gap="8px" align="center">
-                  <AssignmentItemIcon boxSize="35px" />
-                  <Box>
-                    <Text fontSize="20px" fontWeight="400">
-                      {assignment.panelTitle}
-                    </Text>
-                    <Text
-                      fontSize="12px"
-                      fontWeight="400"
-                      color="date-time-color"
-                    >
-                      {`Due date: ${assignment.dueDate}`}
-                    </Text>
-                  </Box>
-                </Flex>
+                <VStack align="stretch" spacing="16px">
+                  <Flex flex="1" gap="8px" align="center">
+                    <AssignmentItemIcon boxSize="35px" />
+                    <Box>
+                      <Text fontSize="20px" fontWeight="400">
+                        {assignment.panelTitle}
+                      </Text>
+                      <Text
+                        fontSize="12px"
+                        fontWeight="400"
+                        color="date-time-color"
+                      >
+                        {`Due date: ${date(assignment.dueDate)}`}
+                      </Text>
+                    </Box>
+                  </Flex>
+                  <Text
+                    fontSize="16px"
+                    fontWeight="300"
+                    color="paragraph-color"
+                  >
+                    {assignment.description}
+                  </Text>
+                </VStack>
               </HStack>
             ))}
-          {!(learningMaterials || assignments) && (
+          {(learningMaterials?.length === 0 || assignments?.length === 0) && (
             <>
               <Text
                 mb="30px"

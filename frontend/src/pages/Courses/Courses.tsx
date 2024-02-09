@@ -16,16 +16,17 @@ interface ResponseData {
 }
 
 const Courses = () => {
-  const [courses, setCourses] = useState<Course[]>([]);
+  // const { programId } = useParams();
   const location = useLocation();
-
   const { programId } = location.state;
+
+  const [courses, setCourses] = useState<Course[]>([]);
 
   useEffect(() => {
     const config = {
       headers: {
         Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNzI3NjMwNywiZXhwIjoxNzA3Mjc5OTA3fQ.9BHiLD2OX6PlMhJ4f5VFvljEeTsmAGhruy-z4nfeOGk",
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNzQ2NTk4NywiZXhwIjoxNzA3NDY5NTg3fQ.oQdQZ6G4p_DdOd76qKsL9ZSyxpcOPgtSAY63kSu6ihs",
       },
     };
 
@@ -41,13 +42,17 @@ const Courses = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [programId]);
 
   const navigate = useNavigate();
 
-  const handleNavigate = (courseCode: string) => {
-    // TODO: Navigate to Course Page with courseId
-    navigate(`/courses/${courseCode}`);
+  const handleNavigate = (
+    courseId: number,
+    courseCode: string,
+    courseName: string
+  ) => {
+    // navigate(`${courseId}`);
+    navigate(`${courseCode}`, { state: { courseId, courseName } });
   };
 
   return (
@@ -62,12 +67,18 @@ const Courses = () => {
       <SimpleGrid columns={3} spacing={30} minChildWidth="275px">
         {courses.map((course) => (
           <CardItem
-            key={course.courseId}
+            key={course.courseCode}
             src={Course1}
             alt={`Course ${course.courseId}`}
             code={course.courseCode}
             name={course.courseName}
-            navigateTo={() => handleNavigate(course.courseCode)}
+            navigateTo={() =>
+              handleNavigate(
+                course.courseId,
+                course.courseCode,
+                course.courseName
+              )
+            }
           />
         ))}
       </SimpleGrid>

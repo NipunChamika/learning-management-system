@@ -26,7 +26,7 @@ const Programs = () => {
   const config = {
     headers: {
       Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNzI3NjMwNywiZXhwIjoxNzA3Mjc5OTA3fQ.9BHiLD2OX6PlMhJ4f5VFvljEeTsmAGhruy-z4nfeOGk",
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNzQ2NTk4NywiZXhwIjoxNzA3NDY5NTg3fQ.oQdQZ6G4p_DdOd76qKsL9ZSyxpcOPgtSAY63kSu6ihs",
     },
   };
 
@@ -47,8 +47,9 @@ const Programs = () => {
 
   const navigate = useNavigate();
 
-  const handleNavigate = (programId: number) => {
-    navigate("/courses", { state: { programId } });
+  const handleNavigate = (programId: number, programCode: string) => {
+    // navigate(`${programId}`);
+    navigate(`${programCode}`, { state: { programId } });
   };
 
   return (
@@ -63,12 +64,14 @@ const Programs = () => {
       <SimpleGrid columns={3} spacing={30} minChildWidth="275px">
         {programs.map((program) => (
           <CardItem
-            key={program.programId}
+            key={program.programCode}
             src={Program1}
             alt={`Course ${program.programId}`}
             code={program.programCode}
             name={program.programName}
-            navigateTo={() => handleNavigate(program.programId)}
+            navigateTo={() =>
+              handleNavigate(program.programId, program.programCode)
+            }
           />
         ))}
       </SimpleGrid>

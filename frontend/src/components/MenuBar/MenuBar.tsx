@@ -9,8 +9,12 @@ const MenuBar = () => {
   return (
     <>
       <VStack bgColor="bg-color" alignItems="stretch" spacing={0}>
-        <MenuItem navigateTo={"/profile"} icon={ProfileIcon} title="Profile" />
-        <MenuItem navigateTo={"/"} icon={ProgramsIcon} title="Programs" />
+        <MenuItem navigateTo={"/"} icon={ProfileIcon} title="Profile" />
+        <MenuItem
+          navigateTo={"/programs"}
+          icon={ProgramsIcon}
+          title="Programs"
+        />
         <MenuItem navigateTo={"/courses"} icon={CoursesIcon} title="Courses" />
         <MenuItem icon={SignoutIcon} title="Sign Out" />
       </VStack>
