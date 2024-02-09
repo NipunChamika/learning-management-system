@@ -182,7 +182,7 @@ export class LearningMaterialService {
   async getCourseLearningMaterials(id: number) {
     const course = await this.courseRepository.findOne({
       where: { id },
-      relations: ['course'],
+      relations: ['learningMaterials'],
     });
 
     if (!course) {

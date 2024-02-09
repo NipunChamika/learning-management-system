@@ -181,7 +181,7 @@ export class AssignmentService {
         assignmentId: assignment.id,
         assignmentTitle: assignment.assignmentTitle,
         assignmentResourcePath:
-          assignment.resourcePath !== null ? assignment.dueDate : null,
+          assignment.resourcePath !== null ? assignment.resourcePath : null,
         assignmentDescription:
           assignment.description !== null ? assignment.description : null,
         assignmentDueDate: assignment.dueDate,

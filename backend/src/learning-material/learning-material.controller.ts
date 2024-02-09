@@ -177,7 +177,7 @@ export class LearningMaterialController {
     @Param('id', ParseIntPipe) courseId: number,
   ) {
     try {
-      await this.learningMaterialService.getCourseLearningMaterials(courseId);
+      return this.learningMaterialService.getCourseLearningMaterials(courseId);
     } catch (error) {
       throw new HttpException(
         {
