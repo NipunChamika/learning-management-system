@@ -20,6 +20,8 @@ const tokens = {
       "menu-hover-border": "#317CEC",
       "menu-active-bg": "#317CEC",
       "card-bg": "#FAFAFA",
+      "btn-bg": "#317CEC",
+      "btn-hover-bg": "#0A56C8",
     },
     dark: {
       "bg-default": "#232323",
@@ -35,6 +37,8 @@ const tokens = {
       "menu-hover-border": "#317CEC",
       "menu-active-bg": "#317CEC",
       "card-bg": "#232323",
+      "btn-bg": "#317CEC",
+      "btn-hover-bg": "#0A56C8",
     },
   },
 };
@@ -92,6 +96,14 @@ const semanticTokens = {
     "card-bg": {
       default: tokens.colors.light["card-bg"],
       _dark: tokens.colors.dark["card-bg"],
+    },
+    "btn-bg": {
+      default: tokens.colors.light["btn-bg"],
+      _dark: tokens.colors.dark["btn-bg"],
+    },
+    "btn-hover-bg": {
+      default: tokens.colors.light["btn-hover-bg"],
+      _dark: tokens.colors.dark["btn-hover-bg"],
     },
   },
 };

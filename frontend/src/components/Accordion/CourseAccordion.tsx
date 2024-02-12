@@ -15,6 +15,7 @@ import { DownloadIcon } from "../../icons/DownloadIcon";
 import { AssignmentItemIcon } from "../../icons/AssignmentItemIcon";
 import { LearningMaterialIcon } from "../../icons/LearningMaterialIcon";
 import { AssignmentIcon } from "../../icons/AssignmentIcon";
+import { useNavigate } from "react-router-dom";
 
 type LearningMaterial = {
   id: number;
@@ -48,6 +49,12 @@ const CourseAccordion = ({ learningMaterials, assignments }: Props) => {
     const formattedDate = formatter.format(new Date(dueDate));
 
     return formattedDate;
+  };
+
+  const navigate = useNavigate();
+
+  const handleNavigate = (id: number, title: string, description: string) => {
+    navigate(`${id}`, { state: { title, description } });
   };
 
   return (
@@ -115,7 +122,19 @@ const CourseAccordion = ({ learningMaterials, assignments }: Props) => {
                   <Flex flex="1" gap="8px" align="center">
                     <AssignmentItemIcon boxSize="35px" />
                     <Box>
-                      <Text fontSize="20px" fontWeight="400">
+                      <Text
+                        fontSize="20px"
+                        fontWeight="400"
+                        cursor="pointer"
+                        _hover={{ textDecor: "underline" }}
+                        onClick={() =>
+                          handleNavigate(
+                            assignment.id,
+                            assignment.panelTitle,
+                            assignment.description
+                          )
+                        }
+                      >
                         {assignment.panelTitle}
                       </Text>
                       <Text

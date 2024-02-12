@@ -7,6 +7,7 @@ import EmailEntry from "./pages/EmailEntry/EmailEntry";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import Courses from "./pages/Courses/Courses";
 import CourseDashboard from "./pages/CourseDashboard/CourseDashboard";
+import Submission from "./pages/Submission/Submission";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         path: "programs/:programCode/:courseCode",
         element: <CourseDashboard />,
+      },
+      {
+        path: "programs/:programCode/:courseCode/:id",
+        element: <Submission />,
       },
     ],
   },

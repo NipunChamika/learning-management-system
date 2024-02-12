@@ -40,7 +40,7 @@ const CourseDashboard = () => {
   const config = {
     headers: {
       Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNzQ2NTk4NywiZXhwIjoxNzA3NDY5NTg3fQ.oQdQZ6G4p_DdOd76qKsL9ZSyxpcOPgtSAY63kSu6ihs",
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNzczNjc0MywiZXhwIjoxNzA3NzQwMzQzfQ.gtl3Edx8p5SKcydOPE-TUDR6XkdxtDsc_HkHIdeYgug",
     },
   };
 
