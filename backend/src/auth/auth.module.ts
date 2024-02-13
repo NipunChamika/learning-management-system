@@ -7,10 +7,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './strategies/local-strategy';
 import { JwtStrategy } from './strategies/jwt-strategy';
 import { RefreshJwtStrategy } from './strategies/refresh-token-strategy';
+import { Student } from 'src/typeorm/entities/student.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Student]),
     JwtModule.register({
       secret: `${process.env.SECRET_KEY}`,
       signOptions: { expiresIn: '1h' },

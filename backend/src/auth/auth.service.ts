@@ -4,6 +4,7 @@ import { User } from 'src/typeorm/entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { Student } from 'src/typeorm/entities/student.entity';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +12,9 @@ export class AuthService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private jwtService: JwtService,
+
+    @InjectRepository(Student)
+    private studentRepository: Repository<Student>,
   ) {}
 
   async findUserWithEmail(email: string) {
@@ -36,6 +40,20 @@ export class AuthService {
   }
 
   async login(user: User) {
+    let studentDetails = { studentId: undefined };
+
+    if (user.role === 'STUDENT') {
+      const student = await this.studentRepository.findOne({
+        where: { user: { id: user.id } },
+      });
+
+      if (student) {
+        studentDetails = {
+          studentId: student.id,
+        };
+      }
+    }
+
     const payload = {
       sub: user.id,
       role: user.role,
@@ -48,6 +66,9 @@ export class AuthService {
         lastName: user.lastName,
         email: user.email,
         role: user.role,
+        ...(studentDetails.studentId && {
+          studentId: studentDetails.studentId,
+        }),
       },
       accessToken: this.jwtService.sign(payload),
       refreshToken: this.jwtService.sign(payload, { expiresIn: '7d' }),
