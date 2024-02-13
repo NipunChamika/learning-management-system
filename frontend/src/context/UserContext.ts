@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, createContext, useContext } from "react";
+import { User } from "../utils/types";
 
 interface UserContextInterface {
   isLoggedIn: boolean;
@@ -17,6 +18,8 @@ interface UserContextInterface {
   setResetPassword: (isResetPassword: boolean) => void;
   isMenuCollapse: boolean;
   setMenuCollapse: (isMenuCollapse: boolean) => void;
+  user: User | undefined;
+  setUser: (user: User | undefined) => void;
 }
 
 export const UserContext = createContext<UserContextInterface | undefined>(

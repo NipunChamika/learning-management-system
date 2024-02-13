@@ -20,19 +20,19 @@ import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/UserContext";
 import AuthCard from "../../components/AuthCard/AuthCard";
 import useToastFunction from "../../hooks/useToastFunction";
+import { User } from "../../utils/types";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
 interface ResponseData {
   accessToken: string;
   refreshToken: string;
-  user: {
-    id: number;
-  };
+  user: User;
 }
 
 const Login = () => {
-  const { setLoggedIn, isResetPassword, setResetPassword } = useUserContext();
+  const { setLoggedIn, isResetPassword, setResetPassword, setUser } =
+    useUserContext();
 
   const {
     register,
@@ -64,6 +64,7 @@ const Login = () => {
       .then((res) => {
         console.log(res.data);
         setLoggedIn(true);
+        setUser(res.data.user);
         navigate("/");
         localStorage.setItem("accessToken", res.data.accessToken);
         localStorage.setItem("refreshToken", res.data.refreshToken);

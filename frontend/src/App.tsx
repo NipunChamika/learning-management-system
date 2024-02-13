@@ -2,6 +2,7 @@ import { RouterProvider } from "react-router-dom";
 import { UserContext } from "./context/UserContext";
 import { useState } from "react";
 import router from "./routes";
+import { User } from "./utils/types";
 
 function App() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -12,6 +13,7 @@ function App() {
   const [sendOtp, setSendOtp] = useState(false);
   const [isResetPassword, setResetPassword] = useState(false);
   const [isMenuCollapse, setMenuCollapse] = useState(false);
+  const [user, setUser] = useState<User | undefined>();
 
   return (
     <UserContext.Provider
@@ -32,6 +34,8 @@ function App() {
         setResetPassword,
         isMenuCollapse,
         setMenuCollapse,
+        user,
+        setUser,
       }}
     >
       <RouterProvider router={router} />

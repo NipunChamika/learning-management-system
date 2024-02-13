@@ -8,6 +8,7 @@ import ResetPassword from "./pages/ResetPassword/ResetPassword";
 import Courses from "./pages/Courses/Courses";
 import CourseDashboard from "./pages/CourseDashboard/CourseDashboard";
 import Submission from "./pages/Submission/Submission";
+import Missing from "./pages/Missing/Missing";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
       { index: true, element: <Profile /> },
       { path: "programs", element: <Programs /> },
       { path: "programs/:programCode", element: <Courses /> },
+      {
+        path: "courses",
+        element: <Courses />,
+      },
       {
         path: "programs/:programCode/:courseCode",
         element: <CourseDashboard />,
@@ -38,6 +43,10 @@ const router = createBrowserRouter([
   {
     path: "/reset-password",
     element: <ResetPassword />,
+  },
+  {
+    path: "*",
+    element: <Missing />,
   },
 ]);
 

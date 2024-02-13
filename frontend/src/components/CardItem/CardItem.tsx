@@ -5,7 +5,7 @@ interface Props {
   alt: string;
   code: string;
   name: string;
-  navigateTo: () => void;
+  navigateTo?: () => void;
 }
 
 const CardItem = ({ src, alt, code, name, navigateTo }: Props) => {

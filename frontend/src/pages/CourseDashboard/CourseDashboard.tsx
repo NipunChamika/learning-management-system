@@ -37,10 +37,11 @@ const CourseDashboard = () => {
   >([]);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
 
+  const accessToken = localStorage.getItem("accessToken");
+
   const config = {
     headers: {
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNzczNjc0MywiZXhwIjoxNzA3NzQwMzQzfQ.gtl3Edx8p5SKcydOPE-TUDR6XkdxtDsc_HkHIdeYgug",
+      Authorization: `Bearer ${accessToken}`,
     },
   };
 

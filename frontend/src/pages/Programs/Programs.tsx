@@ -9,40 +9,76 @@ import Program1 from "../../assets/Program1.png";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../../context/UserContext";
 
-interface Program {
+type Program = {
   programId: number;
   programName: string;
   programCode: string;
-}
+};
 
-interface ResponseData {
+interface ResponseDataStudent {
   programs: Program[];
 }
 
+interface ResponseDataAdmin {
+  data: Program[];
+  meta: {
+    page: number;
+    limit: number;
+    totalCount: number;
+    totalPages: number;
+    skip: number;
+  };
+}
+
 const Programs = () => {
+  const { user } = useUserContext();
+
   const [programs, setPrograms] = useState<Program[]>([]);
+
+  const accessToken = localStorage.getItem("accessToken");
 
   const config = {
     headers: {
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInJvbGUiOiJBRE1JTiIsImlhdCI6MTcwNzczNjc0MywiZXhwIjoxNzA3NzQwMzQzfQ.gtl3Edx8p5SKcydOPE-TUDR6XkdxtDsc_HkHIdeYgug",
+      Authorization: `Bearer ${accessToken}`,
     },
   };
 
   // TODO: Dynamically pass the studentId to the get request
 
   useEffect(() => {
-    axios
-      .get<ResponseData>("http://localhost:3000/program/student/3", config)
-      .then((res) => {
-        console.log(res.data);
-        setPrograms(res.data.programs);
-        console.log(programs);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (user?.role === "STUDENT") {
+      axios
+        .get<ResponseDataStudent>(
+          `http://localhost:3000/program/student/${user?.studentId}`,
+          config
+        )
+        .then((res) => {
+          console.log(res.data);
+          setPrograms(res.data.programs);
+          console.log("I'm a STUDENT");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
+    if (user?.role === "ADMIN") {
+      axios
+        .get<ResponseDataAdmin>(
+          `http://localhost:3000/program?page=1&limit=10`,
+          config
+        )
+        .then((res) => {
+          console.log(res.data);
+          setPrograms(res.data.data);
+          console.log("I'm an ADMIN");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }, []);
 
   const navigate = useNavigate();
@@ -62,18 +98,20 @@ const Programs = () => {
       </Box>
 
       <SimpleGrid columns={3} spacing={30} minChildWidth="275px">
-        {programs.map((program) => (
-          <CardItem
-            key={program.programCode}
-            src={Program1}
-            alt={`Course ${program.programId}`}
-            code={program.programCode}
-            name={program.programName}
-            navigateTo={() =>
-              handleNavigate(program.programId, program.programCode)
-            }
-          />
-        ))}
+        {Array.isArray(programs) &&
+          programs.map((program) => (
+            <CardItem
+              key={program.programCode}
+              src={Program1}
+              alt={`Course ${program.programId}`}
+              code={program.programCode}
+              name={program.programName}
+              {...(user?.role === "STUDENT" && {
+                navigateTo: () =>
+                  handleNavigate(program.programId, program.programCode),
+              })}
+            />
+          ))}
       </SimpleGrid>
     </>
   );
