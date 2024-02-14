@@ -1,4 +1,4 @@
-import { Box, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, Flex, SimpleGrid, Text } from "@chakra-ui/react";
 import CardItem from "../../components/CardItem/CardItem";
 import Program1 from "../../assets/Program1.png";
 // import Program2 from "../../assets/Program2.png";
@@ -10,6 +10,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/UserContext";
+import { AddIcon } from "../../icons/AddIcon";
 
 type Program = {
   programId: number;
@@ -91,9 +92,12 @@ const Programs = () => {
   return (
     <>
       <Box mb="24px">
-        <Text fontSize="30px" fontWeight="500" color="text-color">
-          Programs
-        </Text>
+        <Flex color="text-color" align="center" justify="space-between">
+          <Text fontSize="30px" fontWeight="500">
+            Programs
+          </Text>
+          {user?.role === "ADMIN" && <AddIcon boxSize="26px" />}
+        </Flex>
         <Box width="100%" h="1px" bgColor="border-color" mt="16px" />
       </Box>
 
