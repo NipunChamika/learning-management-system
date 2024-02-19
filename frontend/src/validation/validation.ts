@@ -37,3 +37,8 @@ export const resetPasswordSchema = z
     message: "Passwords do not match",
     path: ["confirmNewPassword"],
   });
+
+export const addProgramSchema = z.object({
+  programCode: z.string().min(1, { message: "Program code is required" }),
+  programName: z.string().min(1, { message: "Program name is required" }),
+});

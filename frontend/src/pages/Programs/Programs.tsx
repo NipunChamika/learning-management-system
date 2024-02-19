@@ -1,4 +1,11 @@
-import { Box, Flex, SimpleGrid, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  SimpleGrid,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import CardItem from "../../components/CardItem/CardItem";
 import Program1 from "../../assets/Program1.png";
 // import Program2 from "../../assets/Program2.png";
@@ -11,6 +18,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/UserContext";
 import { AddIcon } from "../../icons/AddIcon";
+import ModalDialog from "../../components/ModalDialog/ModalDialog";
+import { addProgramSchema } from "../../validation/validation";
+import Form from "../../components/Form/Form";
 
 type Program = {
   programId: number;
@@ -37,6 +47,8 @@ const Programs = () => {
   const { user } = useUserContext();
 
   const [programs, setPrograms] = useState<Program[]>([]);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const accessToken = localStorage.getItem("accessToken");
 
@@ -96,10 +108,19 @@ const Programs = () => {
           <Text fontSize="30px" fontWeight="500">
             Programs
           </Text>
-          {user?.role === "ADMIN" && <AddIcon boxSize="26px" />}
+          {/* {user?.role === "ADMIN" && <AddIcon boxSize="26px" />} */}
+          {user?.role === "ADMIN" && (
+            <Button leftIcon={<AddIcon />} color="text-color" onClick={onOpen}>
+              Add
+            </Button>
+          )}
         </Flex>
         <Box width="100%" h="1px" bgColor="border-color" mt="16px" />
       </Box>
+
+      <ModalDialog isOpen={isOpen} onClose={onClose}>
+        <Form schema={addProgramSchema} onClose={onClose} />
+      </ModalDialog>
 
       <SimpleGrid columns={3} spacing={30} minChildWidth="275px">
         {Array.isArray(programs) &&
