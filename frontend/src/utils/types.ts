@@ -9,6 +9,14 @@ export type User = {
   studentId?: number;
 };
 
+export type Meta = {
+  page: number;
+  limit: number;
+  totalCount: number;
+  totalPages: number;
+  skip: number;
+};
+
 export const getRole = () => {
   let role;
   const { user } = useUserContext();

@@ -4,45 +4,72 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CardItem from "../../components/CardItem/CardItem";
 import Course1 from "../../assets/Program3.png";
+import { useUserContext } from "../../context/UserContext";
+import { Meta } from "../../utils/types";
 
 interface Course {
   courseId: number;
   courseName: string;
   courseCode: string;
+  programId: number;
 }
 
-interface ResponseData {
+interface ResponseDataStudent {
   courses: Course[];
 }
 
+interface ResponseDataAdmin {
+  data: Course[];
+  meta: Meta;
+}
+
 const Courses = () => {
+  const { user } = useUserContext();
+
   // const { programId } = useParams();
   const location = useLocation();
-  const { programId } = location.state;
+  const { programId } = location.state || {};
 
   const [courses, setCourses] = useState<Course[]>([]);
 
+  const accessToken = localStorage.getItem("accessToken");
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
+    if (user?.role === "STUDENT" && programId) {
+      axios
+        .get<ResponseDataStudent>(
+          "http://localhost:3000/course/program/" + programId,
+          config
+        )
+        .then((res) => {
+          console.log(res.data);
+          setCourses(res.data.courses);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    };
-
-    axios
-      .get<ResponseData>(
-        "http://localhost:3000/course/program/" + programId,
-        config
-      )
-      .then((res) => {
-        console.log(res.data);
-        setCourses(res.data.courses);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (user?.role === "ADMIN") {
+      axios
+        .get<ResponseDataAdmin>(
+          "http://localhost:3000/course?page=1&limit=10",
+          config
+        )
+        .then((res) => {
+          console.log(res.data);
+          setCourses(res.data.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }, [programId]);
 
   const navigate = useNavigate();
@@ -53,7 +80,9 @@ const Courses = () => {
     courseName: string
   ) => {
     // navigate(`${courseId}`);
-    navigate(`${courseCode}`, { state: { courseId, courseName } });
+    if (user?.role === "STUDENT") {
+      navigate(`${courseCode}`, { state: { courseId, courseName } });
+    }
   };
 
   return (
