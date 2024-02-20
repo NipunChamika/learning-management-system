@@ -119,7 +119,14 @@ const Programs = () => {
       </Box>
 
       <ModalDialog isOpen={isOpen} onClose={onClose}>
-        <Form schema={addProgramSchema} onClose={onClose} />
+        <Form
+          schema={addProgramSchema}
+          onClose={onClose}
+          labels={[
+            { labelName: "Program Code", htmlFor: "programCode" },
+            { labelName: "Program Name", htmlFor: "programName" },
+          ]}
+        />
       </ModalDialog>
 
       <SimpleGrid columns={3} spacing={30} minChildWidth="275px">
