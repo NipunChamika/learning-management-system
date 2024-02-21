@@ -55,7 +55,11 @@ export class ProgramService {
     const totalPages = Math.ceil(totalCount / limit);
 
     return {
-      data: programs,
+      data: programs.map((program, i) => ({
+        programId: program.id,
+        programCode: program.programCode,
+        programName: program.programName,
+      })),
       meta: {
         page,
         limit,
