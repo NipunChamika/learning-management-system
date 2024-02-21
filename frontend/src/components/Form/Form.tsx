@@ -7,49 +7,33 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { useForm } from "react-hook-form";
-import { ZodType, z } from "zod";
+import { ReactNode } from "react";
+import { FieldValues, Path, SubmitHandler, useForm } from "react-hook-form";
+import { ZodType } from "zod";
 
-type FormControlProps = {
+type FormControlProps<T> = {
   labelName: string;
-  htmlFor: string;
+  htmlFor: Path<T>;
 };
 
-interface Props {
-  schema: ZodType;
-  onClose: () => void;
-  labels: FormControlProps[];
+interface Props<T extends FieldValues> {
+  schema: ZodType<T>;
+  labels: FormControlProps<T>[];
+  onSubmit: SubmitHandler<T>;
+  children?: ReactNode;
 }
 
-const Form = ({ schema, onClose, labels }: Props) => {
-  type FormData = z.infer<typeof schema>;
-
+const Form = <T extends FieldValues>({
+  schema,
+  labels,
+  onSubmit,
+  children,
+}: Props<T>) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({ resolver: zodResolver(schema) });
-
-  const accessToken = localStorage.getItem("accessToken");
-
-  const config = {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  };
-
-  const onSubmit = (data: FormData) => {
-    axios
-      .post("http://localhost:3000/program", data, config)
-      .then((res) => {
-        console.log(res.data);
-        onClose();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  } = useForm<T>({ resolver: zodResolver(schema) });
 
   const getErrorMessage = (error: any) => {
     if (typeof error === "string") {
@@ -80,24 +64,26 @@ const Form = ({ schema, onClose, labels }: Props) => {
               {label.labelName}
             </FormLabel>
             <Input {...register(label.htmlFor)} id={label.htmlFor} />
-            <FormErrorMessage>
+            <FormErrorMessage mt="1px">
               {errors[label.htmlFor] &&
                 getErrorMessage(errors[label.htmlFor]?.message)}
             </FormErrorMessage>
           </FormControl>
         ))}
-        <Flex justify="end" mb="8px">
-          <Button
-            type="submit"
-            color="text-color"
-            borderRadius="8px"
-            py="3px"
-            fontSize="16px"
-            fontWeight="500"
-          >
-            Submit
-          </Button>
-        </Flex>
+        {children || (
+          <Flex justify="end" mb="8px">
+            <Button
+              type="submit"
+              color="text-color"
+              borderRadius="8px"
+              py="3px"
+              fontSize="16px"
+              fontWeight="500"
+            >
+              Submit
+            </Button>
+          </Flex>
+        )}
       </form>
     </>
   );

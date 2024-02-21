@@ -1,4 +1,6 @@
+import { z } from "zod";
 import { useUserContext } from "../context/UserContext";
+import { addProgramSchema } from "../validation/validation";
 
 export type User = {
   id: number;
@@ -16,6 +18,8 @@ export type Meta = {
   totalPages: number;
   skip: number;
 };
+
+export type AddProgramFormData = z.infer<typeof addProgramSchema>;
 
 export const getRole = () => {
   let role;

@@ -21,6 +21,7 @@ import { AddIcon } from "../../icons/AddIcon";
 import ModalDialog from "../../components/ModalDialog/ModalDialog";
 import { addProgramSchema } from "../../validation/validation";
 import Form from "../../components/Form/Form";
+import { AddProgramFormData } from "../../utils/types";
 
 type Program = {
   programId: number;
@@ -101,6 +102,18 @@ const Programs = () => {
     navigate(`${programCode}`, { state: { programId } });
   };
 
+  const onSubmit = (data: AddProgramFormData) => {
+    axios
+      .post("http://localhost:3000/program", data, config)
+      .then((res) => {
+        console.log(res.data);
+        onClose();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <>
       <Box mb="24px">
@@ -108,7 +121,6 @@ const Programs = () => {
           <Text fontSize="30px" fontWeight="500">
             Programs
           </Text>
-          {/* {user?.role === "ADMIN" && <AddIcon boxSize="26px" />} */}
           {user?.role === "ADMIN" && (
             <Button leftIcon={<AddIcon />} color="text-color" onClick={onOpen}>
               Add
@@ -121,11 +133,11 @@ const Programs = () => {
       <ModalDialog isOpen={isOpen} onClose={onClose}>
         <Form
           schema={addProgramSchema}
-          onClose={onClose}
           labels={[
             { labelName: "Program Code", htmlFor: "programCode" },
             { labelName: "Program Name", htmlFor: "programName" },
           ]}
+          onSubmit={onSubmit}
         />
       </ModalDialog>
 
