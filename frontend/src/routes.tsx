@@ -18,10 +18,10 @@ const router = createBrowserRouter([
       { index: true, element: <Profile /> },
       { path: "programs", element: <Programs /> },
       { path: "programs/:programCode", element: <Courses /> },
-      {
-        path: "courses",
-        element: <Courses />,
-      },
+      // {
+      //   path: "courses",
+      //   element: <Courses />,
+      // },
       {
         path: "programs/:programCode/:courseCode",
         element: <CourseDashboard />,

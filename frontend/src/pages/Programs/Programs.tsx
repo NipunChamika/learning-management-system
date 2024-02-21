@@ -139,7 +139,7 @@ const Programs = () => {
         <Box width="100%" h="1px" bgColor="border-color" mt="16px" />
       </Box>
 
-      <ModalDialog isOpen={isOpen} onClose={onClose}>
+      <ModalDialog isOpen={isOpen} onClose={onClose} modalHeading="Add Program">
         <Form
           schema={addProgramSchema}
           labels={[
@@ -172,18 +172,28 @@ const Programs = () => {
           <Table variant="simple">
             <Thead>
               <Tr>
-                <Th>Program Code</Th>
-                <Th>Program Name</Th>
-                <Th>Actions</Th>
+                <Th borderColor="border-color">Program Code</Th>
+                <Th borderColor="border-color">Program Name</Th>
+                <Th borderColor="border-color">Actions</Th>
               </Tr>
             </Thead>
             <Tbody>
               {programs.map((program, i) => (
                 <Tr key={i} color="text-color">
-                  <Td>{program.programCode}</Td>
-                  <Td>{program.programName}</Td>
-                  <Td>
-                    <Flex align="center" justify="space-between" px="8px">
+                  <Td borderColor="border-color">{program.programCode}</Td>
+                  <Td borderColor="border-color">
+                    <Text
+                      w="fit-content"
+                      _hover={{ textDecor: "underline", cursor: "pointer" }}
+                      onClick={() =>
+                        handleNavigate(program.programId, program.programCode)
+                      }
+                    >
+                      {program.programName}
+                    </Text>
+                  </Td>
+                  <Td borderColor="border-color">
+                    <Flex align="center" gap="16px">
                       <EditIcon />
                       <DeleteIcon />
                     </Flex>
