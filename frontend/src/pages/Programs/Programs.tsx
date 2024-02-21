@@ -3,7 +3,14 @@ import {
   Button,
   Flex,
   SimpleGrid,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
   Text,
+  Th,
+  Thead,
+  Tr,
   useDisclosure,
 } from "@chakra-ui/react";
 import CardItem from "../../components/CardItem/CardItem";
@@ -22,6 +29,8 @@ import ModalDialog from "../../components/ModalDialog/ModalDialog";
 import { addProgramSchema } from "../../validation/validation";
 import Form from "../../components/Form/Form";
 import { AddProgramFormData } from "../../utils/types";
+import { EditIcon } from "../../icons/EditIcon";
+import { DeleteIcon } from "../../icons/DeleteIcon";
 
 type Program = {
   programId: number;
@@ -141,22 +150,50 @@ const Programs = () => {
         />
       </ModalDialog>
 
-      <SimpleGrid columns={3} spacing={30} minChildWidth="275px">
-        {Array.isArray(programs) &&
-          programs.map((program) => (
-            <CardItem
-              key={program.programCode}
-              src={Program1}
-              alt={`Course ${program.programId}`}
-              code={program.programCode}
-              name={program.programName}
-              {...(user?.role === "STUDENT" && {
-                navigateTo: () =>
-                  handleNavigate(program.programId, program.programCode),
-              })}
-            />
-          ))}
-      </SimpleGrid>
+      {user?.role === "STUDENT" ? (
+        <SimpleGrid columns={3} spacing={30} minChildWidth="275px">
+          {Array.isArray(programs) &&
+            programs.map((program) => (
+              <CardItem
+                key={program.programCode}
+                src={Program1}
+                alt={`Course ${program.programId}`}
+                code={program.programCode}
+                name={program.programName}
+                {...(user?.role === "STUDENT" && {
+                  navigateTo: () =>
+                    handleNavigate(program.programId, program.programCode),
+                })}
+              />
+            ))}
+        </SimpleGrid>
+      ) : (
+        <TableContainer>
+          <Table variant="simple">
+            <Thead>
+              <Tr>
+                <Th>Program Code</Th>
+                <Th>Program Name</Th>
+                <Th>Actions</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {programs.map((program, i) => (
+                <Tr key={i} color="text-color">
+                  <Td>{program.programCode}</Td>
+                  <Td>{program.programName}</Td>
+                  <Td>
+                    <Flex align="center" justify="space-between" px="8px">
+                      <EditIcon />
+                      <DeleteIcon />
+                    </Flex>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      )}
     </>
   );
 };
