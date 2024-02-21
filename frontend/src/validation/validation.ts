@@ -42,3 +42,8 @@ export const addProgramSchema = z.object({
   programCode: z.string().min(1, { message: "Program code is required" }),
   programName: z.string().min(1, { message: "Program name is required" }),
 });
+
+export const addCourseSchema = z.object({
+  courseCode: z.string().min(1, { message: "Course code is required" }),
+  courseName: z.string().min(1, { message: "Course name is required" }),
+});
