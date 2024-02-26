@@ -23,7 +23,7 @@ import Program1 from "../../assets/Program1.png";
 // import Program5 from "../../assets/Program5.png";
 // import Program6 from "../../assets/Program6.png";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/UserContext";
 import { AddIcon } from "../../icons/AddIcon";
@@ -36,6 +36,7 @@ import Form from "../../components/Form/Form";
 import { AddProgramFormData, UpdateProgramFormData } from "../../utils/types";
 import { EditIcon } from "../../icons/EditIcon";
 import { DeleteIcon } from "../../icons/DeleteIcon";
+import AlertModal from "../../components/AlertModal/AlertModal";
 
 type Program = {
   programId: number;
@@ -66,6 +67,8 @@ const Programs = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
+
+  const cancelRef = useRef(null);
 
   const accessToken = localStorage.getItem("accessToken");
 
@@ -133,6 +136,12 @@ const Programs = () => {
     onOpen();
   };
 
+  const handleDeleteProgram = (program: Program) => {
+    setOpenModal("delete");
+    setSelectedProgram(program);
+    onOpen();
+  };
+
   const onAddProgram = (data: AddProgramFormData) => {
     axios
       .post("http://localhost:3000/program", data, config)
@@ -159,6 +168,22 @@ const Programs = () => {
         fetchPrograms();
       })
       .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const onDeleteProgram = () => {
+    axios
+      .delete(
+        `http://localhost:3000/program/${selectedProgram?.programId}`,
+        config
+      )
+      .then((res) => {
+        console.log(res.data);
+        onClose();
+        fetchPrograms();
+      })
+      .then((error) => {
         console.log(error);
       });
   };
@@ -221,6 +246,17 @@ const Programs = () => {
         </ModalDialog>
       )}
 
+      {isOpenModal === "delete" && (
+        <AlertModal
+          isOpen={isOpen}
+          leastDestructiveRef={cancelRef}
+          onClose={onClose}
+          alertHeading="Delete Program"
+          alertBody="Are you sure you want to delete this program?"
+          handleClick={onDeleteProgram}
+        />
+      )}
+
       {user?.role === "STUDENT" ? (
         <SimpleGrid columns={3} spacing={30} minChildWidth="275px">
           {Array.isArray(programs) &&
@@ -276,6 +312,7 @@ const Programs = () => {
                           aria-label="Delete"
                           icon={<DeleteIcon />}
                           borderColor="border-color"
+                          onClick={() => handleDeleteProgram(program)}
                         />
                       </ButtonGroup>
                       {/* <EditIcon />

@@ -12,6 +12,8 @@ const tokens = {
       "border-color": "#F4F4F4",
       "text-color": "#1A2744",
       "low-text-color": "#978D8D",
+      "danger-text-color": "#F85149",
+      "danger-text-hover": "white",
       "date-time-color": "#B7B5B5",
       "paragraph-color": "#1A2744",
       "nav-btn-hover-bg": "#f9f6fd",
@@ -22,6 +24,7 @@ const tokens = {
       "card-bg": "#FAFAFA",
       "btn-bg": "#317CEC",
       "btn-hover-bg": "#0A56C8",
+      "btn-danger": "#F85149",
     },
     dark: {
       "bg-default": "#232323",
@@ -29,6 +32,8 @@ const tokens = {
       "border-color": "#373434",
       "text-color": "white",
       "low-text-color": "#978D8D",
+      "danger-text-color": "#F85149",
+      "danger-text-hover": "white",
       "date-time-color": "#B7B5B5",
       "paragraph-color": "#FFFFFF",
       "nav-btn-hover-bg": "#4C4C4C",
@@ -39,6 +44,7 @@ const tokens = {
       "card-bg": "#232323",
       "btn-bg": "#317CEC",
       "btn-hover-bg": "#0A56C8",
+      "btn-danger": "#F85149",
     },
   },
 };
@@ -64,6 +70,14 @@ const semanticTokens = {
     "low-text-color": {
       default: tokens.colors.light["low-text-color"],
       _dark: tokens.colors.dark["low-text-color"],
+    },
+    "danger-text-color": {
+      default: tokens.colors.light["danger-text-color"],
+      _dark: tokens.colors.dark["danger-text-color"],
+    },
+    "danger-text-hover": {
+      default: tokens.colors.light["danger-text-hover"],
+      _dark: tokens.colors.dark["danger-text-hover"],
     },
     "date-time-color": {
       default: tokens.colors.light["date-time-color"],
@@ -104,6 +118,10 @@ const semanticTokens = {
     "btn-hover-bg": {
       default: tokens.colors.light["btn-hover-bg"],
       _dark: tokens.colors.dark["btn-hover-bg"],
+    },
+    "btn-danger": {
+      default: tokens.colors.light["btn-danger"],
+      _dark: tokens.colors.dark["btn-danger"],
     },
   },
 };
