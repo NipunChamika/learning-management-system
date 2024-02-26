@@ -16,7 +16,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CardItem from "../../components/CardItem/CardItem";
 import Course1 from "../../assets/Program3.png";
@@ -31,6 +31,7 @@ import {
 } from "../../validation/validation";
 import { EditIcon } from "../../icons/EditIcon";
 import { DeleteIcon } from "../../icons/DeleteIcon";
+import AlertModal from "../../components/AlertModal/AlertModal";
 
 interface Course {
   courseId: number;
@@ -55,6 +56,8 @@ const Courses = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+
+  const cancelRef = useRef(null);
 
   const accessToken = localStorage.getItem("accessToken");
 
@@ -105,6 +108,12 @@ const Courses = () => {
     onOpen();
   };
 
+  const handleDeleteCourse = (course: Course) => {
+    setOpenModal("delete");
+    setSelectedCourse(course);
+    onOpen();
+  };
+
   const onAddCourse = (data: AddCourseFormData) => {
     axios
       .post(`http://localhost:3000/course/${programId}`, data, config)
@@ -123,6 +132,22 @@ const Courses = () => {
       .patch(
         `http://localhost:3000/course/${selectedCourse?.courseId}`,
         data,
+        config
+      )
+      .then((res) => {
+        console.log(res.data);
+        onClose();
+        fetchCourses();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const onDeleteCourse = () => {
+    axios
+      .delete(
+        `http://localhost:3000/course/${selectedCourse?.courseId}`,
         config
       )
       .then((res) => {
@@ -193,6 +218,17 @@ const Courses = () => {
         </ModalDialog>
       )}
 
+      {isOpenModal === "delete" && (
+        <AlertModal
+          isOpen={isOpen}
+          leastDestructiveRef={cancelRef}
+          onClose={onClose}
+          alertHeading="Delete Course"
+          alertBody="Are you sure you want to delete this course?"
+          handleClick={onDeleteCourse}
+        />
+      )}
+
       {user?.role === "STUDENT" ? (
         <SimpleGrid columns={3} spacing={30} minChildWidth="275px">
           {courses.map((course) => (
@@ -254,6 +290,7 @@ const Courses = () => {
                           aria-label="Delete"
                           icon={<DeleteIcon />}
                           borderColor="border-color"
+                          onClick={() => handleDeleteCourse(course)}
                         />
                       </ButtonGroup>
                       {/* <EditIcon />
