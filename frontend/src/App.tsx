@@ -14,6 +14,9 @@ function App() {
   const [isResetPassword, setResetPassword] = useState(false);
   const [isMenuCollapse, setMenuCollapse] = useState(false);
   const [user, setUser] = useState<User | undefined>();
+  const [isOpenModal, setOpenModal] = useState<"add" | "edit" | "delete">(
+    "add"
+  );
 
   return (
     <UserContext.Provider
@@ -36,6 +39,8 @@ function App() {
         setMenuCollapse,
         user,
         setUser,
+        isOpenModal,
+        setOpenModal,
       }}
     >
       <RouterProvider router={router} />

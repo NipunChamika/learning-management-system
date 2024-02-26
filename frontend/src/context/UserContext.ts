@@ -20,6 +20,8 @@ interface UserContextInterface {
   setMenuCollapse: (isMenuCollapse: boolean) => void;
   user: User | undefined;
   setUser: (user: User | undefined) => void;
+  isOpenModal: "add" | "edit" | "delete";
+  setOpenModal: (isOpenModal: "add" | "edit" | "delete") => void;
 }
 
 export const UserContext = createContext<UserContextInterface | undefined>(

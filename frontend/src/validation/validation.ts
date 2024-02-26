@@ -52,3 +52,8 @@ export const updateProgramSchema = z.object({
   programCode: z.string().optional(),
   programName: z.string().optional(),
 });
+
+export const updateCourseSchema = z.object({
+  courseCode: z.string().optional(),
+  courseName: z.string().optional(),
+});

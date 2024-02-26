@@ -59,17 +59,13 @@ interface ResponseDataAdmin {
 }
 
 const Programs = () => {
-  const { user } = useUserContext();
+  const { user, isOpenModal, setOpenModal } = useUserContext();
 
   const [programs, setPrograms] = useState<Program[]>([]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [isOpenModal, setOpenModal] = useState<"add" | "edit" | "delete">(
-    "add"
-  );
-
-  const [selectedProgram, setSetlectedProgram] = useState<Program | null>(null);
+  const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
 
   const accessToken = localStorage.getItem("accessToken");
 
@@ -131,9 +127,9 @@ const Programs = () => {
     onOpen();
   };
 
-  const handleEditProgram = (selectedProgram: Program) => {
+  const handleUpdateProgram = (selectedProgram: Program) => {
     setOpenModal("edit");
-    setSetlectedProgram(selectedProgram);
+    setSelectedProgram(selectedProgram);
     onOpen();
   };
 
@@ -208,7 +204,7 @@ const Programs = () => {
         <ModalDialog
           isOpen={isOpen}
           onClose={onClose}
-          modalHeading="Edit Program"
+          modalHeading="Update Program"
         >
           <Form
             schema={updateProgramSchema}
@@ -274,7 +270,7 @@ const Programs = () => {
                           aria-label="Edit"
                           icon={<EditIcon />}
                           borderColor="border-color"
-                          onClick={() => handleEditProgram(program)}
+                          onClick={() => handleUpdateProgram(program)}
                         />
                         <IconButton
                           aria-label="Delete"

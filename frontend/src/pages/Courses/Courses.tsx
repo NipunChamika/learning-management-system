@@ -1,7 +1,9 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Flex,
+  IconButton,
   SimpleGrid,
   Table,
   TableContainer,
@@ -23,7 +25,10 @@ import { AddCourseFormData } from "../../utils/types";
 import { AddIcon } from "../../icons/AddIcon";
 import ModalDialog from "../../components/ModalDialog/ModalDialog";
 import Form from "../../components/Form/Form";
-import { addCourseSchema } from "../../validation/validation";
+import {
+  addCourseSchema,
+  updateCourseSchema,
+} from "../../validation/validation";
 import { EditIcon } from "../../icons/EditIcon";
 import { DeleteIcon } from "../../icons/DeleteIcon";
 
@@ -39,7 +44,7 @@ interface ResponseDataStudent {
 }
 
 const Courses = () => {
-  const { user } = useUserContext();
+  const { user, isOpenModal, setOpenModal } = useUserContext();
 
   // const { programId } = useParams();
   const location = useLocation();
@@ -49,6 +54,8 @@ const Courses = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+
   const accessToken = localStorage.getItem("accessToken");
 
   const config = {
@@ -57,7 +64,7 @@ const Courses = () => {
     },
   };
 
-  useEffect(() => {
+  const fetchCourses = () => {
     axios
       .get<ResponseDataStudent>(
         "http://localhost:3000/course/program/" + programId,
@@ -70,6 +77,10 @@ const Courses = () => {
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  useEffect(() => {
+    fetchCourses();
   }, [programId]);
 
   const navigate = useNavigate();
@@ -83,12 +94,41 @@ const Courses = () => {
     navigate(`${courseCode}`, { state: { courseId, courseName } });
   };
 
-  const onSubmit = (data: AddCourseFormData) => {
+  const handleAddCourse = () => {
+    setOpenModal("add");
+    onOpen();
+  };
+
+  const handleUpdateCourse = (course: Course) => {
+    setOpenModal("edit");
+    setSelectedCourse(course);
+    onOpen();
+  };
+
+  const onAddCourse = (data: AddCourseFormData) => {
     axios
       .post(`http://localhost:3000/course/${programId}`, data, config)
       .then((res) => {
         console.log(res.data);
         onClose();
+        fetchCourses();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const onUpdateCourse = (data: AddCourseFormData) => {
+    axios
+      .patch(
+        `http://localhost:3000/course/${selectedCourse?.courseId}`,
+        data,
+        config
+      )
+      .then((res) => {
+        console.log(res.data);
+        onClose();
+        fetchCourses();
       })
       .catch((error) => {
         console.log(error);
@@ -103,7 +143,11 @@ const Courses = () => {
             Courses
           </Text>
           {user?.role === "ADMIN" && (
-            <Button leftIcon={<AddIcon />} color="text-color" onClick={onOpen}>
+            <Button
+              leftIcon={<AddIcon />}
+              color="text-color"
+              onClick={handleAddCourse}
+            >
               Add
             </Button>
           )}
@@ -111,16 +155,43 @@ const Courses = () => {
         <Box width="100%" h="1px" bgColor="border-color" my="16px" />
       </Box>
 
-      <ModalDialog isOpen={isOpen} onClose={onClose} modalHeading="Add Course">
-        <Form
-          schema={addCourseSchema}
-          labels={[
-            { labelName: "Course Code", htmlFor: "courseCode" },
-            { labelName: "Course Name", htmlFor: "courseName" },
-          ]}
-          onSubmit={onSubmit}
-        />
-      </ModalDialog>
+      {isOpenModal === "add" && (
+        <ModalDialog
+          isOpen={isOpen}
+          onClose={onClose}
+          modalHeading="Add Course"
+        >
+          <Form
+            schema={addCourseSchema}
+            labels={[
+              { labelName: "Course Code", htmlFor: "courseCode" },
+              { labelName: "Course Name", htmlFor: "courseName" },
+            ]}
+            onSubmit={onAddCourse}
+          />
+        </ModalDialog>
+      )}
+
+      {isOpenModal === "edit" && (
+        <ModalDialog
+          isOpen={isOpen}
+          onClose={onClose}
+          modalHeading="Update Course"
+        >
+          <Form
+            schema={updateCourseSchema}
+            labels={[
+              { labelName: "Course Code", htmlFor: "courseCode" },
+              { labelName: "Course Name", htmlFor: "courseName" },
+            ]}
+            onSubmit={onUpdateCourse}
+            defaultValues={{
+              courseCode: selectedCourse?.courseCode,
+              courseName: selectedCourse?.courseName,
+            }}
+          />
+        </ModalDialog>
+      )}
 
       {user?.role === "STUDENT" ? (
         <SimpleGrid columns={3} spacing={30} minChildWidth="275px">
@@ -172,8 +243,21 @@ const Courses = () => {
                   </Td>
                   <Td borderColor="border-color">
                     <Flex align="center" gap="16px">
-                      <EditIcon />
-                      <DeleteIcon />
+                      <ButtonGroup isAttached variant="outline" size="sm">
+                        <IconButton
+                          aria-label="Edit"
+                          icon={<EditIcon />}
+                          borderColor="border-color"
+                          onClick={() => handleUpdateCourse(course)}
+                        />
+                        <IconButton
+                          aria-label="Delete"
+                          icon={<DeleteIcon />}
+                          borderColor="border-color"
+                        />
+                      </ButtonGroup>
+                      {/* <EditIcon />
+                      <DeleteIcon /> */}
                     </Flex>
                   </Td>
                 </Tr>
