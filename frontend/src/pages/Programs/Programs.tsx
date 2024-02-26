@@ -1,7 +1,9 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Flex,
+  IconButton,
   SimpleGrid,
   Table,
   TableContainer,
@@ -26,9 +28,12 @@ import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/UserContext";
 import { AddIcon } from "../../icons/AddIcon";
 import ModalDialog from "../../components/ModalDialog/ModalDialog";
-import { addProgramSchema } from "../../validation/validation";
+import {
+  addProgramSchema,
+  updateProgramSchema,
+} from "../../validation/validation";
 import Form from "../../components/Form/Form";
-import { AddProgramFormData } from "../../utils/types";
+import { AddProgramFormData, UpdateProgramFormData } from "../../utils/types";
 import { EditIcon } from "../../icons/EditIcon";
 import { DeleteIcon } from "../../icons/DeleteIcon";
 
@@ -60,6 +65,12 @@ const Programs = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const [isOpenModal, setOpenModal] = useState<"add" | "edit" | "delete">(
+    "add"
+  );
+
+  const [selectedProgram, setSetlectedProgram] = useState<Program | null>(null);
+
   const accessToken = localStorage.getItem("accessToken");
 
   const config = {
@@ -70,7 +81,7 @@ const Programs = () => {
 
   // TODO: Dynamically pass the studentId to the get request
 
-  useEffect(() => {
+  const fetchPrograms = () => {
     if (user?.role === "STUDENT") {
       axios
         .get<ResponseDataStudent>(
@@ -102,6 +113,10 @@ const Programs = () => {
           console.log(error);
         });
     }
+  };
+
+  useEffect(() => {
+    fetchPrograms();
   }, []);
 
   const navigate = useNavigate();
@@ -111,12 +126,41 @@ const Programs = () => {
     navigate(`${programCode}`, { state: { programId } });
   };
 
-  const onSubmit = (data: AddProgramFormData) => {
+  const handleAddProgram = () => {
+    setOpenModal("add");
+    onOpen();
+  };
+
+  const handleEditProgram = (selectedProgram: Program) => {
+    setOpenModal("edit");
+    setSetlectedProgram(selectedProgram);
+    onOpen();
+  };
+
+  const onAddProgram = (data: AddProgramFormData) => {
     axios
       .post("http://localhost:3000/program", data, config)
       .then((res) => {
         console.log(res.data);
         onClose();
+        fetchPrograms();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const onUpdateProgram = (data: UpdateProgramFormData) => {
+    axios
+      .patch(
+        `http://localhost:3000/program/${selectedProgram?.programId}`,
+        data,
+        config
+      )
+      .then((res) => {
+        console.log(res.data);
+        onClose();
+        fetchPrograms();
       })
       .catch((error) => {
         console.log(error);
@@ -131,7 +175,11 @@ const Programs = () => {
             Programs
           </Text>
           {user?.role === "ADMIN" && (
-            <Button leftIcon={<AddIcon />} color="text-color" onClick={onOpen}>
+            <Button
+              leftIcon={<AddIcon />}
+              color="text-color"
+              onClick={handleAddProgram}
+            >
               Add
             </Button>
           )}
@@ -139,16 +187,43 @@ const Programs = () => {
         <Box width="100%" h="1px" bgColor="border-color" mt="16px" />
       </Box>
 
-      <ModalDialog isOpen={isOpen} onClose={onClose} modalHeading="Add Program">
-        <Form
-          schema={addProgramSchema}
-          labels={[
-            { labelName: "Program Code", htmlFor: "programCode" },
-            { labelName: "Program Name", htmlFor: "programName" },
-          ]}
-          onSubmit={onSubmit}
-        />
-      </ModalDialog>
+      {isOpenModal === "add" && (
+        <ModalDialog
+          isOpen={isOpen}
+          onClose={onClose}
+          modalHeading="Add Program"
+        >
+          <Form
+            schema={addProgramSchema}
+            labels={[
+              { labelName: "Program Code", htmlFor: "programCode" },
+              { labelName: "Program Name", htmlFor: "programName" },
+            ]}
+            onSubmit={onAddProgram}
+          />
+        </ModalDialog>
+      )}
+
+      {isOpenModal === "edit" && (
+        <ModalDialog
+          isOpen={isOpen}
+          onClose={onClose}
+          modalHeading="Edit Program"
+        >
+          <Form
+            schema={updateProgramSchema}
+            labels={[
+              { labelName: "Program Code", htmlFor: "programCode" },
+              { labelName: "Program Name", htmlFor: "programName" },
+            ]}
+            onSubmit={onUpdateProgram}
+            defaultValues={{
+              programCode: selectedProgram?.programCode,
+              programName: selectedProgram?.programName,
+            }}
+          />
+        </ModalDialog>
+      )}
 
       {user?.role === "STUDENT" ? (
         <SimpleGrid columns={3} spacing={30} minChildWidth="275px">
@@ -194,8 +269,21 @@ const Programs = () => {
                   </Td>
                   <Td borderColor="border-color">
                     <Flex align="center" gap="16px">
-                      <EditIcon />
-                      <DeleteIcon />
+                      <ButtonGroup isAttached variant="outline" size="sm">
+                        <IconButton
+                          aria-label="Edit"
+                          icon={<EditIcon />}
+                          borderColor="border-color"
+                          onClick={() => handleEditProgram(program)}
+                        />
+                        <IconButton
+                          aria-label="Delete"
+                          icon={<DeleteIcon />}
+                          borderColor="border-color"
+                        />
+                      </ButtonGroup>
+                      {/* <EditIcon />
+                      <DeleteIcon /> */}
                     </Flex>
                   </Td>
                 </Tr>

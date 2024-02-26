@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { useUserContext } from "../context/UserContext";
-import { addCourseSchema, addProgramSchema } from "../validation/validation";
+import {
+  addCourseSchema,
+  addProgramSchema,
+  updateProgramSchema,
+} from "../validation/validation";
 
 export type User = {
   id: number;
@@ -20,6 +24,8 @@ export type Meta = {
 };
 
 export type AddProgramFormData = z.infer<typeof addProgramSchema>;
+
+export type UpdateProgramFormData = z.infer<typeof updateProgramSchema>;
 
 export type AddCourseFormData = z.infer<typeof addCourseSchema>;
 

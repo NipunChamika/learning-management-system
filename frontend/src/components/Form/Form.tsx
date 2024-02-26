@@ -8,7 +8,13 @@ import {
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ReactNode } from "react";
-import { FieldValues, Path, SubmitHandler, useForm } from "react-hook-form";
+import {
+  DefaultValues,
+  FieldValues,
+  Path,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
 import { ZodType } from "zod";
 
 type FormControlProps<T> = {
@@ -17,10 +23,11 @@ type FormControlProps<T> = {
 };
 
 interface Props<T extends FieldValues> {
-  schema: ZodType<T>;
+  schema: ZodType<any, any, any>;
   labels: FormControlProps<T>[];
   onSubmit: SubmitHandler<T>;
   children?: ReactNode;
+  defaultValues?: Partial<T>;
 }
 
 const Form = <T extends FieldValues>({
@@ -28,12 +35,16 @@ const Form = <T extends FieldValues>({
   labels,
   onSubmit,
   children,
+  defaultValues,
 }: Props<T>) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<T>({ resolver: zodResolver(schema) });
+  } = useForm<T>({
+    resolver: zodResolver(schema),
+    defaultValues: defaultValues as DefaultValues<T>,
+  });
 
   const getErrorMessage = (error: any) => {
     if (typeof error === "string") {

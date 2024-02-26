@@ -47,3 +47,8 @@ export const addCourseSchema = z.object({
   courseCode: z.string().min(1, { message: "Course code is required" }),
   courseName: z.string().min(1, { message: "Course name is required" }),
 });
+
+export const updateProgramSchema = z.object({
+  programCode: z.string().optional(),
+  programName: z.string().optional(),
+});
