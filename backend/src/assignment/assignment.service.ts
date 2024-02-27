@@ -42,8 +42,15 @@ export class AssignmentService {
       );
     }
 
+    const dueDate = new Date(assignmentDetails.dueDate);
+
+    const dueDateUTC = new Date(
+      dueDate.getTime() - dueDate.getTimezoneOffset() * 60000,
+    );
+
     const newAssignment = this.assignmentRepository.create({
       ...assignmentDetails,
+      dueDate: dueDateUTC,
       course: course,
     });
 
