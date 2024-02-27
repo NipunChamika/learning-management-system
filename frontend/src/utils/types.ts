@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { useUserContext } from "../context/UserContext";
 import {
+  addAssignmentSchema,
   addCourseSchema,
   addMaterialSchema,
   addProgramSchema,
@@ -31,6 +32,8 @@ export type UpdateProgramFormData = z.infer<typeof updateProgramSchema>;
 export type AddCourseFormData = z.infer<typeof addCourseSchema>;
 
 export type AddMaterialFormData = z.infer<typeof addMaterialSchema>;
+
+export type AddAssignmentFormData = z.infer<typeof addAssignmentSchema>;
 
 export const getRole = () => {
   let role;

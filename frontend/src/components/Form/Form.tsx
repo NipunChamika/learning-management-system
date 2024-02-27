@@ -7,7 +7,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ReactNode } from "react";
+import { HTMLInputTypeAttribute, ReactNode } from "react";
 import {
   DefaultValues,
   FieldValues,
@@ -20,6 +20,7 @@ import { ZodType } from "zod";
 type FormControlProps<T> = {
   labelName: string;
   htmlFor: Path<T>;
+  inputType?: HTMLInputTypeAttribute;
 };
 
 interface Props<T extends FieldValues> {
@@ -74,7 +75,11 @@ const Form = <T extends FieldValues>({
             >
               {label.labelName}
             </FormLabel>
-            <Input {...register(label.htmlFor)} id={label.htmlFor} />
+            <Input
+              {...register(label.htmlFor)}
+              id={label.htmlFor}
+              type={label.inputType || "text"}
+            />
             <FormErrorMessage mt="1px">
               {errors[label.htmlFor] &&
                 getErrorMessage(errors[label.htmlFor]?.message)}

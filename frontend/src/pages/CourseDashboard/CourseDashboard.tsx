@@ -13,7 +13,10 @@ import { useLocation, useParams } from "react-router-dom";
 import { useUserContext } from "../../context/UserContext";
 import ModalDialog from "../../components/ModalDialog/ModalDialog";
 import Form from "../../components/Form/Form";
-import { addMaterialSchema } from "../../validation/validation";
+import {
+  addAssignmentSchema,
+  addMaterialSchema,
+} from "../../validation/validation";
 
 interface LearningMaterial {
   learningMaterialId: number;
@@ -39,6 +42,13 @@ interface Assignment {
   assignmentDescription: string;
   assignmentDueDate: Date;
 }
+
+type AssignmentForPost = {
+  assignmentTitle: string;
+  resourcePath: string;
+  description: string;
+  dueDate: string;
+};
 
 interface AssignmentResponseData {
   assignments: Assignment[];
@@ -77,6 +87,7 @@ const CourseDashboard = () => {
         config
       )
       .then((res) => {
+        // console.log(res.data.learningMaterials);
         setLearningMaterials(res.data.learningMaterials);
       })
       .catch((error) => {
@@ -95,6 +106,7 @@ const CourseDashboard = () => {
         config
       )
       .then((res) => {
+        // console.log(res.data.learningMaterials);
         setAssignments(res.data.assignments);
       })
       .catch((error) => {
@@ -112,6 +124,12 @@ const CourseDashboard = () => {
     onOpen();
   };
 
+  const handleAddAssignment = () => {
+    setModalType("assignment");
+    setOpenModal("add");
+    onOpen();
+  };
+
   const onAddMaterial = (data: LearningMaterialForPost) => {
     axios
       .post(`http://localhost:3000/learning-material/${courseId}`, data, config)
@@ -123,6 +141,21 @@ const CourseDashboard = () => {
       .catch((error) => {
         console.log(error);
       });
+    // console.log("Material added");
+  };
+
+  const onAddAssignment = (data: AssignmentForPost) => {
+    axios
+      .post(`http://localhost:3000/assignment/${courseId}`, data, config)
+      .then((res) => {
+        console.log(res.data);
+        onClose();
+        fetchAssignments();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    // console.log("Assignment added");
   };
 
   return (
@@ -160,6 +193,32 @@ const CourseDashboard = () => {
         </ModalDialog>
       )}
 
+      {isOpenModal === "add" && isModalType === "assignment" && (
+        <ModalDialog
+          isOpen={isOpen}
+          onClose={onClose}
+          modalHeading="Add Assignment"
+        >
+          <Form
+            schema={addAssignmentSchema}
+            labels={[
+              {
+                labelName: "Assignment Title",
+                htmlFor: "assignmentTitle",
+              },
+              { labelName: "Resource Path", htmlFor: "resourcePath" },
+              { labelName: "Description", htmlFor: "description" },
+              {
+                labelName: "Due Date",
+                htmlFor: "dueDate",
+                inputType: "datetime-local",
+              },
+            ]}
+            onSubmit={onAddAssignment}
+          />
+        </ModalDialog>
+      )}
+
       <Box mt={6}>
         <Accordion allowMultiple>
           <CourseAccordion
@@ -177,6 +236,7 @@ const CourseDashboard = () => {
               description: assignment.assignmentDescription,
               dueDate: assignment.assignmentDueDate,
             }))}
+            handleAdd={handleAddAssignment}
           />
         </Accordion>
       </Box>

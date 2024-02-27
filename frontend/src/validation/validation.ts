@@ -65,3 +65,14 @@ export const addMaterialSchema = z.object({
   materialType: z.string().min(1, { message: "File type is required" }),
   resourcePath: z.string().min(1, { message: "Resource path is required" }),
 });
+
+export const addAssignmentSchema = z.object({
+  assignmentTitle: z
+    .string()
+    .min(1, { message: "Assignment title is required" }),
+  resourcePath: z.string().min(1, { message: "Resource path is required" }),
+  description: z.string().min(1, { message: "Description is required" }),
+  dueDate: z.string().refine((val) => !isNaN(Date.parse(val)), {
+    message: "Due date must be a valid date",
+  }),
+});
