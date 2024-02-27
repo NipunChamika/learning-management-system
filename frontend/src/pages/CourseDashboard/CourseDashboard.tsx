@@ -1,8 +1,19 @@
-import { VStack, Text, Box, HStack, Accordion } from "@chakra-ui/react";
+import {
+  VStack,
+  Text,
+  Box,
+  HStack,
+  Accordion,
+  useDisclosure,
+} from "@chakra-ui/react";
 import CourseAccordion from "../../components/Accordion/CourseAccordion";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation, useParams } from "react-router-dom";
+import { useUserContext } from "../../context/UserContext";
+import ModalDialog from "../../components/ModalDialog/ModalDialog";
+import Form from "../../components/Form/Form";
+import { addMaterialSchema } from "../../validation/validation";
 
 interface LearningMaterial {
   learningMaterialId: number;
@@ -10,6 +21,12 @@ interface LearningMaterial {
   learningMaterialType: string;
   learningMaterialResourcePath?: string;
 }
+
+type LearningMaterialForPost = {
+  learningMaterialTitle: string;
+  materialType: string;
+  resourcePath: string;
+};
 
 interface LearningResponseData {
   learningMaterials: LearningMaterial[];
@@ -37,6 +54,14 @@ const CourseDashboard = () => {
   >([]);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { isOpenModal, setOpenModal } = useUserContext();
+
+  const [isModalType, setModalType] = useState<"material" | "assignment">(
+    "material"
+  );
+
   const accessToken = localStorage.getItem("accessToken");
 
   const config = {
@@ -45,35 +70,60 @@ const CourseDashboard = () => {
     },
   };
 
-  useEffect(() => {
+  const fetchLearningMaterials = () => {
     axios
       .get<LearningResponseData>(
         "http://localhost:3000/learning-material/course/" + courseId,
         config
       )
       .then((res) => {
-        // console.log(res.data.learningMaterials);
         setLearningMaterials(res.data.learningMaterials);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [courseId]);
+  };
 
   useEffect(() => {
+    fetchLearningMaterials();
+  }, [courseId]);
+
+  const fetchAssignments = () => {
     axios
       .get<AssignmentResponseData>(
         "http://localhost:3000/assignment/course/" + courseId,
         config
       )
       .then((res) => {
-        // console.log(res.data.learningMaterials);
         setAssignments(res.data.assignments);
       })
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  useEffect(() => {
+    fetchAssignments();
   }, [courseId]);
+
+  const handleAddMaterial = () => {
+    setModalType("material");
+    setOpenModal("add");
+    onOpen();
+  };
+
+  const onAddMaterial = (data: LearningMaterialForPost) => {
+    axios
+      .post(`http://localhost:3000/learning-material/${courseId}`, data, config)
+      .then((res) => {
+        console.log(res.data);
+        onClose();
+        fetchLearningMaterials();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <>
@@ -89,6 +139,27 @@ const CourseDashboard = () => {
         <Box width="100%" h="1px" bgColor="border-color" />
       </VStack>
 
+      {isOpenModal === "add" && isModalType === "material" && (
+        <ModalDialog
+          isOpen={isOpen}
+          onClose={onClose}
+          modalHeading="Add Program"
+        >
+          <Form
+            schema={addMaterialSchema}
+            labels={[
+              {
+                labelName: "Learning Material Title",
+                htmlFor: "learningMaterialTitle",
+              },
+              { labelName: "File Type", htmlFor: "materialType" },
+              { labelName: "Resource Path", htmlFor: "resourcePath" },
+            ]}
+            onSubmit={onAddMaterial}
+          />
+        </ModalDialog>
+      )}
+
       <Box mt={6}>
         <Accordion allowMultiple>
           <CourseAccordion
@@ -96,6 +167,7 @@ const CourseDashboard = () => {
               id: learningMaterial.learningMaterialId,
               panelTitle: learningMaterial.learningMaterialTitle,
             }))}
+            handleAdd={handleAddMaterial}
           />
 
           <CourseAccordion

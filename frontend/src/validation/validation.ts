@@ -57,3 +57,11 @@ export const updateCourseSchema = z.object({
   courseCode: z.string().optional(),
   courseName: z.string().optional(),
 });
+
+export const addMaterialSchema = z.object({
+  learningMaterialTitle: z
+    .string()
+    .min(1, { message: "Learning material title is required" }),
+  materialType: z.string().min(1, { message: "File type is required" }),
+  resourcePath: z.string().min(1, { message: "Resource path is required" }),
+});

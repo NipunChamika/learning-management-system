@@ -4,6 +4,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Button,
   Flex,
   HStack,
   Icon,
@@ -16,6 +17,8 @@ import { AssignmentItemIcon } from "../../icons/AssignmentItemIcon";
 import { LearningMaterialIcon } from "../../icons/LearningMaterialIcon";
 import { AssignmentIcon } from "../../icons/AssignmentIcon";
 import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../../context/UserContext";
+import { AddIcon } from "../../icons/AddIcon";
 
 type LearningMaterial = {
   id: number;
@@ -32,9 +35,16 @@ type Assignment = {
 interface Props {
   learningMaterials?: LearningMaterial[];
   assignments?: Assignment[];
+  handleAdd?: () => void;
 }
 
-const CourseAccordion = ({ learningMaterials, assignments }: Props) => {
+const CourseAccordion = ({
+  learningMaterials,
+  assignments,
+  handleAdd,
+}: Props) => {
+  const { user } = useUserContext();
+
   const date = (dueDate: Date) => {
     const formatter = new Intl.DateTimeFormat("en-GB", {
       year: "numeric",
@@ -167,6 +177,17 @@ const CourseAccordion = ({ learningMaterials, assignments }: Props) => {
                 No content available.
               </Text>
             </>
+          )}
+          {user?.role === "ADMIN" && (
+            <Flex mt="-20px">
+              <Button
+                leftIcon={<AddIcon />}
+                color="text-color"
+                onClick={handleAdd}
+              >
+                Add
+              </Button>
+            </Flex>
           )}
         </AccordionPanel>
       </AccordionItem>
