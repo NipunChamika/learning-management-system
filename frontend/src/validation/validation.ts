@@ -76,3 +76,9 @@ export const addAssignmentSchema = z.object({
     message: "Due date must be a valid date",
   }),
 });
+
+export const updateMaterialSchema = z.object({
+  learningMaterialTitle: z.string().optional(),
+  materialType: z.string().optional(),
+  resourcePath: z.string().optional(),
+});

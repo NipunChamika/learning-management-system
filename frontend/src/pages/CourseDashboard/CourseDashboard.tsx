@@ -16,6 +16,7 @@ import Form from "../../components/Form/Form";
 import {
   addAssignmentSchema,
   addMaterialSchema,
+  updateMaterialSchema,
 } from "../../validation/validation";
 
 interface LearningMaterial {
@@ -26,6 +27,7 @@ interface LearningMaterial {
 }
 
 type LearningMaterialForPost = {
+  materialId: number;
   learningMaterialTitle: string;
   materialType: string;
   resourcePath: string;
@@ -40,10 +42,11 @@ interface Assignment {
   assignmentTitle: string;
   assignmentResourcePath: string;
   assignmentDescription: string;
-  assignmentDueDate: Date;
+  assignmentDueDate: string;
 }
 
 type AssignmentForPost = {
+  assignmentId: number;
   assignmentTitle: string;
   resourcePath: string;
   description: string;
@@ -71,6 +74,9 @@ const CourseDashboard = () => {
   const [isModalType, setModalType] = useState<"material" | "assignment">(
     "material"
   );
+
+  const [selectedMaterial, setSelectedMaterial] =
+    useState<LearningMaterialForPost>();
 
   const accessToken = localStorage.getItem("accessToken");
 
@@ -130,9 +136,22 @@ const CourseDashboard = () => {
     onOpen();
   };
 
+  const handleUpdateMaterial = (selectedMaterial: LearningMaterialForPost) => {
+    setModalType("material");
+    setOpenModal("edit");
+    setSelectedMaterial(selectedMaterial);
+    onOpen();
+  };
+
   const onAddMaterial = (data: LearningMaterialForPost) => {
+    const { materialId, ...material } = data;
+
     axios
-      .post(`http://localhost:3000/learning-material/${courseId}`, data, config)
+      .post(
+        `http://localhost:3000/learning-material/${courseId}`,
+        material,
+        config
+      )
       .then((res) => {
         console.log(res.data);
         onClose();
@@ -145,8 +164,10 @@ const CourseDashboard = () => {
   };
 
   const onAddAssignment = (data: AssignmentForPost) => {
+    const { assignmentId, ...assignment } = data;
+
     axios
-      .post(`http://localhost:3000/assignment/${courseId}`, data, config)
+      .post(`http://localhost:3000/assignment/${courseId}`, assignment, config)
       .then((res) => {
         console.log(res.data);
         onClose();
@@ -156,6 +177,25 @@ const CourseDashboard = () => {
         console.log(error);
       });
     // console.log("Assignment added");
+  };
+
+  const onUpdateMaterial = (data: LearningMaterialForPost) => {
+    const { materialId, ...material } = data;
+
+    axios
+      .patch(
+        `http://localhost:3000/learning-material/${selectedMaterial?.materialId}`,
+        material,
+        config
+      )
+      .then((res) => {
+        console.log(res.data);
+        onClose();
+        fetchLearningMaterials();
+      })
+      .then((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -207,7 +247,11 @@ const CourseDashboard = () => {
                 htmlFor: "assignmentTitle",
               },
               { labelName: "Resource Path", htmlFor: "resourcePath" },
-              { labelName: "Description", htmlFor: "description" },
+              {
+                labelName: "Description",
+                htmlFor: "description",
+                isTextarea: true,
+              },
               {
                 labelName: "Due Date",
                 htmlFor: "dueDate",
@@ -219,20 +263,46 @@ const CourseDashboard = () => {
         </ModalDialog>
       )}
 
+      {isOpenModal === "edit" && isModalType === "material" && (
+        <ModalDialog
+          isOpen={isOpen}
+          onClose={onClose}
+          modalHeading="Update Program"
+        >
+          <Form
+            schema={updateMaterialSchema}
+            labels={[
+              {
+                labelName: "Learning Material Title",
+                htmlFor: "learningMaterialTitle",
+              },
+              { labelName: "File Type", htmlFor: "materialType" },
+              { labelName: "Resource Path", htmlFor: "resourcePath" },
+            ]}
+            onSubmit={onUpdateMaterial}
+            defaultValues={selectedMaterial}
+          />
+        </ModalDialog>
+      )}
+
       <Box mt={6}>
         <Accordion allowMultiple>
           <CourseAccordion
             learningMaterials={learningMaterials.map((learningMaterial) => ({
               id: learningMaterial.learningMaterialId,
               panelTitle: learningMaterial.learningMaterialTitle,
+              materialType: learningMaterial.learningMaterialType,
+              resourcePath: learningMaterial.learningMaterialResourcePath || "",
             }))}
             handleAdd={handleAddMaterial}
+            handleUpdateMaterial={handleUpdateMaterial}
           />
 
           <CourseAccordion
             assignments={assignments.map((assignment) => ({
               id: assignment.assignmentId,
               panelTitle: assignment.assignmentTitle,
+              resourcePath: assignment.assignmentResourcePath,
               description: assignment.assignmentDescription,
               dueDate: assignment.assignmentDueDate,
             }))}

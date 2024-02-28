@@ -5,9 +5,11 @@ import {
   AccordionPanel,
   Box,
   Button,
+  ButtonGroup,
   Flex,
   HStack,
   Icon,
+  IconButton,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -19,16 +21,28 @@ import { AssignmentIcon } from "../../icons/AssignmentIcon";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/UserContext";
 import { AddIcon } from "../../icons/AddIcon";
+import { EditIcon } from "../../icons/EditIcon";
+import { DeleteIcon } from "../../icons/DeleteIcon";
 
 type LearningMaterial = {
   id: number;
   panelTitle: string;
+  materialType: string;
+  resourcePath: string;
+};
+
+type LearningMaterialForPost = {
+  materialId: number;
+  learningMaterialTitle: string;
+  materialType: string;
+  resourcePath: string;
 };
 
 type Assignment = {
   id: number;
   panelTitle: string;
-  dueDate: Date;
+  resourcePath: string;
+  dueDate: string;
   description: string;
 };
 
@@ -36,16 +50,18 @@ interface Props {
   learningMaterials?: LearningMaterial[];
   assignments?: Assignment[];
   handleAdd?: () => void;
+  handleUpdateMaterial?: (material: LearningMaterialForPost) => void;
 }
 
 const CourseAccordion = ({
   learningMaterials,
   assignments,
   handleAdd,
+  handleUpdateMaterial,
 }: Props) => {
   const { user } = useUserContext();
 
-  const date = (dueDate: Date) => {
+  const date = (dueDate: string) => {
     const formatter = new Intl.DateTimeFormat("en-GB", {
       year: "numeric",
       month: "2-digit",
@@ -115,7 +131,32 @@ const CourseAccordion = ({
                     {material.panelTitle}
                   </Text>
                 </Flex>
-                <DownloadIcon boxSize="24px" />
+                {user?.role === "ADMIN" ? (
+                  <ButtonGroup isAttached variant="outline" size="sm">
+                    <IconButton
+                      aria-label="Edit"
+                      icon={<EditIcon />}
+                      borderColor="border-color"
+                      onClick={() =>
+                        handleUpdateMaterial &&
+                        handleUpdateMaterial({
+                          materialId: material.id,
+                          learningMaterialTitle: material.panelTitle,
+                          materialType: material.materialType,
+                          resourcePath: material.resourcePath,
+                        })
+                      }
+                    />
+                    <IconButton
+                      aria-label="Delete"
+                      icon={<DeleteIcon />}
+                      borderColor="border-color"
+                      // onClick={handleDeleteMaterial}
+                    />
+                  </ButtonGroup>
+                ) : (
+                  <DownloadIcon boxSize="24px" />
+                )}
               </HStack>
             ))}
           {assignments &&
@@ -128,33 +169,53 @@ const CourseAccordion = ({
                 pb="16px"
                 mb="40px"
               >
-                <VStack align="stretch" spacing="16px">
-                  <Flex flex="1" gap="8px" align="center">
-                    <AssignmentItemIcon boxSize="35px" />
-                    <Box>
-                      <Text
-                        fontSize="20px"
-                        fontWeight="400"
-                        cursor="pointer"
-                        _hover={{ textDecor: "underline" }}
-                        onClick={() =>
-                          handleNavigate(
-                            assignment.id,
-                            assignment.panelTitle,
-                            assignment.description
-                          )
-                        }
-                      >
-                        {assignment.panelTitle}
-                      </Text>
-                      <Text
-                        fontSize="12px"
-                        fontWeight="400"
-                        color="date-time-color"
-                      >
-                        {`Due date: ${date(assignment.dueDate)}`}
-                      </Text>
-                    </Box>
+                <VStack align="stretch" spacing="16px" w="100%">
+                  <Flex
+                    flex="1"
+                    gap="8px"
+                    align="center"
+                    justify="space-between"
+                  >
+                    <HStack>
+                      <AssignmentItemIcon boxSize="35px" />
+                      <Box>
+                        <Text
+                          fontSize="20px"
+                          fontWeight="400"
+                          cursor="pointer"
+                          _hover={{ textDecor: "underline" }}
+                          onClick={() =>
+                            handleNavigate(
+                              assignment.id,
+                              assignment.panelTitle,
+                              assignment.description
+                            )
+                          }
+                        >
+                          {assignment.panelTitle}
+                        </Text>
+                        <Text
+                          fontSize="12px"
+                          fontWeight="400"
+                          color="date-time-color"
+                        >
+                          {`Due date: ${date(assignment.dueDate)}`}
+                        </Text>
+                      </Box>
+                    </HStack>
+                    <ButtonGroup isAttached variant="outline" size="sm">
+                      <IconButton
+                        aria-label="Edit"
+                        icon={<EditIcon />}
+                        borderColor="border-color"
+                      />
+                      <IconButton
+                        aria-label="Delete"
+                        icon={<DeleteIcon />}
+                        borderColor="border-color"
+                        // onClick={handleDelete}
+                      />
+                    </ButtonGroup>
                   </Flex>
                   <Text
                     fontSize="16px"

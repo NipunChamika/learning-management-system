@@ -5,6 +5,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  Textarea,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HTMLInputTypeAttribute, ReactNode } from "react";
@@ -21,6 +22,7 @@ type FormControlProps<T> = {
   labelName: string;
   htmlFor: Path<T>;
   inputType?: HTMLInputTypeAttribute;
+  isTextarea?: boolean;
 };
 
 interface Props<T extends FieldValues> {
@@ -75,11 +77,15 @@ const Form = <T extends FieldValues>({
             >
               {label.labelName}
             </FormLabel>
-            <Input
-              {...register(label.htmlFor)}
-              id={label.htmlFor}
-              type={label.inputType || "text"}
-            />
+            {label.isTextarea ? (
+              <Textarea {...register(label.htmlFor)} id={label.htmlFor} />
+            ) : (
+              <Input
+                {...register(label.htmlFor)}
+                id={label.htmlFor}
+                type={label.inputType || "text"}
+              />
+            )}
             <FormErrorMessage mt="1px">
               {errors[label.htmlFor] &&
                 getErrorMessage(errors[label.htmlFor]?.message)}
