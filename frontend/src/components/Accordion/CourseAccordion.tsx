@@ -60,6 +60,7 @@ interface Props {
   handleAdd?: () => void;
   handleUpdateMaterial?: (material: LearningMaterialForPost) => void;
   handleUpdateAssignment?: (assignment: AssignmentForPost) => void;
+  handleDeleteMaterial?: (material: LearningMaterialForPost) => void;
 }
 
 const CourseAccordion = ({
@@ -68,6 +69,7 @@ const CourseAccordion = ({
   handleAdd,
   handleUpdateMaterial,
   handleUpdateAssignment,
+  handleDeleteMaterial,
 }: Props) => {
   const { user } = useUserContext();
 
@@ -161,7 +163,15 @@ const CourseAccordion = ({
                       aria-label="Delete"
                       icon={<DeleteIcon />}
                       borderColor="border-color"
-                      // onClick={handleDeleteMaterial}
+                      onClick={() =>
+                        handleDeleteMaterial &&
+                        handleDeleteMaterial({
+                          materialId: material.id,
+                          learningMaterialTitle: material.panelTitle,
+                          materialType: material.materialType,
+                          resourcePath: material.resourcePath,
+                        })
+                      }
                     />
                   </ButtonGroup>
                 ) : (

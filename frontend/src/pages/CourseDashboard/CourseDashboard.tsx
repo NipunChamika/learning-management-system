@@ -7,7 +7,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import CourseAccordion from "../../components/Accordion/CourseAccordion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useLocation, useParams } from "react-router-dom";
 import { useUserContext } from "../../context/UserContext";
@@ -25,6 +25,7 @@ import {
   UpdateAssignmentFormData,
   UpdateMaterialFormData,
 } from "../../utils/types";
+import AlertModal from "../../components/AlertModal/AlertModal";
 
 interface LearningMaterial {
   learningMaterialId: number;
@@ -87,6 +88,8 @@ const CourseDashboard = () => {
 
   const [selectedAssignment, setSelectedAssignment] =
     useState<AssignmentForPost>();
+
+  const cancelRef = useRef(null);
 
   const accessToken = localStorage.getItem("accessToken");
 
@@ -160,6 +163,13 @@ const CourseDashboard = () => {
     onOpen();
   };
 
+  const handleDeleteMaterial = (selectedMaterial: LearningMaterialForPost) => {
+    setModalType("material");
+    setOpenModal("delete");
+    setSelectedMaterial(selectedMaterial);
+    onOpen();
+  };
+
   const onAddMaterial = (data: AddMaterialFormData) => {
     axios
       .post(`http://localhost:3000/learning-material/${courseId}`, data, config)
@@ -225,6 +235,22 @@ const CourseDashboard = () => {
   };
 
   const formattedDueDate = selectedAssignment?.dueDate.slice(0, 16);
+
+  const onDeleteMaterial = () => {
+    axios
+      .delete(
+        `http://localhost:3000/learning-material/${selectedMaterial?.materialId}`,
+        config
+      )
+      .then((res) => {
+        console.log(res.data);
+        onClose();
+        fetchLearningMaterials();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <>
@@ -344,6 +370,17 @@ const CourseDashboard = () => {
         </ModalDialog>
       )}
 
+      {isOpenModal === "delete" && isModalType === "material" && (
+        <AlertModal
+          isOpen={isOpen}
+          leastDestructiveRef={cancelRef}
+          onClose={onClose}
+          alertHeading="Delete Learning Material"
+          alertBody="Are you sure you want to delete this learning material?"
+          handleClick={onDeleteMaterial}
+        />
+      )}
+
       <Box mt={6}>
         <Accordion allowMultiple>
           <CourseAccordion
@@ -355,6 +392,7 @@ const CourseDashboard = () => {
             }))}
             handleAdd={handleAddMaterial}
             handleUpdateMaterial={handleUpdateMaterial}
+            handleDeleteMaterial={handleDeleteMaterial}
           />
 
           <CourseAccordion
