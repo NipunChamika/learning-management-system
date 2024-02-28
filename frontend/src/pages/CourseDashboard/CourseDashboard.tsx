@@ -170,6 +170,13 @@ const CourseDashboard = () => {
     onOpen();
   };
 
+  const handleDeleteAssignment = (selectedAssignment: AssignmentForPost) => {
+    setModalType("assignment");
+    setOpenModal("delete");
+    setSelectedAssignment(selectedAssignment);
+    onOpen();
+  };
+
   const onAddMaterial = (data: AddMaterialFormData) => {
     axios
       .post(`http://localhost:3000/learning-material/${courseId}`, data, config)
@@ -246,6 +253,22 @@ const CourseDashboard = () => {
         console.log(res.data);
         onClose();
         fetchLearningMaterials();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const onDeleteAssignment = () => {
+    axios
+      .delete(
+        `http://localhost:3000/assignment/${selectedAssignment?.assignmentId}`,
+        config
+      )
+      .then((res) => {
+        console.log(res.data);
+        onClose();
+        fetchAssignments();
       })
       .catch((error) => {
         console.log(error);
@@ -381,6 +404,17 @@ const CourseDashboard = () => {
         />
       )}
 
+      {isOpenModal === "delete" && isModalType === "assignment" && (
+        <AlertModal
+          isOpen={isOpen}
+          leastDestructiveRef={cancelRef}
+          onClose={onClose}
+          alertHeading="Delete Assignment"
+          alertBody="Are you sure you want to delete this assignment?"
+          handleClick={onDeleteAssignment}
+        />
+      )}
+
       <Box mt={6}>
         <Accordion allowMultiple>
           <CourseAccordion
@@ -405,6 +439,7 @@ const CourseDashboard = () => {
             }))}
             handleAdd={handleAddAssignment}
             handleUpdateAssignment={handleUpdateAssignment}
+            handleDeleteAssignment={handleDeleteAssignment}
           />
         </Accordion>
       </Box>
