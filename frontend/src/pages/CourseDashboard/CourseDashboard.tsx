@@ -16,8 +16,15 @@ import Form from "../../components/Form/Form";
 import {
   addAssignmentSchema,
   addMaterialSchema,
+  updateAssignmentSchema,
   updateMaterialSchema,
 } from "../../validation/validation";
+import {
+  AddAssignmentFormData,
+  AddMaterialFormData,
+  UpdateAssignmentFormData,
+  UpdateMaterialFormData,
+} from "../../utils/types";
 
 interface LearningMaterial {
   learningMaterialId: number;
@@ -77,6 +84,9 @@ const CourseDashboard = () => {
 
   const [selectedMaterial, setSelectedMaterial] =
     useState<LearningMaterialForPost>();
+
+  const [selectedAssignment, setSelectedAssignment] =
+    useState<AssignmentForPost>();
 
   const accessToken = localStorage.getItem("accessToken");
 
@@ -143,15 +153,16 @@ const CourseDashboard = () => {
     onOpen();
   };
 
-  const onAddMaterial = (data: LearningMaterialForPost) => {
-    const { materialId, ...material } = data;
+  const handleUpdateAssignment = (selectedAssignment: AssignmentForPost) => {
+    setModalType("assignment");
+    setOpenModal("edit");
+    setSelectedAssignment(selectedAssignment);
+    onOpen();
+  };
 
+  const onAddMaterial = (data: AddMaterialFormData) => {
     axios
-      .post(
-        `http://localhost:3000/learning-material/${courseId}`,
-        material,
-        config
-      )
+      .post(`http://localhost:3000/learning-material/${courseId}`, data, config)
       .then((res) => {
         console.log(res.data);
         onClose();
@@ -163,11 +174,9 @@ const CourseDashboard = () => {
     // console.log("Material added");
   };
 
-  const onAddAssignment = (data: AssignmentForPost) => {
-    const { assignmentId, ...assignment } = data;
-
+  const onAddAssignment = (data: AddAssignmentFormData) => {
     axios
-      .post(`http://localhost:3000/assignment/${courseId}`, assignment, config)
+      .post(`http://localhost:3000/assignment/${courseId}`, data, config)
       .then((res) => {
         console.log(res.data);
         onClose();
@@ -179,13 +188,11 @@ const CourseDashboard = () => {
     // console.log("Assignment added");
   };
 
-  const onUpdateMaterial = (data: LearningMaterialForPost) => {
-    const { materialId, ...material } = data;
-
+  const onUpdateMaterial = (data: UpdateMaterialFormData) => {
     axios
       .patch(
         `http://localhost:3000/learning-material/${selectedMaterial?.materialId}`,
-        material,
+        data,
         config
       )
       .then((res) => {
@@ -193,10 +200,31 @@ const CourseDashboard = () => {
         onClose();
         fetchLearningMaterials();
       })
-      .then((error) => {
+      .catch((error) => {
         console.log(error);
       });
   };
+
+  const onUpdateAssignment = (data: UpdateAssignmentFormData) => {
+    const formattedDueDate = `${data.dueDate}:00Z`;
+
+    axios
+      .patch(
+        `http://localhost:3000/assignment/${selectedAssignment?.assignmentId}`,
+        { ...data, dueDate: formattedDueDate },
+        config
+      )
+      .then((res) => {
+        console.log(res.data);
+        onClose();
+        fetchAssignments();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const formattedDueDate = selectedAssignment?.dueDate.slice(0, 16);
 
   return (
     <>
@@ -285,6 +313,37 @@ const CourseDashboard = () => {
         </ModalDialog>
       )}
 
+      {isOpenModal === "edit" && isModalType === "assignment" && (
+        <ModalDialog
+          isOpen={isOpen}
+          onClose={onClose}
+          modalHeading="Update Assignment"
+        >
+          <Form
+            schema={updateAssignmentSchema}
+            labels={[
+              {
+                labelName: "Assignment Title",
+                htmlFor: "assignmentTitle",
+              },
+              { labelName: "Resource Path", htmlFor: "resourcePath" },
+              {
+                labelName: "Description",
+                htmlFor: "description",
+                isTextarea: true,
+              },
+              {
+                labelName: "Due Date",
+                htmlFor: "dueDate",
+                inputType: "datetime-local",
+              },
+            ]}
+            onSubmit={onUpdateAssignment}
+            defaultValues={{ ...selectedAssignment, dueDate: formattedDueDate }}
+          />
+        </ModalDialog>
+      )}
+
       <Box mt={6}>
         <Accordion allowMultiple>
           <CourseAccordion
@@ -307,6 +366,7 @@ const CourseDashboard = () => {
               dueDate: assignment.assignmentDueDate,
             }))}
             handleAdd={handleAddAssignment}
+            handleUpdateAssignment={handleUpdateAssignment}
           />
         </Accordion>
       </Box>

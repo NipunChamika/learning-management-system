@@ -21,7 +21,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import CardItem from "../../components/CardItem/CardItem";
 import Course1 from "../../assets/Program3.png";
 import { useUserContext } from "../../context/UserContext";
-import { AddCourseFormData } from "../../utils/types";
+import { AddCourseFormData, UpdateCourseFormData } from "../../utils/types";
 import { AddIcon } from "../../icons/AddIcon";
 import ModalDialog from "../../components/ModalDialog/ModalDialog";
 import Form from "../../components/Form/Form";
@@ -127,7 +127,7 @@ const Courses = () => {
       });
   };
 
-  const onUpdateCourse = (data: AddCourseFormData) => {
+  const onUpdateCourse = (data: UpdateCourseFormData) => {
     axios
       .patch(
         `http://localhost:3000/course/${selectedCourse?.courseId}`,

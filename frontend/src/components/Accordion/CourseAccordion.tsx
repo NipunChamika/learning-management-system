@@ -46,11 +46,20 @@ type Assignment = {
   description: string;
 };
 
+type AssignmentForPost = {
+  assignmentId: number;
+  assignmentTitle: string;
+  resourcePath: string;
+  dueDate: string;
+  description: string;
+};
+
 interface Props {
   learningMaterials?: LearningMaterial[];
   assignments?: Assignment[];
   handleAdd?: () => void;
   handleUpdateMaterial?: (material: LearningMaterialForPost) => void;
+  handleUpdateAssignment?: (assignment: AssignmentForPost) => void;
 }
 
 const CourseAccordion = ({
@@ -58,6 +67,7 @@ const CourseAccordion = ({
   assignments,
   handleAdd,
   handleUpdateMaterial,
+  handleUpdateAssignment,
 }: Props) => {
   const { user } = useUserContext();
 
@@ -208,6 +218,16 @@ const CourseAccordion = ({
                         aria-label="Edit"
                         icon={<EditIcon />}
                         borderColor="border-color"
+                        onClick={() =>
+                          handleUpdateAssignment &&
+                          handleUpdateAssignment({
+                            assignmentId: assignment.id,
+                            assignmentTitle: assignment.panelTitle,
+                            resourcePath: assignment.resourcePath,
+                            description: assignment.description,
+                            dueDate: assignment.dueDate,
+                          })
+                        }
                       />
                       <IconButton
                         aria-label="Delete"

@@ -82,3 +82,10 @@ export const updateMaterialSchema = z.object({
   materialType: z.string().optional(),
   resourcePath: z.string().optional(),
 });
+
+export const updateAssignmentSchema = z.object({
+  assignmentTitle: z.string().optional(),
+  resourcePath: z.string().optional(),
+  description: z.string().optional(),
+  dueDate: z.string().optional(),
+});
