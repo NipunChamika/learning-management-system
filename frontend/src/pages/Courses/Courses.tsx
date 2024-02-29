@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CardItem from "../../components/CardItem/CardItem";
 import Course1 from "../../assets/Program3.png";
 import { useUserContext } from "../../context/UserContext";
@@ -32,6 +32,7 @@ import {
 import { EditIcon } from "../../icons/EditIcon";
 import { DeleteIcon } from "../../icons/DeleteIcon";
 import AlertModal from "../../components/AlertModal/AlertModal";
+import PathBreadcrumb from "../../components/PathBreadcrumb/PathBreadcrumb";
 
 interface Course {
   courseId: number;
@@ -47,9 +48,9 @@ interface ResponseDataStudent {
 const Courses = () => {
   const { user, isOpenModal, setOpenModal } = useUserContext();
 
-  // const { programId } = useParams();
-  const location = useLocation();
-  const { programId } = location.state || {};
+  const { programId } = useParams();
+  // const location = useLocation();
+  // const { programId } = location.state || {};
 
   const [courses, setCourses] = useState<Course[]>([]);
 
@@ -94,7 +95,7 @@ const Courses = () => {
     courseName: string
   ) => {
     // navigate(`${courseId}`);
-    navigate(`${courseCode}`, { state: { courseId, courseName } });
+    navigate(`${courseId}`, { state: { courseCode, courseName } });
   };
 
   const handleAddCourse = () => {
@@ -163,6 +164,16 @@ const Courses = () => {
   return (
     <>
       <Box>
+        <PathBreadcrumb
+          paths={[
+            { pathName: "Programs", pathTo: `/programs` },
+            {
+              pathName: "Courses",
+              pathTo: `/programs/${programId}`,
+              isCurrentPage: true,
+            },
+          ]}
+        />
         <Flex color="text-color" align="center" justify="space-between">
           <Text fontSize="30px" fontWeight="500">
             Courses

@@ -26,6 +26,7 @@ import {
   UpdateMaterialFormData,
 } from "../../utils/types";
 import AlertModal from "../../components/AlertModal/AlertModal";
+import PathBreadcrumb from "../../components/PathBreadcrumb/PathBreadcrumb";
 
 interface LearningMaterial {
   learningMaterialId: number;
@@ -66,9 +67,9 @@ interface AssignmentResponseData {
 }
 
 const CourseDashboard = () => {
-  const { courseCode } = useParams();
+  const { programId, courseId } = useParams();
   const location = useLocation();
-  const { courseId, courseName } = location.state;
+  const { courseCode, courseName } = location.state;
 
   const [learningMaterials, setLearningMaterials] = useState<
     LearningMaterial[]
@@ -278,6 +279,17 @@ const CourseDashboard = () => {
   return (
     <>
       <VStack gap={4}>
+        <PathBreadcrumb
+          paths={[
+            { pathName: "Programs", pathTo: `/programs` },
+            { pathName: "Courses", pathTo: `/programs/${programId}` },
+            {
+              pathName: "Dashboard",
+              pathTo: `/programs/${programId}/${courseId}`,
+              isCurrentPage: true,
+            },
+          ]}
+        />
         <HStack justify="space-between" w="100%">
           <Text fontSize="30px" fontWeight="500" color="text-color">
             {courseName}

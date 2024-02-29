@@ -120,9 +120,9 @@ const Programs = () => {
 
   const navigate = useNavigate();
 
-  const handleNavigate = (programId: number, programCode: string) => {
+  const handleNavigate = (programId: number) => {
     // navigate(`${programId}`);
-    navigate(`${programCode}`, { state: { programId } });
+    navigate(`${programId}`);
   };
 
   const handleAddProgram = () => {
@@ -268,8 +268,7 @@ const Programs = () => {
                 code={program.programCode}
                 name={program.programName}
                 {...(user?.role === "STUDENT" && {
-                  navigateTo: () =>
-                    handleNavigate(program.programId, program.programCode),
+                  navigateTo: () => handleNavigate(program.programId),
                 })}
               />
             ))}
@@ -292,9 +291,7 @@ const Programs = () => {
                     <Text
                       w="fit-content"
                       _hover={{ textDecor: "underline", cursor: "pointer" }}
-                      onClick={() =>
-                        handleNavigate(program.programId, program.programCode)
-                      }
+                      onClick={() => handleNavigate(program.programId)}
                     >
                       {program.programName}
                     </Text>
