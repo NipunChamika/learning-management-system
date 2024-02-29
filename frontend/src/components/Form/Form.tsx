@@ -1,14 +1,19 @@
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import {
   Button,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  IconButton,
   Input,
+  InputGroup,
+  InputRightElement,
+  Select,
   Textarea,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { HTMLInputTypeAttribute, ReactNode } from "react";
+import { HTMLInputTypeAttribute, ReactNode, useState } from "react";
 import {
   DefaultValues,
   FieldValues,
@@ -23,6 +28,8 @@ type FormControlProps<T> = {
   htmlFor: Path<T>;
   inputType?: HTMLInputTypeAttribute;
   isTextarea?: boolean;
+  isSelect?: boolean;
+  selectOptions?: { value: string; label: string }[];
 };
 
 interface Props<T extends FieldValues> {
@@ -49,6 +56,8 @@ const Form = <T extends FieldValues>({
     defaultValues: defaultValues as DefaultValues<T>,
   });
 
+  const [show, setShow] = useState<{ [key: string]: boolean }>({});
+
   const getErrorMessage = (error: any) => {
     if (typeof error === "string") {
       return error;
@@ -57,6 +66,10 @@ const Form = <T extends FieldValues>({
     } else {
       return "An error occurred";
     }
+  };
+
+  const toggleShowPassword = (field: string) => {
+    setShow((prevState) => ({ ...prevState, [field]: !prevState[field] }));
   };
 
   return (
@@ -79,6 +92,36 @@ const Form = <T extends FieldValues>({
             </FormLabel>
             {label.isTextarea ? (
               <Textarea {...register(label.htmlFor)} id={label.htmlFor} />
+            ) : label.isSelect ? (
+              <Select
+                {...register(label.htmlFor)}
+                id={label.htmlFor}
+                placeholder="Select role"
+              >
+                {label.selectOptions?.map((option, i) => (
+                  <option key={i} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Select>
+            ) : label.inputType === "password" ? (
+              <InputGroup>
+                <Input
+                  {...register(label.htmlFor)}
+                  type={show[label.htmlFor] ? "text" : "password"}
+                  id={label.htmlFor}
+                  // focusBorderColor="pink.400"
+                />
+                <InputRightElement>
+                  <IconButton
+                    variant="none"
+                    textColor="slategrey"
+                    aria-label="Show password"
+                    icon={show[label.htmlFor] ? <ViewOffIcon /> : <ViewIcon />}
+                    onClick={() => toggleShowPassword(label.htmlFor)}
+                  />
+                </InputRightElement>
+              </InputGroup>
             ) : (
               <Input
                 {...register(label.htmlFor)}
@@ -86,6 +129,15 @@ const Form = <T extends FieldValues>({
                 type={label.inputType || "text"}
               />
             )}
+            {/* {label.isSelect && (
+              <Select {...register(label.htmlFor)} id={label.htmlFor}>
+                {label.selectOptions?.map((option, i) => (
+                  <option key={i} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Select>
+            )} */}
             <FormErrorMessage mt="1px">
               {errors[label.htmlFor] &&
                 getErrorMessage(errors[label.htmlFor]?.message)}

@@ -12,27 +12,44 @@ import {
   Th,
   Thead,
   Tr,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { AddIcon } from "../../icons/AddIcon";
 import { EditIcon } from "../../icons/EditIcon";
 import { DeleteIcon } from "../../icons/DeleteIcon";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useUserContext } from "../../context/UserContext";
+import ModalDialog from "../../components/ModalDialog/ModalDialog";
+import Form from "../../components/Form/Form";
+import { addUserSchema } from "../../validation/validation";
 
-interface Users {
-  userId: number;
+interface User {
   firstName: string;
   lastName: string;
   email: string;
   role: "ADMIN" | "STUDENT";
 }
 
+interface UserForPost {
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: "ADMIN" | "STUDENT";
+  password: string;
+  confirmPassword: string;
+}
+
 interface UsersResponseData {
-  data: Users[];
+  data: User[];
 }
 
 const Users = () => {
-  const [users, setUsers] = useState<Users[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+
+  const { isOpenModal, setOpenModal } = useUserContext();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const accessToken = localStorage.getItem("accessToken");
 
@@ -61,6 +78,25 @@ const Users = () => {
     fetchUsers();
   }, []);
 
+  const handleAddUser = () => {
+    setOpenModal("add");
+    onOpen();
+  };
+
+  const onAddUser = (data: UserForPost) => {
+    const { confirmPassword, ...user } = data;
+    axios
+      .post(`http://localhost:3000/user`, user, config)
+      .then((res) => {
+        console.log(res.data);
+        onClose();
+        fetchUsers();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <>
       <Box mb="24px">
@@ -71,13 +107,46 @@ const Users = () => {
           <Button
             leftIcon={<AddIcon />}
             color="text-color"
-            // onClick={handleAddUser}
+            onClick={handleAddUser}
           >
             Add
           </Button>
         </Flex>
         <Box width="100%" h="1px" bgColor="border-color" mt="16px" />
       </Box>
+
+      {isOpenModal === "add" && (
+        <ModalDialog isOpen={isOpen} onClose={onClose} modalHeading="Add User">
+          <Form
+            schema={addUserSchema}
+            labels={[
+              { labelName: "First Name", htmlFor: "firstName" },
+              { labelName: "Last Name", htmlFor: "lastName" },
+              { labelName: "Email", htmlFor: "email" },
+              {
+                labelName: "Password",
+                htmlFor: "password",
+                inputType: "password",
+              },
+              {
+                labelName: "Confirm Password",
+                htmlFor: "confirmPassword",
+                inputType: "password",
+              },
+              {
+                labelName: "Role",
+                htmlFor: "role",
+                isSelect: true,
+                selectOptions: [
+                  { value: "ADMIN", label: "ADMIN" },
+                  { value: "STUDENT", label: "STUDENT" },
+                ],
+              },
+            ]}
+            onSubmit={onAddUser}
+          />
+        </ModalDialog>
+      )}
 
       <TableContainer>
         <Table variant="simple">
