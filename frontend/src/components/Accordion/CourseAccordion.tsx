@@ -225,38 +225,40 @@ const CourseAccordion = ({
                         </Text>
                       </Box>
                     </HStack>
-                    <ButtonGroup isAttached variant="outline" size="sm">
-                      <IconButton
-                        aria-label="Edit"
-                        icon={<EditIcon />}
-                        borderColor="border-color"
-                        onClick={() =>
-                          handleUpdateAssignment &&
-                          handleUpdateAssignment({
-                            assignmentId: assignment.id,
-                            assignmentTitle: assignment.panelTitle,
-                            resourcePath: assignment.resourcePath,
-                            description: assignment.description,
-                            dueDate: assignment.dueDate,
-                          })
-                        }
-                      />
-                      <IconButton
-                        aria-label="Delete"
-                        icon={<DeleteIcon />}
-                        borderColor="border-color"
-                        onClick={() =>
-                          handleDeleteAssignment &&
-                          handleDeleteAssignment({
-                            assignmentId: assignment.id,
-                            assignmentTitle: assignment.panelTitle,
-                            resourcePath: assignment.resourcePath,
-                            description: assignment.description,
-                            dueDate: assignment.dueDate,
-                          })
-                        }
-                      />
-                    </ButtonGroup>
+                    {user?.role === "ADMIN" && (
+                      <ButtonGroup isAttached variant="outline" size="sm">
+                        <IconButton
+                          aria-label="Edit"
+                          icon={<EditIcon />}
+                          borderColor="border-color"
+                          onClick={() =>
+                            handleUpdateAssignment &&
+                            handleUpdateAssignment({
+                              assignmentId: assignment.id,
+                              assignmentTitle: assignment.panelTitle,
+                              resourcePath: assignment.resourcePath,
+                              description: assignment.description,
+                              dueDate: assignment.dueDate,
+                            })
+                          }
+                        />
+                        <IconButton
+                          aria-label="Delete"
+                          icon={<DeleteIcon />}
+                          borderColor="border-color"
+                          onClick={() =>
+                            handleDeleteAssignment &&
+                            handleDeleteAssignment({
+                              assignmentId: assignment.id,
+                              assignmentTitle: assignment.panelTitle,
+                              resourcePath: assignment.resourcePath,
+                              description: assignment.description,
+                              dueDate: assignment.dueDate,
+                            })
+                          }
+                        />
+                      </ButtonGroup>
+                    )}
                   </Flex>
                   <Text
                     fontSize="16px"

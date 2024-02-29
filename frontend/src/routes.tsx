@@ -9,6 +9,7 @@ import Courses from "./pages/Courses/Courses";
 import CourseDashboard from "./pages/CourseDashboard/CourseDashboard";
 import Submission from "./pages/Submission/Submission";
 import Missing from "./pages/Missing/Missing";
+import Users from "./pages/Users/Users";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Profile /> },
       { path: "programs", element: <Programs /> },
+      { path: "users", element: <Users /> },
       { path: "programs/:programId", element: <Courses /> },
       // {
       //   path: "courses",
