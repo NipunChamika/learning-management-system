@@ -27,7 +27,7 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Post()
   @UsePipes(new ValidationPipe())
