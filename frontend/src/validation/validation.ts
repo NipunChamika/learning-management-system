@@ -113,3 +113,21 @@ export const addUserSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+export const updateUserSchema = z.object({
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  email: z
+    .string()
+    .optional()
+    .refine(
+      (email) => {
+        if (!email) return true;
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      },
+      {
+        message: "Invalid email address",
+      }
+    ),
+  role: z.enum(["ADMIN", "STUDENT", ""]).optional(),
+});

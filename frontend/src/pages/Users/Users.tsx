@@ -22,16 +22,17 @@ import { useEffect, useState } from "react";
 import { useUserContext } from "../../context/UserContext";
 import ModalDialog from "../../components/ModalDialog/ModalDialog";
 import Form from "../../components/Form/Form";
-import { addUserSchema } from "../../validation/validation";
+import { addUserSchema, updateUserSchema } from "../../validation/validation";
+
+// interface User {
+//   firstName: string;
+//   lastName: string;
+//   email: string;
+//   role: "ADMIN" | "STUDENT";
+// }
 
 interface User {
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: "ADMIN" | "STUDENT";
-}
-
-interface UserForPost {
+  id: number;
   firstName: string;
   lastName: string;
   email: string;
@@ -50,6 +51,8 @@ const Users = () => {
   const { isOpenModal, setOpenModal } = useUserContext();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const accessToken = localStorage.getItem("accessToken");
 
@@ -83,10 +86,31 @@ const Users = () => {
     onOpen();
   };
 
-  const onAddUser = (data: UserForPost) => {
-    const { confirmPassword, ...user } = data;
+  const handleUpdateUser = (selectedUser: User) => {
+    setOpenModal("edit");
+    setSelectedUser(selectedUser);
+    onOpen();
+  };
+
+  const onAddUser = (data: User) => {
+    const { confirmPassword, id, ...user } = data;
     axios
       .post(`http://localhost:3000/user`, user, config)
+      .then((res) => {
+        console.log(res.data);
+        onClose();
+        fetchUsers();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const onUpdateUser = (data: User) => {
+    const { password, confirmPassword, id, ...user } = data;
+
+    axios
+      .patch(`http://localhost:3000/user/${selectedUser?.id}`, user, config)
       .then((res) => {
         console.log(res.data);
         onClose();
@@ -148,6 +172,49 @@ const Users = () => {
         </ModalDialog>
       )}
 
+      {isOpenModal === "edit" && (
+        <ModalDialog
+          isOpen={isOpen}
+          onClose={onClose}
+          modalHeading="Update User"
+        >
+          <Form
+            schema={updateUserSchema}
+            labels={[
+              { labelName: "First Name", htmlFor: "firstName" },
+              { labelName: "Last Name", htmlFor: "lastName" },
+              { labelName: "Email", htmlFor: "email" },
+              // {
+              //   labelName: "Password",
+              //   htmlFor: "password",
+              //   inputType: "password",
+              // },
+              // {
+              //   labelName: "Confirm Password",
+              //   htmlFor: "confirmPassword",
+              //   inputType: "password",
+              // },
+              {
+                labelName: "Role",
+                htmlFor: "role",
+                isSelect: true,
+                selectOptions: [
+                  { value: "ADMIN", label: "ADMIN" },
+                  { value: "STUDENT", label: "STUDENT" },
+                ],
+              },
+            ]}
+            onSubmit={onUpdateUser}
+            defaultValues={{
+              firstName: selectedUser?.firstName,
+              lastName: selectedUser?.lastName,
+              email: selectedUser?.email,
+              role: selectedUser?.role,
+            }}
+          />
+        </ModalDialog>
+      )}
+
       <TableContainer>
         <Table variant="simple">
           <Thead>
@@ -173,7 +240,7 @@ const Users = () => {
                         aria-label="Edit"
                         icon={<EditIcon />}
                         borderColor="border-color"
-                        //   onClick={() => handleUpdateProgram(program)}
+                        onClick={() => handleUpdateUser(user)}
                       />
                       <IconButton
                         aria-label="Delete"
