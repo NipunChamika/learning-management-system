@@ -5,10 +5,12 @@ import {
   addCourseSchema,
   addMaterialSchema,
   addProgramSchema,
+  addUserSchema,
   updateAssignmentSchema,
   updateCourseSchema,
   updateMaterialSchema,
   updateProgramSchema,
+  updateUserSchema,
 } from "../validation/validation";
 
 export type User = {
@@ -43,6 +45,10 @@ export type AddAssignmentFormData = z.infer<typeof addAssignmentSchema>;
 export type UpdateMaterialFormData = z.infer<typeof updateMaterialSchema>;
 
 export type UpdateAssignmentFormData = z.infer<typeof updateAssignmentSchema>;
+
+export type AddUserFormData = z.infer<typeof addUserSchema>;
+
+export type UpdateUserFormData = z.infer<typeof updateUserSchema>;
 
 export const getRole = () => {
   let role;

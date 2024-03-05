@@ -4,6 +4,7 @@ import { ProgramsIcon } from "../../icons/ProgramsIcon";
 import { SignoutIcon } from "../../icons/SignoutIcon";
 import MenuItem from "../MenuItem/MenuItem";
 import { useUserContext } from "../../context/UserContext";
+import { UsersIcon } from "../../icons/UsersIcon";
 
 const MenuBar = () => {
   const { user } = useUserContext();
@@ -13,7 +14,7 @@ const MenuBar = () => {
       <VStack bgColor="bg-color" alignItems="stretch" spacing={0}>
         <MenuItem navigateTo={"/"} icon={ProfileIcon} title="Profile" />
         {user?.role === "ADMIN" && (
-          <MenuItem navigateTo={"/users"} icon={ProfileIcon} title="Users" />
+          <MenuItem navigateTo={"/users"} icon={UsersIcon} title="Users" />
         )}
         <MenuItem
           navigateTo={"/programs"}

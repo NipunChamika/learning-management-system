@@ -24,6 +24,7 @@ import ModalDialog from "../../components/ModalDialog/ModalDialog";
 import Form from "../../components/Form/Form";
 import { addUserSchema, updateUserSchema } from "../../validation/validation";
 import AlertModal from "../../components/AlertModal/AlertModal";
+import { AddUserFormData, UpdateUserFormData } from "../../utils/types";
 
 // interface User {
 //   firstName: string;
@@ -101,8 +102,8 @@ const Users = () => {
     onOpen();
   };
 
-  const onAddUser = (data: User) => {
-    const { confirmPassword, id, ...user } = data;
+  const onAddUser = (data: AddUserFormData) => {
+    const { confirmPassword, ...user } = data;
     axios
       .post(`http://localhost:3000/user`, user, config)
       .then((res) => {
@@ -115,11 +116,9 @@ const Users = () => {
       });
   };
 
-  const onUpdateUser = (data: User) => {
-    const { password, confirmPassword, id, ...user } = data;
-
+  const onUpdateUser = (data: UpdateUserFormData) => {
     axios
-      .patch(`http://localhost:3000/user/${selectedUser?.id}`, user, config)
+      .patch(`http://localhost:3000/user/${selectedUser?.id}`, data, config)
       .then((res) => {
         console.log(res.data);
         onClose();
