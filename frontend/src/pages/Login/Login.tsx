@@ -83,14 +83,14 @@ const Login = () => {
         display="flex"
         justifyContent="center"
         alignItems="center"
-        bgColor="#f4f7fe"
+        bgColor="bg-default"
       >
         <AuthCard cardTitle="Log in">
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl isInvalid={!!errors.email} mb={4}>
               <FormLabel
                 htmlFor="email"
-                textColor="slategrey"
+                textColor="low-text-color"
                 mb={0}
                 fontSize="14"
                 fontWeight="400"
@@ -109,7 +109,7 @@ const Login = () => {
             <FormControl isInvalid={!!errors.password}>
               <FormLabel
                 htmlFor="password"
-                textColor="slategrey"
+                textColor="low-text-color"
                 mb={0}
                 fontSize="14"
                 fontWeight="400"
@@ -145,7 +145,7 @@ const Login = () => {
                 fontSize="12px"
                 _hover={{ textDecoration: "none", color: "#608fff" }}
                 pt="20px"
-                onClick={() => navigate("/email")}
+                onClick={() => navigate("/forgot-password")}
               >
                 Forgot password?
               </Button>

@@ -5,6 +5,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  Text,
 } from "@chakra-ui/react";
 import { z } from "zod";
 import { emailSchema } from "../../validation/validation";
@@ -62,7 +63,7 @@ const EmailEntry = () => {
         display="flex"
         justifyContent="center"
         alignItems="center"
-        bgColor="#f4f7fe"
+        bgColor="bg-default"
       >
         <AuthCard
           cardTitle="Email Verification"
@@ -70,11 +71,16 @@ const EmailEntry = () => {
           footerLinkText="Log in"
           onFooterLinkClick={() => navigate("/login")}
         >
+          <Box display="flex" justifyContent="center" textAlign="center">
+            <Text pb="20px" w="85%" color="text-color">
+              Reset your password by providing your account email below.
+            </Text>
+          </Box>
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl isInvalid={!!errors.email} mb={4}>
               <FormLabel
                 htmlFor="email"
-                textColor="slategrey"
+                textColor="low-text-color"
                 mb={0}
                 fontSize="14"
                 fontWeight="400"

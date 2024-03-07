@@ -27,13 +27,14 @@ const AuthCard = ({
 }: Props) => {
   return (
     <>
-      <Card minW="400px">
+      <Card minW="400px" bg="bg-color">
         <CardHeader
           as="h1"
           fontSize="28px"
           fontWeight="600"
           textAlign="center"
           pb="0"
+          color="text-color"
         >
           {cardTitle}
         </CardHeader>

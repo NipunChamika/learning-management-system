@@ -39,7 +39,7 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/email",
+    path: "/forgot-password",
     element: <EmailEntry />,
   },
   {

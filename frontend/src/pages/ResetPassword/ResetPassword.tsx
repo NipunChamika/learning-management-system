@@ -151,15 +151,16 @@ const PasswordReset = () => {
         display="flex"
         justifyContent="center"
         alignItems="center"
-        bgColor="#f4f7fe"
+        bgColor="bg-default"
       >
-        <Card minW="400px">
+        <Card minW="400px" bg="bg-color">
           <CardHeader
             as="h1"
             fontSize="28px"
             fontWeight="600"
             textAlign="center"
             pb="0"
+            color="text-color"
           >
             Reset Password
           </CardHeader>
@@ -168,7 +169,7 @@ const PasswordReset = () => {
               <FormControl isInvalid={!!errors.otp} mb={4}>
                 <FormLabel
                   htmlFor="otp"
-                  textColor="slategrey"
+                  textColor="low-text-color"
                   mb={0}
                   fontSize="14"
                   fontWeight="400"
@@ -197,7 +198,7 @@ const PasswordReset = () => {
               <FormControl isInvalid={!!errors.newPassword} mb={4}>
                 <FormLabel
                   htmlFor="newPassword"
-                  textColor="slategrey"
+                  textColor="low-text-color"
                   mb={0}
                   fontSize="14"
                   fontWeight="400"
@@ -227,7 +228,7 @@ const PasswordReset = () => {
               <FormControl isInvalid={!!errors.confirmNewPassword}>
                 <FormLabel
                   htmlFor="confirmNewPassword"
-                  textColor="slategrey"
+                  textColor="low-text-color"
                   mb={0}
                   fontSize="14"
                   fontWeight="400"
