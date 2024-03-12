@@ -35,4 +35,35 @@ export class MailService {
       );
     }
   }
+
+  async sendTempPassword(email: string, password: string) {
+    try {
+      await this.mailerService.sendMail({
+        from: {
+          name: 'Softcodeit',
+          address: 'noreply@softcodeit.com',
+        },
+        to: email,
+        subject: 'Your Temporary Password',
+        context: {
+          password: password,
+        },
+        template: 'temp-pass',
+      });
+
+      return {
+        status: 'A temporary password will be sent to your email',
+        code: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: 'Error sending the email',
+          code: HttpStatus.BAD_REQUEST,
+          message: error.message || 'Http Exception',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }

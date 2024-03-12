@@ -44,6 +44,13 @@ export class UserService {
     });
 
     await this.userRepository.save(newUser);
+
+    const mailResponse = await this.mailService.sendTempPassword(
+      userDetails.email,
+      password,
+    );
+
+    return mailResponse;
   }
 
   async getAllUsers(page: number = 1, limit: number = 10) {
