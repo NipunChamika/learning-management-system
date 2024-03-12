@@ -14,10 +14,6 @@ export class CreateUserDto {
   email: string;
 
   @IsNotEmpty()
-  @IsString()
-  password: string;
-
-  @IsNotEmpty()
   @IsIn(['ADMIN', 'STUDENT'])
   role: 'ADMIN' | 'STUDENT';
 }

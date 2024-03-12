@@ -8,6 +8,7 @@ import {
 } from 'src/utils/types';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { generate } from 'generate-password-ts';
 import { Student } from 'src/typeorm/entities/student.entity';
 import { MailService } from 'src/mail/mail.service';
 
@@ -24,7 +25,17 @@ export class UserService {
   ) {}
 
   async createUser(userDetails: CreateUserParams) {
-    const { password } = userDetails;
+    // const { password } = userDetails;
+    const password = generate({
+      length: 8,
+      numbers: true,
+      symbols: true,
+      lowercase: true,
+      uppercase: true,
+      excludeSimilarCharacters: true,
+      strict: true,
+    });
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = this.userRepository.create({
@@ -32,7 +43,7 @@ export class UserService {
       password: hashedPassword,
     });
 
-    return this.userRepository.save(newUser);
+    await this.userRepository.save(newUser);
   }
 
   async getAllUsers(page: number = 1, limit: number = 10) {
