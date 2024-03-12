@@ -14,9 +14,9 @@ function App() {
   const [isResetPassword, setResetPassword] = useState(false);
   const [isMenuCollapse, setMenuCollapse] = useState(false);
   const [user, setUser] = useState<User | undefined>();
-  const [isOpenModal, setOpenModal] = useState<"add" | "edit" | "delete">(
-    "add"
-  );
+  const [isOpenModal, setOpenModal] = useState<
+    "add" | "edit" | "delete" | "reset"
+  >("add");
 
   return (
     <UserContext.Provider

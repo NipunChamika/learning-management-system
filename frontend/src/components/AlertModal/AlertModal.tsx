@@ -16,6 +16,8 @@ interface Props {
   alertHeading: string;
   alertBody: string;
   handleClick: () => void;
+  buttonTitle: string;
+  deleteAlert?: boolean;
 }
 
 const AlertModal = ({
@@ -25,6 +27,8 @@ const AlertModal = ({
   alertHeading,
   alertBody,
   handleClick,
+  buttonTitle,
+  deleteAlert,
 }: Props) => {
   return (
     <>
@@ -51,10 +55,14 @@ const AlertModal = ({
               </Button>
               <Button
                 onClick={handleClick}
-                color="danger-text-color"
-                _hover={{ bg: "btn-danger", color: "danger-text-hover" }}
+                color={deleteAlert ? "danger-text-color" : "menu-hover-bg"}
+                _hover={
+                  deleteAlert
+                    ? { bg: "btn-danger", color: "danger-text-hover" }
+                    : { bg: "menu-hover-bg", color: "danger-text-hover" }
+                }
               >
-                Delete
+                {buttonTitle}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

@@ -25,6 +25,7 @@ import Form from "../../components/Form/Form";
 import { addUserSchema, updateUserSchema } from "../../validation/validation";
 import AlertModal from "../../components/AlertModal/AlertModal";
 import { AddUserFormData, UpdateUserFormData } from "../../utils/types";
+import { ResetPassword } from "../../icons/ResetPassword";
 
 // interface User {
 //   firstName: string;
@@ -102,6 +103,12 @@ const Users = () => {
     onOpen();
   };
 
+  const handleResetPassword = (selectedUser: User) => {
+    setOpenModal("reset");
+    setSelectedUser(selectedUser);
+    onOpen();
+  };
+
   const onAddUser = (data: AddUserFormData) => {
     axios
       .post(`http://localhost:3000/user`, data, config)
@@ -141,6 +148,10 @@ const Users = () => {
       });
   };
 
+  const onResetPassword = () => {
+    console.log("Reset Password");
+  };
+
   return (
     <>
       <Box mb="24px">
@@ -167,16 +178,6 @@ const Users = () => {
               { labelName: "First Name", htmlFor: "firstName" },
               { labelName: "Last Name", htmlFor: "lastName" },
               { labelName: "Email", htmlFor: "email" },
-              // {
-              //   labelName: "Password",
-              //   htmlFor: "password",
-              //   inputType: "password",
-              // },
-              // {
-              //   labelName: "Confirm Password",
-              //   htmlFor: "confirmPassword",
-              //   inputType: "password",
-              // },
               {
                 labelName: "Role",
                 htmlFor: "role",
@@ -227,12 +228,26 @@ const Users = () => {
 
       {isOpenModal === "delete" && (
         <AlertModal
+          deleteAlert
           isOpen={isOpen}
           leastDestructiveRef={cancelRef}
           onClose={onClose}
           alertHeading="Delete User"
           alertBody="Are you sure you want to delete this user?"
           handleClick={onDeleteUser}
+          buttonTitle="Delete"
+        />
+      )}
+
+      {isOpenModal === "reset" && (
+        <AlertModal
+          isOpen={isOpen}
+          leastDestructiveRef={cancelRef}
+          onClose={onClose}
+          alertHeading="Reset Password"
+          alertBody="Are you sure you want to reset the password of this user?"
+          handleClick={onResetPassword}
+          buttonTitle="Reset"
         />
       )}
 
@@ -262,6 +277,12 @@ const Users = () => {
                         icon={<EditIcon />}
                         borderColor="border-color"
                         onClick={() => handleUpdateUser(user)}
+                      />
+                      <IconButton
+                        aria-label="Reset"
+                        icon={<ResetPassword />}
+                        borderColor="border-color"
+                        onClick={() => handleResetPassword(user)}
                       />
                       <IconButton
                         aria-label="Delete"
