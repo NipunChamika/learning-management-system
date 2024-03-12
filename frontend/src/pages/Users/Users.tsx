@@ -103,9 +103,8 @@ const Users = () => {
   };
 
   const onAddUser = (data: AddUserFormData) => {
-    const { confirmPassword, ...user } = data;
     axios
-      .post(`http://localhost:3000/user`, user, config)
+      .post(`http://localhost:3000/user`, data, config)
       .then((res) => {
         console.log(res.data);
         onClose();
@@ -168,16 +167,16 @@ const Users = () => {
               { labelName: "First Name", htmlFor: "firstName" },
               { labelName: "Last Name", htmlFor: "lastName" },
               { labelName: "Email", htmlFor: "email" },
-              {
-                labelName: "Password",
-                htmlFor: "password",
-                inputType: "password",
-              },
-              {
-                labelName: "Confirm Password",
-                htmlFor: "confirmPassword",
-                inputType: "password",
-              },
+              // {
+              //   labelName: "Password",
+              //   htmlFor: "password",
+              //   inputType: "password",
+              // },
+              // {
+              //   labelName: "Confirm Password",
+              //   htmlFor: "confirmPassword",
+              //   inputType: "password",
+              // },
               {
                 labelName: "Role",
                 htmlFor: "role",
