@@ -24,9 +24,8 @@ export class UserService {
     private mailService: MailService,
   ) {}
 
-  async createUser(userDetails: CreateUserParams) {
-    // const { password } = userDetails;
-    const password = generate({
+  createRandomPassword(): string {
+    return generate({
       length: 8,
       numbers: true,
       symbols: true,
@@ -35,6 +34,11 @@ export class UserService {
       excludeSimilarCharacters: true,
       strict: true,
     });
+  }
+
+  async createUser(userDetails: CreateUserParams) {
+    // const { password } = userDetails;
+    const password = this.createRandomPassword();
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -47,6 +51,27 @@ export class UserService {
 
     const mailResponse = await this.mailService.sendTempPassword(
       userDetails.email,
+      password,
+    );
+
+    return mailResponse;
+  }
+
+  async updatePassword(email: string) {
+    const user = await this.userRepository.findOneBy({ email });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    const password = this.createRandomPassword();
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await this.userRepository.update({ email }, { password: hashedPassword });
+
+    const mailResponse = await this.mailService.sendTempPassword(
+      email,
       password,
     );
 

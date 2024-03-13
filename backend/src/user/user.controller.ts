@@ -22,6 +22,7 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Controller('user')
 export class UserController {
@@ -42,6 +43,29 @@ export class UserController {
       throw new HttpException(
         {
           status: error.response || 'Error creating user',
+          code: error.status || HttpStatus.BAD_REQUEST,
+        },
+        error.status || HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @Patch('update-password')
+  @UsePipes(new ValidationPipe())
+  async updatePassword(@Body() updatePasswordDto: UpdatePasswordDto) {
+    try {
+      await this.userService.updatePassword(updatePasswordDto.email);
+      return {
+        status:
+          'An email with the temporary password will be sent to your email',
+        code: HttpStatus.OK,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: error.response || 'Error updating password',
           code: error.status || HttpStatus.BAD_REQUEST,
         },
         error.status || HttpStatus.BAD_REQUEST,
