@@ -149,7 +149,19 @@ const Users = () => {
   };
 
   const onResetPassword = () => {
-    console.log("Reset Password");
+    const data = {
+      email: selectedUser?.email,
+    };
+
+    axios
+      .patch(`http://localhost:3000/user/update-password`, data, config)
+      .then((res) => {
+        console.log(res.data);
+        onClose();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
