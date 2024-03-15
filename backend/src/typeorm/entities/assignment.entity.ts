@@ -1,6 +1,7 @@
 import { BaseEntity } from 'src/core/entity/base.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Course } from './course.entity';
+import { Submission } from './submission.entity';
 
 @Entity({ name: 'assignments' })
 export class Assignment extends BaseEntity {
@@ -18,4 +19,7 @@ export class Assignment extends BaseEntity {
 
   @ManyToOne(() => Course, (course) => course.assignments)
   course: Course;
+
+  @OneToMany(() => Submission, (submission) => submission.assignment)
+  submissions: Submission[];
 }

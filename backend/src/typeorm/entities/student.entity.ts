@@ -4,16 +4,21 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToMany,
   OneToOne,
 } from 'typeorm';
 import { User } from './user.entity';
 import { Program } from './program.entity';
 import { BaseEntity } from 'src/core/entity/base.entity';
+import { Submission } from './submission.entity';
 
 @Entity({ name: 'students' })
 export class Student extends BaseEntity {
   @Column()
   passedAL: boolean;
+
+  @Column({ unique: true })
+  indexNo: number;
 
   @OneToOne(() => User, (user) => user.student, { cascade: ['soft-remove'] })
   @JoinColumn({ name: 'userId' })
@@ -22,4 +27,7 @@ export class Student extends BaseEntity {
   @ManyToMany(() => Program, (program) => program.students)
   @JoinTable({ name: 'student_programs' })
   programs: Program[];
+
+  @OneToMany(() => Submission, (submission) => submission.student)
+  submissions: Submission[];
 }
