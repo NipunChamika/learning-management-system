@@ -231,12 +231,14 @@ const Courses = () => {
 
       {isOpenModal === "delete" && (
         <AlertModal
+          deleteAlert
           isOpen={isOpen}
           leastDestructiveRef={cancelRef}
           onClose={onClose}
           alertHeading="Delete Course"
           alertBody="Are you sure you want to delete this course?"
           handleClick={onDeleteCourse}
+          buttonTitle="Delete"
         />
       )}
 

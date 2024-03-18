@@ -248,12 +248,14 @@ const Programs = () => {
 
       {isOpenModal === "delete" && (
         <AlertModal
+          deleteAlert
           isOpen={isOpen}
           leastDestructiveRef={cancelRef}
           onClose={onClose}
           alertHeading="Delete Program"
           alertBody="Are you sure you want to delete this program?"
           handleClick={onDeleteProgram}
+          buttonTitle="Delete"
         />
       )}
 
