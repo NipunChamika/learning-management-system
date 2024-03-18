@@ -32,6 +32,17 @@ export class StudentService {
       throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
     }
 
+    const indexNo = await this.studentRepository.findBy({
+      indexNo: createStudentInfo.indexNo,
+    });
+
+    if (indexNo.length > 0) {
+      throw new HttpException(
+        'Index number already exists',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const programs = await this.programRepository.findBy({
       id: In(createStudentInfo.programIds),
     });
@@ -66,6 +77,7 @@ export class StudentService {
 
     const studentData = students.map((student) => ({
       studentId: student.id,
+      indexNo: student.indexNo,
       passedAL: student.passedAL,
       userId: student.user.id,
       programIds: student.programs.map((program) => program.id),
@@ -96,6 +108,7 @@ export class StudentService {
     // return student;
     return {
       studentId: student.id,
+      indexNo: student.indexNo,
       passedAL: student.passedAL,
       userId: student.user.id,
       programId: student.programs.map((program) => program.id),

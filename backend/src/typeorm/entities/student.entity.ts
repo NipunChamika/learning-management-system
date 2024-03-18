@@ -14,11 +14,11 @@ import { Submission } from './submission.entity';
 
 @Entity({ name: 'students' })
 export class Student extends BaseEntity {
-  @Column()
-  passedAL: boolean;
-
   @Column({ unique: true })
   indexNo: number;
+
+  @Column()
+  passedAL: boolean;
 
   @OneToOne(() => User, (user) => user.student, { cascade: ['soft-remove'] })
   @JoinColumn({ name: 'userId' })

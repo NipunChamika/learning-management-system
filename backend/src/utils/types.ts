@@ -13,6 +13,7 @@ export type UpdateUserParams = {
 };
 
 export type CreateStudentInfoParams = {
+  indexNo: number;
   passedAL: boolean;
   programIds: number[];
 };
