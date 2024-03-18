@@ -6,7 +6,7 @@ import { Assignment } from './assignment.entity';
 
 @Entity({ name: 'courses' })
 export class Course extends BaseEntity {
-  @Column()
+  @Column({ unique: true })
   courseCode: string;
 
   @Column()

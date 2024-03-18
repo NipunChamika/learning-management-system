@@ -11,6 +11,7 @@ import { LearningMaterialModule } from './learning-material/learning-material.mo
 import { AssignmentModule } from './assignment/assignment.module';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
+import { SubmissionModule } from './submission/submission.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { MailModule } from './mail/mail.module';
     AssignmentModule,
     AuthModule,
     MailModule,
+    SubmissionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
