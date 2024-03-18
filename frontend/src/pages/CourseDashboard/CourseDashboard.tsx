@@ -407,23 +407,27 @@ const CourseDashboard = () => {
 
       {isOpenModal === "delete" && isModalType === "material" && (
         <AlertModal
+          deleteAlert
           isOpen={isOpen}
           leastDestructiveRef={cancelRef}
           onClose={onClose}
           alertHeading="Delete Learning Material"
           alertBody="Are you sure you want to delete this learning material?"
           handleClick={onDeleteMaterial}
+          buttonTitle="Delete"
         />
       )}
 
       {isOpenModal === "delete" && isModalType === "assignment" && (
         <AlertModal
+          deleteAlert
           isOpen={isOpen}
           leastDestructiveRef={cancelRef}
           onClose={onClose}
           alertHeading="Delete Assignment"
           alertBody="Are you sure you want to delete this assignment?"
           handleClick={onDeleteAssignment}
+          buttonTitle="Delete"
         />
       )}
 
