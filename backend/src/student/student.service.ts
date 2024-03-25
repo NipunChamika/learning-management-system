@@ -98,7 +98,7 @@ export class StudentService {
   async getStudentById(id: number) {
     const student = await this.studentRepository.findOne({
       where: { id },
-      relations: ['user', 'program'],
+      relations: ['user', 'programs'],
     });
 
     if (!student) {

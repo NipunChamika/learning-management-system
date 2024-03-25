@@ -40,7 +40,7 @@ export class AuthService {
   }
 
   async login(user: User) {
-    let studentDetails = { studentId: undefined };
+    let studentDetails = { studentId: undefined, indexNo: undefined };
 
     if (user.role === 'STUDENT') {
       const student = await this.studentRepository.findOne({
@@ -50,6 +50,7 @@ export class AuthService {
       if (student) {
         studentDetails = {
           studentId: student.id,
+          indexNo: student.indexNo,
         };
       }
     }
@@ -68,6 +69,7 @@ export class AuthService {
         role: user.role,
         ...(studentDetails.studentId && {
           studentId: studentDetails.studentId,
+          indexNo: studentDetails.indexNo,
         }),
       },
       accessToken: this.jwtService.sign(payload),

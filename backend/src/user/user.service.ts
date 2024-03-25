@@ -102,15 +102,27 @@ export class UserService {
   }
 
   async getUserById(id: number) {
-    const user = await this.userRepository.findOneBy({ id });
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['student'],
+    });
 
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
-    const { password, otpFlag, otp, otpRequestedAt, ...userWithoutPassword } =
-      user;
-    return userWithoutPassword;
+    // const { password, otpFlag, otp, otpRequestedAt, ...userWithoutPassword } =
+    //   user;
+    // return userWithoutPassword;
+    return {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.role,
+      studentId: user.student ? user.student.id : null,
+      indexNo: user.student ? user.student.indexNo : null,
+    };
   }
 
   async updateUser(id: number, updateUserDetails: UpdateUserParams) {
