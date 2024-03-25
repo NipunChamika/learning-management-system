@@ -5,6 +5,7 @@ import {
   addCourseSchema,
   addMaterialSchema,
   addProgramSchema,
+  addSubmissionSchema,
   addUserSchema,
   updateAssignmentSchema,
   updateCourseSchema,
@@ -20,6 +21,7 @@ export type User = {
   email: string;
   role: "ADMIN" | "STUDENT";
   studentId?: number;
+  indexNo?: number;
 };
 
 export type Meta = {
@@ -49,6 +51,8 @@ export type UpdateAssignmentFormData = z.infer<typeof updateAssignmentSchema>;
 export type AddUserFormData = z.infer<typeof addUserSchema>;
 
 export type UpdateUserFormData = z.infer<typeof updateUserSchema>;
+
+export type AddSubmissionFormData = z.infer<typeof addSubmissionSchema>;
 
 export const getRole = () => {
   let role;

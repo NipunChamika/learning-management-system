@@ -119,3 +119,7 @@ export const updateUserSchema = z.object({
     ),
   role: z.enum(["ADMIN", "STUDENT", ""]).optional(),
 });
+
+export const addSubmissionSchema = z.object({
+  file: z.instanceof(FileList).optional(),
+});

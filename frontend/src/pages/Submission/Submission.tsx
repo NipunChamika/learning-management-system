@@ -1,82 +1,85 @@
-import { Box, Flex, HStack, Text, VStack } from "@chakra-ui/react";
-import { useLocation } from "react-router-dom";
+import { Box, Button, Text, VStack } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, Controller } from "react-hook-form";
+import { useLocation, useParams } from "react-router-dom";
+import { addSubmissionSchema } from "../../validation/validation";
+import { AddSubmissionFormData } from "../../utils/types";
+import axios from "axios";
+import { useUserContext } from "../../context/UserContext";
 
 const Submission = () => {
+  const { user } = useUserContext();
   const location = useLocation();
-
   const { title, description } = location.state;
+  const { id } = useParams();
+  const accessToken = localStorage.getItem("accessToken");
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<AddSubmissionFormData>({
+    resolver: zodResolver(addSubmissionSchema),
+  });
+
+  const onSubmit = (data: AddSubmissionFormData) => {
+    const formData = new FormData();
+
+    if (data.file && data.file.length > 0) {
+      formData.append("file", data.file[0]);
+    }
+
+    const multipartConfig = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+
+    axios
+      .post(
+        `http://localhost:3000/submission/${id}/${user?.indexNo}`,
+        formData,
+        multipartConfig
+      )
+      .then((res) => {
+        console.log(res.data);
+        console.log("Submitted");
+        reset();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <>
-      <Box>
-        <Text fontSize="30px" fontWeight="500" color="text-color">
-          {title} Submission
-        </Text>
-        <Box width="100%" h="1px" bgColor="border-color" my="16px" />
-      </Box>
-
       <VStack
         align="stretch"
-        border="1px"
-        borderRadius="8px"
-        borderColor="border-color"
+        spacing="40px"
+        py="48px"
+        px="64px"
+        borderBottomRadius="8px"
       >
-        <Text
-          borderRadius="8px"
-          bg="card-bg"
-          py="20px"
-          px="24px"
-          fontSize="22px"
-          fontWeight="500"
-          color="text-color"
-          borderBottom="1px"
-          borderBottomColor="border-color"
-        >
-          Assignment Content
-        </Text>
-        <VStack
-          align="stretch"
-          spacing="40px"
-          py="48px"
-          px="64px"
-          borderBottomRadius="8px"
-        >
-          <Text>{description}</Text>
-          <HStack spacing="16px" h="auto">
-            <HStack
-              border="1px"
-              borderRadius="10px"
-              borderColor="border-color"
-              w="465px"
-            >
-              <Box
-                bg="card-bg"
-                fontSize="16px"
-                fontWeight="400"
-                px="34px"
-                py="16px"
-                borderLeftRadius="10px"
-                cursor="pointer"
-              >
-                Choose File
-              </Box>
-              <Flex />
-            </HStack>
-            <Box
-              bg="btn-bg"
-              px="32px"
-              py="16px"
-              borderRadius="8px"
-              fontSize="16px"
-              fontWeight="400"
-              color="menu-hover-text"
-              cursor="pointer"
-              _hover={{ bg: "btn-hover-bg" }}
-            >
-              Submit
-            </Box>
-          </HStack>
-        </VStack>
+        <Text>{description}</Text>
+        <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
+          <Controller
+            name="file"
+            control={control}
+            render={({ field: { onChange } }) => (
+              <input
+                id="file"
+                type="file"
+                onChange={(e) => onChange(e.target.files)}
+              />
+            )}
+          />
+          {errors.file && <Text color="red">{errors.file.message}</Text>}
+          <Button type="submit" colorScheme="blue" mt={4}>
+            Submit
+          </Button>
+        </form>
       </VStack>
     </>
   );
