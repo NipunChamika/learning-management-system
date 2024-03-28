@@ -121,5 +121,5 @@ export const updateUserSchema = z.object({
 });
 
 export const addSubmissionSchema = z.object({
-  file: z.instanceof(FileList).optional(),
+  file: z.instanceof(FileList),
 });

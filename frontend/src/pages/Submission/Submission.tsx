@@ -1,20 +1,13 @@
-import {
-  Box,
-  Button,
-  Flex,
-  HStack,
-  Input,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Button, HStack, Input, Text, VStack } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useLocation, useParams } from "react-router-dom";
 import { addSubmissionSchema } from "../../validation/validation";
 import { AddSubmissionFormData } from "../../utils/types";
 import axios from "axios";
 import { useUserContext } from "../../context/UserContext";
 import { useState } from "react";
+import { DeleteIcon } from "../../icons/DeleteIcon";
 
 const Submission = () => {
   const { user } = useUserContext();
@@ -25,7 +18,7 @@ const Submission = () => {
   const [file, setFile] = useState<FileList | null>(null);
 
   const {
-    control,
+    register,
     handleSubmit,
     formState: { errors },
     reset,
@@ -40,9 +33,8 @@ const Submission = () => {
       formData.append("file", file[0]);
     }
 
-    const multipartConfig = {
+    const config = {
       headers: {
-        "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${accessToken}`,
       },
     };
@@ -51,7 +43,7 @@ const Submission = () => {
       .post(
         `http://localhost:3000/submission/${id}/${user?.indexNo}`,
         formData,
-        multipartConfig
+        config
       )
       .then((res) => {
         console.log(res.data);
@@ -62,6 +54,16 @@ const Submission = () => {
       .catch((error) => {
         console.log(error);
       });
+
+    // if (data.file !== undefined) {
+    //   console.log(data.file[0].name);
+    // }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+
+    setFile(files);
   };
 
   return (
@@ -81,56 +83,53 @@ const Submission = () => {
         borderBottomRadius="8px"
       >
         <Text>{description}</Text>
-        <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
-          <HStack spacing="16px" h="auto">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <HStack>
             <HStack
               border="1px"
               borderRadius="10px"
               borderColor="border-color"
-              w="465px"
+              // w="465px"
             >
-              <Controller
-                name="file"
-                control={control}
-                render={({ field: { onChange } }) => (
-                  <>
-                    <Box
-                      as="label"
-                      htmlFor="file"
-                      bg="card-bg"
-                      fontSize="16px"
-                      fontWeight="400"
-                      px="34px"
-                      py="16px"
-                      borderLeftRadius="10px"
-                      cursor="pointer"
-                    >
-                      Choose File
-                    </Box>
-                    <Input
-                      id="file"
-                      type="file"
-                      onChange={(e) => onChange(setFile(e.target.files))}
-                      display="none"
-                    />
-                  </>
-                )}
+              <Box
+                as="label"
+                htmlFor="file"
+                bg="card-bg"
+                fontSize="16px"
+                fontWeight="400"
+                px="34px"
+                py="16px"
+                borderLeftRadius="10px"
+                cursor="pointer"
+              >
+                Choose File
+              </Box>
+              <Input
+                id="file"
+                {...register("file")}
+                type="file"
+                hidden
+                onChange={handleChange}
               />
-              <Flex />
+              <Box borderRightRadius="10px" w="256px">
+                {file && <Text>{file[0].name}</Text>}
+              </Box>
+              {file && (
+                <Box
+                  bg="card-bg"
+                  // fontSize="16px"
+                  fontWeight="400"
+                  px="34px"
+                  py="16px"
+                  borderRightRadius="10px"
+                  // alignSelf="end"
+                  _hover={{ cursor: "pointer" }}
+                >
+                  <DeleteIcon />
+                </Box>
+              )}
             </HStack>
-            <Button
-              type="submit"
-              bg="btn-bg"
-              px="32px"
-              py="16px"
-              borderRadius="8px"
-              fontSize="16px"
-              fontWeight="400"
-              color="menu-hover-text"
-              _hover={{ bg: "btn-hover-bg" }}
-            >
-              Submit
-            </Button>
+            <Button type="submit">Submit</Button>
           </HStack>
           {errors.file && <Text color="red">{errors.file.message}</Text>}
         </form>
