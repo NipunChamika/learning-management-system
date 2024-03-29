@@ -66,6 +66,16 @@ const Submission = () => {
     setFile(files);
   };
 
+  const handleRemoveFile = () => {
+    setFile(null);
+
+    const fileInput = document.getElementById("file") as HTMLInputElement;
+
+    if (fileInput) {
+      fileInput.value = "";
+    }
+  };
+
   return (
     <>
       <Box>
@@ -124,6 +134,7 @@ const Submission = () => {
                   borderRightRadius="10px"
                   // alignSelf="end"
                   _hover={{ cursor: "pointer" }}
+                  onClick={handleRemoveFile}
                 >
                   <DeleteIcon />
                 </Box>
