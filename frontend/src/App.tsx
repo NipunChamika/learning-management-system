@@ -17,6 +17,7 @@ function App() {
   const [isOpenModal, setOpenModal] = useState<
     "add" | "edit" | "delete" | "reset"
   >("add");
+  const [isSubmit, setSubmit] = useState(false);
 
   return (
     <UserContext.Provider
@@ -41,6 +42,8 @@ function App() {
         setUser,
         isOpenModal,
         setOpenModal,
+        isSubmit,
+        setSubmit,
       }}
     >
       <RouterProvider router={router} />

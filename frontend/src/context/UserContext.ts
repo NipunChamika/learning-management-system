@@ -22,6 +22,8 @@ interface UserContextInterface {
   setUser: (user: User | undefined) => void;
   isOpenModal: "add" | "edit" | "delete" | "reset";
   setOpenModal: (isOpenModal: "add" | "edit" | "delete" | "reset") => void;
+  isSubmit: boolean;
+  setSubmit: (isSubmit: boolean) => void;
 }
 
 export const UserContext = createContext<UserContextInterface | undefined>(

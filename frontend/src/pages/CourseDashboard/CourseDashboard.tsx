@@ -27,6 +27,7 @@ import {
 } from "../../utils/types";
 import AlertModal from "../../components/AlertModal/AlertModal";
 import PathBreadcrumb from "../../components/PathBreadcrumb/PathBreadcrumb";
+import useToastFunction from "../../hooks/useToastFunction";
 
 interface LearningMaterial {
   learningMaterialId: number;
@@ -78,7 +79,7 @@ const CourseDashboard = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { isOpenModal, setOpenModal } = useUserContext();
+  const { isOpenModal, setOpenModal, isSubmit, setSubmit } = useUserContext();
 
   const [isModalType, setModalType] = useState<"material" | "assignment">(
     "material"
@@ -92,6 +93,8 @@ const CourseDashboard = () => {
 
   const cancelRef = useRef(null);
 
+  const toastFunction = useToastFunction();
+
   const accessToken = localStorage.getItem("accessToken");
 
   const config = {
@@ -99,6 +102,16 @@ const CourseDashboard = () => {
       Authorization: `Bearer ${accessToken}`,
     },
   };
+
+  useEffect(() => {
+    if (isSubmit) {
+      toastFunction({
+        title: "Submission successful",
+        status: "success",
+      });
+      setSubmit(false);
+    }
+  }, []);
 
   const fetchLearningMaterials = () => {
     axios
@@ -456,6 +469,10 @@ const CourseDashboard = () => {
             handleAdd={handleAddAssignment}
             handleUpdateAssignment={handleUpdateAssignment}
             handleDeleteAssignment={handleDeleteAssignment}
+            courseCode={courseCode}
+            courseName={courseName}
+            programId={programId}
+            courseId={courseId}
           />
         </Accordion>
       </Box>

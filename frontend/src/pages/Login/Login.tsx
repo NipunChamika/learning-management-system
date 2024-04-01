@@ -54,7 +54,7 @@ const Login = () => {
       });
     }
     setResetPassword(false);
-  });
+  }, []);
 
   const onSubmit = (data: LoginFormData) => {
     // console.log("Form Data: ", data);
