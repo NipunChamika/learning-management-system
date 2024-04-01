@@ -61,14 +61,18 @@ export class SubmissionService {
       const newSubmission = this.submissionRepository.create({
         student,
         assignment,
-        submissionDate: new Date(),
+        submissionDate: (existingSubmission.submissionDate = new Date(
+          Date.now() - new Date().getTimezoneOffset() * 60000,
+        )),
         submissionCount: 1,
         resourcePath: uploadPath,
       });
 
       return this.submissionRepository.save(newSubmission);
     } else {
-      existingSubmission.submissionDate = new Date();
+      existingSubmission.submissionDate = new Date(
+        Date.now() - new Date().getTimezoneOffset() * 60000,
+      );
       existingSubmission.submissionCount += 1;
 
       return this.submissionRepository.save(existingSubmission);

@@ -187,7 +187,9 @@ export class UserService {
 
     const otp = (Math.floor(Math.random() * 9000) + 1000).toString();
 
-    user.otpRequestedAt = new Date();
+    user.otpRequestedAt = new Date(
+      Date.now() - new Date().getTimezoneOffset() * 60000,
+    );
     user.otp = otp;
     user.otpFlag = true;
 
