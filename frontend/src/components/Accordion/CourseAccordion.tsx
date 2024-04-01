@@ -62,6 +62,10 @@ interface Props {
   handleUpdateAssignment?: (assignment: AssignmentForPost) => void;
   handleDeleteMaterial?: (material: LearningMaterialForPost) => void;
   handleDeleteAssignment?: (assignment: AssignmentForPost) => void;
+  courseCode?: string;
+  courseName?: string;
+  programId?: string;
+  courseId?: string;
 }
 
 const CourseAccordion = ({
@@ -72,6 +76,10 @@ const CourseAccordion = ({
   handleUpdateAssignment,
   handleDeleteMaterial,
   handleDeleteAssignment,
+  courseCode,
+  courseName,
+  programId,
+  courseId,
 }: Props) => {
   const { user } = useUserContext();
 
@@ -94,7 +102,16 @@ const CourseAccordion = ({
   const navigate = useNavigate();
 
   const handleNavigate = (id: number, title: string, description: string) => {
-    navigate(`${id}`, { state: { title, description } });
+    navigate(`${id}`, {
+      state: {
+        title,
+        description,
+        courseCode,
+        courseName,
+        programId,
+        courseId,
+      },
+    });
   };
 
   return (

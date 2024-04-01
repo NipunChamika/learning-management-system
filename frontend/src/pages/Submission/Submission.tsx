@@ -1,7 +1,7 @@
 import { Box, Button, HStack, Input, Text, VStack } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { addSubmissionSchema } from "../../validation/validation";
 import { AddSubmissionFormData } from "../../utils/types";
 import axios from "axios";
@@ -10,10 +10,12 @@ import { useState } from "react";
 import { DeleteIcon } from "../../icons/DeleteIcon";
 
 const Submission = () => {
-  const { user } = useUserContext();
+  const { user, setSubmit } = useUserContext();
   const location = useLocation();
-  const { title, description } = location.state;
+  const { title, description, courseCode, courseName, programId, courseId } =
+    location.state;
   const { id } = useParams();
+  const navigate = useNavigate();
   const accessToken = localStorage.getItem("accessToken");
   const [file, setFile] = useState<FileList | null>(null);
 
@@ -46,6 +48,10 @@ const Submission = () => {
         config
       )
       .then((res) => {
+        navigate(`/programs/${programId}/${courseId}`, {
+          state: { courseCode, courseName },
+        });
+        setSubmit(true);
         console.log(res.data);
         console.log("Submitted");
         reset();
